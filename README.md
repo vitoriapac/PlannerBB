@@ -23,13 +23,13 @@ e pode ser exportado em JSON para integração ou backup.
 
 ## Como executar
 
-Não há etapa de compilação. Clone o projeto e abra [inde.html](inde.html) em um
+Não há etapa de compilação. Clone o projeto e abra [index.html](index.html) em um
 navegador moderno.
 
 ```powershell
 git clone https://github.com/vitoriapac/PlannerBB.git
 cd PlannerBB
-start inde.html
+start index.html
 ```
 
 Os dados ficam no `localStorage` do navegador. Use a opção **Baixar backup
@@ -38,7 +38,7 @@ completo** antes de limpar os dados ou trocar de navegador.
 ## Estrutura do projeto
 
 ```text
-inde.html             Interface e comportamento da aplicação
+index.html            Interface e comportamento da aplicação
 styles.css            Design tokens, layout, componentes e temas
 edital-data.js         Disciplinas, tópicos e subtópicos do edital
 planner-core.js        Métricas, dívida, viabilidade e replanejamento

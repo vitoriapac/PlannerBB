@@ -222,3 +222,92 @@ test("aceitação: dois dias ruins e revisões vencidas geram recuperação segu
   },{});
   assert.ok(Object.values(usedByDay).every(minutes=>minutes<=120));
 });
+
+test("sessões parciais respeitam tolerância e nunca geram dívida negativa",()=>{
+  const cases=[
+    {minutes:0,status:"missed",missing:60},
+    {minutes:20,status:"partial",missing:40},
+    {minutes:50,status:"partial",missing:10},
+    {minutes:55,status:"completed",missing:0},
+    {minutes:60,status:"completed",missing:0},
+    {minutes:90,status:"completed",missing:0}
+  ];
+  cases.forEach(item=>{
+    const sessions=item.minutes?[session({actualMinutes:item.minutes})]:[];
+    const result=Core.evaluateAssignment(assignment({plannedMinutes:60}),sessions,{todayISO:"2026-09-11"});
+    assert.equal(result.derivedStatus,item.status,`${item.minutes} minutos`);
+    assert.equal(result.missingMinutes,item.missing,`${item.minutes} minutos`);
+    assert.ok(result.missingMinutes>=0);
+  });
+});
+
+test("replanner é idempotente para conteúdo perdido, parcial e revisão atrasada",()=>{
+  const assignments=[
+    assignment({id:"missed",plannedMinutes:60}),
+    assignment({id:"partial",topicId:"mat-1",subjectId:"mat",plannedMinutes:60})
+  ];
+  const input={
+    todayISO:"2026-09-11",firstFutureDate:"2026-09-12",examDate:"2026-09-16",
+    availability:{sat:120,sun:120,mon:120,tue:120},assignments,
+    sessions:[session({planAssignmentId:"partial",topicId:"mat-1",subjectId:"mat",actualMinutes:20})],
+    reviews:[{id:"banc-review",subjectId:"banc",reviewStage:1,nextReviewDate:"2026-09-10",estimatedMinutes:30}]
+  };
+  const first=Core.generateReplanProposal(input); first.id="proposal-idempotent";
+  const applied=Core.applyReplanProposal(assignments,first,{createdAt:"2026-09-11T12:00:00.000Z"});
+  const second=Core.generateReplanProposal(Object.assign({},input,{assignments:applied.assignments}));
+  assert.ok(first.operations.length>=3);
+  assert.equal(second.debtMinutes,0);
+  assert.equal(second.reviewMinutes,0);
+  assert.equal(second.operations.length,0);
+  assert.equal(Core.applyReplanProposal(applied.assignments,first).alreadyApplied,true);
+});
+
+test("recovery parcial não cria cadeia e somente a parte cumprida cobre a origem",()=>{
+  const assignments=[
+    assignment({id:"original",plannedMinutes:60}),
+    assignment({id:"recovery",kind:"recovery",sourceAssignmentId:"original",date:"2026-09-10",plannedMinutes:60})
+  ];
+  const sessions=[session({id:"recovery-session",planAssignmentId:"recovery",actualMinutes:20})];
+  const debt=Core.calculateStudyDebt(assignments,sessions,{todayISO:"2026-09-11"});
+  assert.equal(debt.totalMinutes,40);
+  assert.deepEqual(debt.assignments.map(item=>item.assignmentId),["original"]);
+});
+
+test("edição retroativa zera dívida e cancela recovery com justificativa",()=>{
+  const assignments=[
+    assignment({id:"original",plannedMinutes:90}),
+    assignment({id:"recovery",kind:"recovery",sourceAssignmentId:"original",date:"2026-09-12",plannedMinutes:60})
+  ];
+  const corrected=[session({planAssignmentId:"original",actualMinutes:90})];
+  assert.equal(Core.calculateStudyDebt(assignments,corrected,{todayISO:"2026-09-11"}).totalMinutes,0);
+  const reconciled=Core.reconcileRecoveries(assignments,corrected,{todayISO:"2026-09-11",cancelledAt:"2026-09-11T12:00:00.000Z"});
+  const recovery=reconciled.assignments.find(item=>item.id==="recovery");
+  assert.equal(recovery.status,"cancelled");
+  assert.match(recovery.cancelReason,/Débito resolvido/);
+  assert.equal(reconciled.cancellations.length,1);
+});
+
+test("exclusão retroativa transforma assignment concluído em dívida",()=>{
+  const planned=[assignment({plannedMinutes:60})];
+  const completed=[session({actualMinutes:60})];
+  assert.equal(Core.calculateStudyDebt(planned,completed,{todayISO:"2026-09-11"}).totalMinutes,0);
+  assert.equal(Core.calculateStudyDebt(planned,[],{todayISO:"2026-09-11"}).totalMinutes,60);
+  const proposal=Core.generateReplanProposal({
+    todayISO:"2026-09-11",firstFutureDate:"2026-09-12",examDate:"2026-09-14",
+    availability:{sat:60,sun:60},assignments:planned,sessions:[]
+  });
+  assert.equal(proposal.scheduledMinutes,60);
+});
+
+test("mudanças de disponibilidade e prova retornam impacto sem alterar assignments",()=>{
+  const assignments=[
+    assignment({id:"a",date:"2026-09-14",plannedMinutes:120}),
+    assignment({id:"b",date:"2026-09-16",plannedMinutes:60})
+  ];
+  const snapshot=JSON.parse(JSON.stringify(assignments));
+  const impact=Core.analyzePlanImpact(assignments,{mon:60,wed:60},"2026-09-16");
+  assert.equal(impact.totalExcessMinutes,60);
+  assert.equal(impact.beyondExam.length,1);
+  assert.equal(impact.requiresReplan,true);
+  assert.deepEqual(assignments,snapshot);
+});

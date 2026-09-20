@@ -460,7 +460,47 @@ function addSession(session){
   STATE.sessions.push(session);
   if(session.planAssignmentId) recomputeAssignmentCompletedMinutes(session.planAssignmentId);
   if(session.method === "Revisão") advanceReview(session.topicId);
+  reconcileRecoveriesAfterSessionChange();
   persist();
+}
+
+function reconcileRecoveriesAfterSessionChange(){
+  const result=Core.reconcileRecoveries(STATE.planAssignments,STATE.sessions,{todayISO:toISODate(new Date()),cancelledAt:nowISOTimestamp()});
+  if(!result.cancellations.length) return result;
+  STATE.planAssignments=result.assignments;
+  STATE.rescheduleHistory=STATE.rescheduleHistory||[];
+  STATE.rescheduleHistory.push({
+    id:"history_reconcile_"+Date.now(),proposalId:null,createdAt:nowISOTimestamp(),appliedAt:nowISOTimestamp(),
+    reason:"retroactive_session_correction",operations:result.cancellations.map(item=>({
+      type:"cancel_recovery_assignment",sourceAssignmentId:item.sourceAssignmentId,assignmentId:item.assignmentId,
+      minutes:0,reasons:[item.reason],constraintsSatisfied:["Histórico preservado"]
+    }))
+  });
+  return result;
+}
+
+function updateSession(sessionId,changes){
+  const session=STATE.sessions.find(item=>item.id===sessionId);
+  if(!session) return false;
+  const previousAssignmentId=session.planAssignmentId;
+  Object.assign(session,changes||{});
+  session.actualMinutes=Math.max(0,Math.round(Number(session.actualMinutes)||0));
+  if(previousAssignmentId) recomputeAssignmentCompletedMinutes(previousAssignmentId);
+  if(session.planAssignmentId&&session.planAssignmentId!==previousAssignmentId) recomputeAssignmentCompletedMinutes(session.planAssignmentId);
+  reconcileRecoveriesAfterSessionChange();
+  persist();
+  return true;
+}
+
+function deleteSession(sessionId){
+  const index=STATE.sessions.findIndex(item=>item.id===sessionId);
+  if(index<0) return false;
+  const assignmentId=STATE.sessions[index].planAssignmentId;
+  STATE.sessions.splice(index,1);
+  if(assignmentId) recomputeAssignmentCompletedMinutes(assignmentId);
+  reconcileRecoveriesAfterSessionChange();
+  persist();
+  return true;
 }
 
 function computeMockExamTotals(subjectsObj){
@@ -1412,7 +1452,11 @@ function renderReplanHistoryCard(){
       const subject=SUBJECT_MAP[operation.subjectId];
       const row=el("div","as");
       row.style.marginTop="8px";
-      row.textContent=`${operation.type==="create_review_assignment"?"Revisão · ":""}${subject?subject.name+" · ":""}${node?node.name:operation.topicId} — ${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
+      if(operation.type==="cancel_recovery_assignment"){
+        row.textContent=`Recuperação cancelada · ${(operation.reasons||[]).join(" · ")}`;
+      } else {
+        row.textContent=`${operation.type==="create_review_assignment"?"Revisão · ":""}${subject?subject.name+" · ":""}${node?node.name:operation.topicId} — ${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
+      }
       details.appendChild(row);
     });
     body.appendChild(details);
@@ -2298,28 +2342,9 @@ function applyReplanProposal(){
     closeReplanProposal(); showToast("Esta proposta já foi aplicada."); return;
   }
   const now=nowISOTimestamp();
-  proposal.operations.forEach((operation,index)=>{
-    const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
-    const isReview=operation.type==="create_review_assignment";
-    STATE.planAssignments.push({
-      id:(isReview?"review_":"recovery_")+proposal.id+"_"+index,
-      date:operation.to,
-      topicId:operation.topicId,
-      subjectId:operation.subjectId,
-      plannedMinutes:operation.minutes,
-      completedMinutes:0,
-      status:"planned",
-      kind:isReview?"review":"recovery",
-      source:"replanner",
-      sourceAssignmentId:operation.sourceAssignmentId||null,
-      originalDate:source?source.originalDate||source.date:operation.from,
-      rescheduleCount:(source?Number(source.rescheduleCount)||0:0)+1,
-      reviewStage:isReview?operation.reviewStage:null,
-      reviewDueDate:isReview?operation.reviewDueDate:null,
-      createdAt:now,
-      updatedAt:now
-    });
-  });
+  const applied=Core.applyReplanProposal(STATE.planAssignments,proposal,{createdAt:now});
+  if(applied.alreadyApplied){ closeReplanProposal(); showToast("Esta proposta já foi aplicada."); return; }
+  STATE.planAssignments=applied.assignments;
   STATE.rescheduleHistory.push({
     id:"history_"+proposal.id,
     proposalId:proposal.id,
@@ -2367,6 +2392,12 @@ function setupEvents(){
     if(!exam || !start){ showToast("Preencha as datas de início e da prova."); return; }
     if(parseISODate(exam) <= parseISODate(start)){ showToast("A data da prova deve ser depois da data de início."); return; }
     if(DAY_ORDER.every(d=> (dailyAvailability[d]||0)===0)){ showToast("Marque ao menos um dia com disponibilidade."); return; }
+    const previousPlanSettings={examDate:CONFIG.examDate,dailyAvailability:Object.assign({},CONFIG.dailyAvailability)};
+    const impact=Core.analyzePlanImpact(STATE.planAssignments,dailyAvailability,exam);
+    if(impact.requiresReplan){
+      const message=`A mudança deixa ${impact.overloadedDays.length} dia(s) acima da capacidade (${minutesToHM(impact.totalExcessMinutes)}) e ${impact.beyondExam.length} atividade(s) fora da nova data da prova.\n\nDeseja gerar o novo plano e revisar o impacto?`;
+      if(!window.confirm(message)) return;
+    }
     STATE.settings = {
       startDate:start, examDate:exam, dailyAvailability,
       reserveSaturdayForRedacao: document.getElementById("cfg-sat-redacao").checked,
@@ -2378,6 +2409,15 @@ function setupEvents(){
     applySettingsToConfig();
     Planner.syncAssignments();
     Planner.rebuildWeeksFromAssignments();
+    if(previousPlanSettings.examDate!==exam||JSON.stringify(previousPlanSettings.dailyAvailability)!==JSON.stringify(dailyAvailability)){
+      STATE.rescheduleHistory=STATE.rescheduleHistory||[];
+      STATE.rescheduleHistory.push({
+        id:"history_settings_"+Date.now(),proposalId:null,createdAt:nowISOTimestamp(),appliedAt:nowISOTimestamp(),
+        reason:"planning_constraints_changed",before:previousPlanSettings,
+        after:{examDate:exam,dailyAvailability:Object.assign({},dailyAvailability)},impact,
+        operations:[]
+      });
+    }
     persist();
     closeSettingsModal();
     STATE.ui.planWeekIndex = 0;
@@ -2470,6 +2510,7 @@ const Exporter = {
   run(){
     const topics=[];
     const progress={};
+    const exportAdherence=calculatePlanAdherence(CONFIG.startDate||toISODate(new Date()),toISODate(new Date()));
     SUBJECTS.forEach(subj=>{
       subj.topics.forEach(topic=>{
         topics.push(Exporter.topicRecord(topic,subj,null));
@@ -2490,8 +2531,8 @@ const Exporter = {
       dailyAvailability:CONFIG.dailyAvailability,
       preferences:CONFIG.plannerPreferences,
       planningSummary:{
-        adherencePct:overallAdherence().pct,
-        currentDebtMinutes:overallAdherence().debtMinutes,
+        adherencePct:exportAdherence.pct,
+        currentDebtMinutes:exportAdherence.debtMinutes,
         plannedAssignments:STATE.planAssignments.length,
         completedAssignments:STATE.planAssignments.filter(a=>a.status==="completed").length
       },

@@ -16,7 +16,7 @@ e débito de estudo em um plano executável, mantendo o histórico das decisões
 
 ## Executar e validar
 
-Abra `inde.html` em um navegador moderno. Para executar a suíte:
+Abra `index.html` em um navegador moderno. Para executar a suíte:
 
 ```powershell
 npm test

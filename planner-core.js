@@ -144,10 +144,14 @@
     const active=(assignments||[]).filter(assignment=>assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED);
     const coverage={};
     active.filter(assignment=>assignment.kind==="recovery"&&assignment.sourceAssignmentId).forEach(assignment=>{
-      coverage[assignment.sourceAssignmentId]=(coverage[assignment.sourceAssignmentId]||0)+numberOrZero(assignment.plannedMinutes);
+      const evaluation=evaluateAssignment(assignment,sessions,{todayISO,tolerance:options.tolerance});
+      const effectiveCoverage=assignment.date>=todayISO
+        ? numberOrZero(assignment.plannedMinutes)
+        : Math.min(evaluation.completedMinutes,numberOrZero(assignment.plannedMinutes));
+      coverage[assignment.sourceAssignmentId]=(coverage[assignment.sourceAssignmentId]||0)+effectiveCoverage;
     });
     const rows=active
-      .filter(assignment=>assignment.date>=startISO&&assignment.date<=endISO&&assignment.date<todayISO)
+      .filter(assignment=>assignment.kind!=="recovery"&&assignment.date>=startISO&&assignment.date<=endISO&&assignment.date<todayISO)
       .map(assignment=>{
         const evaluation=evaluateAssignment(assignment,sessions,{todayISO,tolerance:options.tolerance});
         const coveredByRecoveryMinutes=coverage[assignment.id]||0;
@@ -165,6 +169,67 @@
       grossMinutes:rows.reduce((sum,row)=>sum+row.remainingMinutes+row.coveredByRecoveryMinutes,0),
       assignments:rows
     };
+  }
+
+  function reconcileRecoveries(assignments,sessions,options){
+    options=options||{};
+    const todayISO=options.todayISO||new Date().toISOString().slice(0,10);
+    const cancelledAt=options.cancelledAt||new Date().toISOString();
+    const next=(assignments||[]).map(assignment=>Object.assign({},assignment));
+    const originals=new Map(next.filter(assignment=>assignment.kind!=="recovery").map(assignment=>[assignment.id,assignment]));
+    const cancellations=[];
+    next.filter(assignment=>assignment.kind==="recovery"&&assignment.sourceAssignmentId&&assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED)
+      .forEach(recovery=>{
+        const source=originals.get(recovery.sourceAssignmentId);
+        if(!source) return;
+        const evaluation=evaluateAssignment(source,sessions,{todayISO,tolerance:options.tolerance});
+        if(evaluation.missingMinutes>0) return;
+        recovery.status=PLAN_LIFECYCLE_STATUS.CANCELLED;
+        recovery.cancelReason="Débito resolvido após correção da sessão original";
+        recovery.cancelledAt=cancelledAt;
+        recovery.updatedAt=cancelledAt;
+        cancellations.push({assignmentId:recovery.id,sourceAssignmentId:source.id,reason:recovery.cancelReason});
+      });
+    return {assignments:next,cancellations};
+  }
+
+  function applyReplanProposal(assignments,proposal,options){
+    options=options||{};
+    const existing=(assignments||[]).map(assignment=>Object.assign({},assignment));
+    const proposalId=proposal&&proposal.id;
+    const alreadyApplied=proposalId&&existing.some(assignment=>assignment.proposalId===proposalId);
+    if(!proposal||alreadyApplied) return {assignments:existing,created:[],alreadyApplied:Boolean(alreadyApplied)};
+    const created=(proposal.operations||[]).map((operation,index)=>{
+      const source=existing.find(assignment=>assignment.id===operation.sourceAssignmentId);
+      const isReview=operation.type==="create_review_assignment";
+      return {
+        id:(isReview?"review_":"recovery_")+(proposalId||"proposal")+"_"+index,
+        proposalId:proposalId||null,date:operation.to,topicId:operation.topicId,subjectId:operation.subjectId,
+        plannedMinutes:operation.minutes,completedMinutes:0,status:PLAN_LIFECYCLE_STATUS.PLANNED,
+        kind:isReview?"review":"recovery",source:"replanner",sourceAssignmentId:operation.sourceAssignmentId||null,
+        originalDate:source?(source.originalDate||source.date):operation.from,
+        rescheduleCount:(source?Number(source.rescheduleCount)||0:0)+1,
+        reviewStage:isReview?operation.reviewStage:null,reviewDueDate:isReview?operation.reviewDueDate:null,
+        createdAt:options.createdAt||proposal.createdAt,updatedAt:options.createdAt||proposal.createdAt
+      };
+    });
+    return {assignments:existing.concat(created),created,alreadyApplied:false};
+  }
+
+  function analyzePlanImpact(assignments,availability,examDate){
+    const byDate={};
+    const beyondExam=[];
+    (assignments||[]).filter(assignment=>assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED).forEach(assignment=>{
+      if(examDate&&assignment.date>=examDate) beyondExam.push(assignment);
+      const row=byDate[assignment.date]||(byDate[assignment.date]={date:assignment.date,committedMinutes:0,capacityMinutes:0});
+      row.committedMinutes+=Math.max(0,Math.round(numberOrZero(assignment.plannedMinutes)));
+    });
+    Object.values(byDate).forEach(row=>{
+      row.capacityMinutes=Math.max(0,Math.round(numberOrZero((availability||{})[dayKeyFromISO(row.date)])));
+      row.excessMinutes=Math.max(0,row.committedMinutes-row.capacityMinutes);
+    });
+    const overloadedDays=Object.values(byDate).filter(row=>row.excessMinutes>0).sort((a,b)=>a.date.localeCompare(b.date));
+    return {overloadedDays,beyondExam,totalExcessMinutes:overloadedDays.reduce((sum,row)=>sum+row.excessMinutes,0),requiresReplan:overloadedDays.length>0||beyondExam.length>0};
   }
 
   function parseISO(iso){
@@ -391,6 +456,9 @@
     evaluateAssignment,
     evaluatePlan,
     calculateStudyDebt,
+    reconcileRecoveries,
+    applyReplanProposal,
+    analyzePlanImpact,
     addDays,
     dayKeyFromISO,
     buildCapacityLedger,

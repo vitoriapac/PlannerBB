@@ -54,3 +54,51 @@ test("motores processam cenário de estresse sem inconsistência",()=>{
   assert.ok(proposal.operations.every(operation=>operation.minutes>0));
   assert.ok(elapsed<2000,`cenário levou ${elapsed.toFixed(1)} ms`);
 });
+
+test("LONG_TERM_CHAOTIC preserva invariantes durante 150 dias",()=>{
+  const fixture=Stress.generate("longTermChaotic");
+  assert.equal(fixture.days,150);
+  assert.ok(fixture.events.some(event=>event.type==="availability_change"));
+  assert.ok(fixture.events.some(event=>event.type==="exam_anticipated"));
+  let availability=fixture.availability;
+  let examDate=fixture.examDate;
+  let sessions=[];
+  for(let day=0;day<fixture.days;day++){
+    const todayISO=Core.addDays(fixture.startISO,day);
+    sessions=fixture.sessions.filter(session=>session.date<=todayISO).map(session=>Object.assign({},session));
+    fixture.events.filter(event=>event.day<=day).forEach(event=>{
+      if(event.type==="availability_change") availability=event.availability;
+      if(event.type==="exam_anticipated") examDate=event.examDate;
+      if(event.type==="retroactive_edit"){
+        const target=sessions.find(session=>session.id===event.sessionId); if(target) target.actualMinutes=event.actualMinutes;
+      }
+      if(event.type==="session_deleted") sessions=sessions.filter(session=>session.id!==event.sessionId);
+    });
+    const metrics=Core.evaluatePlan(fixture.assignments,sessions,{startISO:fixture.startISO,endISO:todayISO,todayISO});
+    assert.ok(metrics.debtMinutes>=0,"dívida nunca pode ser negativa");
+    assert.ok(metrics.evaluations.every(item=>item.result.missingMinutes>=0));
+    const sessionAssignmentIds=new Set(fixture.assignments.map(item=>item.id));
+    assert.ok(sessions.filter(session=>session.planAssignmentId).every(session=>sessionAssignmentIds.has(session.planAssignmentId)),"sessão não pode ficar órfã");
+    if(Core.addDays(todayISO,1)>=examDate) continue;
+    const proposal=Core.generateReplanProposal({
+      todayISO,firstFutureDate:Core.addDays(todayISO,1),examDate,availability,
+      assignments:fixture.assignments,sessions,reviews:fixture.reviews,
+      preferences:{maxSubjectsPerDay:4,maxReviewCapacityPct:.4,allowOverdueReviewOverflow:false}
+    });
+    const recoveryKeys=proposal.operations.filter(operation=>operation.type==="create_recovery_assignment").map(operation=>`${operation.sourceAssignmentId}|${operation.to}`);
+    const reviewKeys=proposal.operations.filter(operation=>operation.type==="create_review_assignment").map(operation=>`${operation.topicId}|${operation.reviewStage}|${operation.reviewDueDate}|${operation.to}`);
+    assert.equal(new Set(recoveryKeys).size,recoveryKeys.length,"recovery duplicado");
+    assert.equal(new Set(reviewKeys).size,reviewKeys.length,"revisão duplicada");
+    const ledger=Core.buildCapacityLedger(fixture.assignments,availability,Core.addDays(todayISO,1),examDate);
+    const baseline=Object.fromEntries(Object.values(ledger).map(row=>[row.date,row.committedMinutes]));
+    proposal.operations.forEach(operation=>{
+      assert.ok(operation.minutes>0);
+      assert.ok(ledger[operation.to],"operação deve apontar para um dia válido");
+      ledger[operation.to].committedMinutes+=operation.minutes;
+    });
+    Object.values(ledger).forEach(row=>assert.ok(
+      row.committedMinutes<=Math.max(row.capacityMinutes,baseline[row.date]),
+      "replanner não pode aumentar excesso de capacidade previamente detectado"
+    ));
+  }
+});

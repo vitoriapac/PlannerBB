@@ -15,12 +15,58 @@
     balanced:{days:150,sessionCount:320,completionFactor:[0.85,1.15],spontaneousEvery:9,seed:20260920},
     irregular:{days:150,sessionCount:250,completionFactor:[0.35,1.25],spontaneousEvery:4,skipEvery:7,seed:20260921},
     critical:{days:150,sessionCount:130,completionFactor:[0.15,0.65],spontaneousEvery:11,skipEvery:3,seed:20260922},
-    longTerm:{days:365,sessionCount:820,completionFactor:[0.65,1.2],spontaneousEvery:10,seed:20260923}
+    longTerm:{days:365,sessionCount:820,completionFactor:[0.65,1.2],spontaneousEvery:10,seed:20260923},
+    longTermChaotic:{days:150,seed:20260924}
   });
+  function generateLongTermChaotic(options){
+    const days=150;
+    const startISO=options.startISO||"2026-01-05";
+    const subjects=options.subjectIds||["port","ing","mat","atu","matfin","banc","info","vendas"];
+    const assignments=[]; const sessions=[]; const reviews=[]; const events=[];
+    for(let index=0;index<days;index++){
+      const subjectId=subjects[index%subjects.length];
+      const assignment={
+        id:`chaos_plan_${index}`,topicId:`${subjectId}-chaos-${index%12}`,subjectId,
+        date:isoDaysFrom(startISO,index),plannedMinutes:60,status:"planned",kind:"content",source:"stress",
+        originalDate:isoDaysFrom(startISO,index),rescheduleCount:0
+      };
+      assignments.push(assignment);
+      if(index%10!==0){
+        const partial=index%5===0;
+        sessions.push({
+          id:`chaos_session_${index}`,planAssignmentId:assignment.id,topicId:assignment.topicId,subjectId,
+          date:assignment.date,method:index%3===0?"Questões":"Leitura",actualMinutes:partial?30:60,
+          questions:index%3===0?20:0,correct:index%3===0?(index>=49&&index<63?9:15):0,wrong:index%3===0?(index>=49&&index<63?11:5):0
+        });
+      }
+      if(index%7===0){
+        sessions.push({id:`chaos_spontaneous_${index}`,planAssignmentId:null,topicId:assignment.topicId,subjectId,
+          date:assignment.date,method:"Leitura",actualMinutes:30,questions:0,correct:0,wrong:0});
+      }
+      if(index>0&&index%12===0){
+        reviews.push({id:assignment.topicId,subjectId,reviewStage:1,nextReviewDate:isoDaysFrom(startISO,index-3),estimatedMinutes:20});
+      }
+    }
+    events.push(
+      {day:28,type:"missed_week",description:"Semana com faltas"},
+      {day:49,type:"performance_drop",description:"Queda de desempenho"},
+      {day:56,type:"availability_change",availability:{mon:60,tue:0,wed:60,thu:120,fri:60,sat:120,sun:0}},
+      {day:70,type:"review_backlog",description:"Revisões acumuladas"},
+      {day:77,type:"spontaneous_sessions",description:"Aumento de sessões espontâneas"},
+      {day:84,type:"exam_anticipated",examDate:isoDaysFrom(startISO,135)},
+      {day:91,type:"retroactive_edit",sessionId:"chaos_session_85",actualMinutes:60},
+      {day:98,type:"session_deleted",sessionId:"chaos_session_97"}
+    );
+    return {
+      preset:"longTermChaotic",days,startISO,examDate:isoDaysFrom(startISO,160),assignments,sessions,reviews,events,
+      availability:{mon:120,tue:120,wed:120,thu:120,fri:120,sat:120,sun:0},mockExams:[],rescheduleHistory:[]
+    };
+  }
   function generate(options={}){
     if(typeof options==="string") options={preset:options};
     const preset=STRESS_PRESETS[options.preset]||STRESS_PRESETS.balanced;
     options=Object.assign({},preset,options);
+    if(options.preset==="longTermChaotic") return generateLongTermChaotic(options);
     const days=options.days||150;
     const sessionCount=options.sessionCount||320;
     const startISO=options.startISO||"2026-01-05";
@@ -62,5 +108,5 @@
     }));
     return {preset:options.preset||"balanced",days,startISO,assignments,sessions,mockExams,rescheduleHistory};
   }
-  return {STRESS_PRESETS,generate};
+  return {STRESS_PRESETS,generate,generateLongTermChaotic};
 });
