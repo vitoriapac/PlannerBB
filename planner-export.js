@@ -6,7 +6,7 @@
   "use strict";
   const BACKUP_SCHEMA="bb-study-planner-backup";
   const INTERCHANGE_SCHEMA="bb-study-planner-interchange";
-  const SCHEMA_VERSION=4;
+  const SCHEMA_VERSION=5;
 
   function clone(value){ return JSON.parse(JSON.stringify(value)); }
 
@@ -57,7 +57,8 @@
         assignments:clone(input.assignments||[]),
         rescheduleHistory:clone(input.rescheduleHistory||[]),
         dailyAvailability:clone(input.dailyAvailability||{}),
-        preferences:clone(input.preferences||{})
+        preferences:clone(input.preferences||{}),
+        summary:clone(input.planningSummary||{})
       },
       reviews:clone(input.reviews||{}),
       progress:clone(input.progress||{})

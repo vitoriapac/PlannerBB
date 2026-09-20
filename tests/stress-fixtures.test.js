@@ -15,6 +15,28 @@ test("fixture determinística cobre 150 dias e centenas de registros",()=>{
   assert.deepEqual(first,second);
 });
 
+test("presets representam rotinas equilibrada, irregular, crítica e de longo prazo",()=>{
+  const balanced=Stress.generate("balanced");
+  const irregular=Stress.generate("irregular");
+  const critical=Stress.generate("critical");
+  const longTerm=Stress.generate("longTerm");
+  assert.ok(balanced.sessions.length>critical.sessions.length);
+  assert.ok(irregular.sessions.length<balanced.sessions.length);
+  assert.equal(longTerm.days,365);
+  assert.equal(longTerm.sessions.length,820);
+  assert.deepEqual(critical,Stress.generate("critical"));
+});
+
+test("cenário crítico produz aderência inferior ao equilibrado",()=>{
+  const evaluate=fixture=>Core.evaluatePlan(fixture.assignments,fixture.sessions,{
+    startISO:fixture.startISO,endISO:"2026-06-30",todayISO:"2026-06-30"
+  });
+  const balanced=evaluate(Stress.generate("balanced"));
+  const critical=evaluate(Stress.generate("critical"));
+  assert.ok(critical.adherencePct<balanced.adherencePct);
+  assert.ok(critical.debtMinutes>balanced.debtMinutes);
+});
+
 test("motores processam cenário de estresse sem inconsistência",()=>{
   const fixture=Stress.generate();
   const started=performance.now();

@@ -47,16 +47,19 @@ test("backup de versão futura é recusado com segurança",()=>{
   assert.match(result.errors.join(" "),/versão mais nova/i);
 });
 
-test("intercâmbio v4 inclui planejamento, revisões e metadados",()=>{
+test("intercâmbio v5 inclui resumo de planejamento, revisões e metadados",()=>{
   const payload=Export.buildInterchange({
     exportedAt:"2026-09-20T12:00:00.000Z",exportId:"export-test",
     exam:{examDate:"2027-02-21"},subjects:[],topics:[],studySessions:[],mockExams:[],
     assignments:[{id:"plan-1"}],rescheduleHistory:[{id:"history-1"}],dailyAvailability:{mon:60},
-    preferences:{maxSubjectsPerDay:3},reviews:{intervalsDays:[1,3]},progress:{global:{pct:0}}
+    preferences:{maxSubjectsPerDay:3},planningSummary:{currentDebtMinutes:45},
+    reviews:{intervalsDays:[1,3],overdue:[{id:"topic-1"}]},progress:{global:{pct:0}}
   });
   assert.equal(payload.schema,"bb-study-planner-interchange");
-  assert.equal(payload.schemaVersion,4);
+  assert.equal(payload.schemaVersion,5);
   assert.equal(payload.planning.assignments.length,1);
   assert.equal(payload.planning.rescheduleHistory.length,1);
   assert.deepEqual(payload.reviews.intervalsDays,[1,3]);
+  assert.equal(payload.planning.summary.currentDebtMinutes,45);
+  assert.equal(payload.reviews.overdue.length,1);
 });

@@ -11,7 +11,16 @@
   function isoDaysFrom(startISO,offset){
     const date=new Date(startISO+"T12:00:00Z"); date.setUTCDate(date.getUTCDate()+offset); return date.toISOString().slice(0,10);
   }
+  const STRESS_PRESETS=Object.freeze({
+    balanced:{days:150,sessionCount:320,completionFactor:[0.85,1.15],spontaneousEvery:9,seed:20260920},
+    irregular:{days:150,sessionCount:250,completionFactor:[0.35,1.25],spontaneousEvery:4,skipEvery:7,seed:20260921},
+    critical:{days:150,sessionCount:130,completionFactor:[0.15,0.65],spontaneousEvery:11,skipEvery:3,seed:20260922},
+    longTerm:{days:365,sessionCount:820,completionFactor:[0.65,1.2],spontaneousEvery:10,seed:20260923}
+  });
   function generate(options={}){
+    if(typeof options==="string") options={preset:options};
+    const preset=STRESS_PRESETS[options.preset]||STRESS_PRESETS.balanced;
+    options=Object.assign({},preset,options);
     const days=options.days||150;
     const sessionCount=options.sessionCount||320;
     const startISO=options.startISO||"2026-01-05";
@@ -30,13 +39,15 @@
     const sessions=[];
     for(let index=0;index<sessionCount;index++){
       const assignment=assignments[index%assignments.length];
-      const spontaneous=index%9===0;
+      const spontaneous=index%(options.spontaneousEvery||9)===0;
+      if(options.skipEvery&&index%options.skipEvery===0) continue;
       const questions=index%4===0?0:10+Math.floor(random()*31);
       const accuracy=0.48+random()*0.47;
+      const factor=options.completionFactor||[0.7,1.25];
       sessions.push({
         id:`stress_session_${index}`,planAssignmentId:spontaneous?null:assignment.id,
         topicId:assignment.topicId,subjectId:assignment.subjectId,date:assignment.date,
-        method:questions?"Questões":"Leitura",actualMinutes:20+Math.floor(random()*101),
+        method:questions?"Questões":"Leitura",actualMinutes:Math.max(5,Math.round(assignment.plannedMinutes*(factor[0]+random()*(factor[1]-factor[0])))),
         questions,correct:Math.round(questions*accuracy),wrong:questions-Math.round(questions*accuracy)
       });
     }
@@ -49,7 +60,7 @@
       createdAt:isoDaysFrom(startISO,30+index*18)+"T12:00:00.000Z",appliedAt:isoDaysFrom(startISO,30+index*18)+"T12:05:00.000Z",
       reason:"missed_assignments",operations:[]
     }));
-    return {days,startISO,assignments,sessions,mockExams,rescheduleHistory};
+    return {preset:options.preset||"balanced",days,startISO,assignments,sessions,mockExams,rescheduleHistory};
   }
-  return {generate};
+  return {STRESS_PRESETS,generate};
 });

@@ -1,6 +1,6 @@
 # Formatos de exportação do BB Study Planner
 
-Versão atual do schema: `4`.
+Versão atual do schema: `5`.
 
 ## Backup completo
 
@@ -10,7 +10,7 @@ assignments e histórico de replanejamentos.
 ```json
 {
   "schema": "bb-study-planner-backup",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "plannerVersion": "2.0.0",
   "exportedAt": "2026-09-20T12:00:00.000Z",
   "stateVersion": 4,
@@ -35,7 +35,7 @@ Schema: `bb-study-planner-interchange`.
 ```json
 {
   "schema": "bb-study-planner-interchange",
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "source": "BB Study Planner",
   "plannerVersion": "2.0.0",
   "exportedAt": "...",
@@ -49,12 +49,19 @@ Schema: `bb-study-planner-interchange`.
     "assignments": [],
     "rescheduleHistory": [],
     "dailyAvailability": {},
-    "preferences": {}
+    "preferences": {},
+    "summary": {
+      "adherencePct": 82,
+      "currentDebtMinutes": 90,
+      "plannedAssignments": 42,
+      "completedAssignments": 30
+    }
   },
   "reviews": {
     "intervalsDays": [1, 3, 7, 16, 35],
     "estimatedMinutes": 30,
-    "schedule": []
+    "schedule": [],
+    "overdue": []
   },
   "progress": {}
 }

@@ -6,7 +6,7 @@
 <title>Extrato de Estudos · Banco do Brasil</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --navy:#0b2545; --navy-2:#123a6b; --navy-soft:#e8edf5;
@@ -343,6 +343,137 @@
     .subject-row{flex-wrap:wrap;}
     .subject-row .strack{width:80px;}
   }
+
+  /* ======================================================================
+     STUDYTRACK DESIGN SYSTEM — camada visual compartilhada
+     ====================================================================== */
+  :root{
+    --font-body:'IBM Plex Sans','Segoe UI',Arial,sans-serif;
+    --font-display:'Fraunces',Georgia,serif;
+    --font-data:'IBM Plex Mono',Consolas,'Courier New',monospace;
+    --text-xs:.75rem;--text-sm:.8125rem;--text-md:.875rem;--text-lg:1rem;--text-xl:1.25rem;
+    --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;
+    --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;
+    --control-height:36px;--touch-target:44px;
+    --navy:#0B2545;--navy-2:#0F3D73;--navy-soft:#E3E9F3;
+    --gold:#765500;--gold-bright:#E8B94A;--gold-deep:#765500;
+    --paper:#F6F3EC;--paper-2:#EDEAE0;--paper-line:#E4DFD1;
+    --line:var(--paper-line);--ink:#1C2430;--ink-soft:#4F5865;--muted:#6D746F;
+    --green:#245F47;--green-bg:#E4F0EA;--amber:#765018;--amber-bg:#F5E9D4;
+    --red:#8F302A;--red-bg:#F3E0DD;--white:#FFFDF9;
+    --heading:#0B2545;--on-navy:#F6F3EC;--radius:2px;--shadow:none;
+    --info-bg:#E3E9F3;--slate-bg:#EDEAE0;--highlight-bg:#FFF8E6;
+    --sans:var(--font-body);--mono:var(--font-data);
+    color-scheme:light;
+  }
+  [data-theme="dark"]{
+    --navy:#0B1E38;--navy-2:#5B8FCC;--navy-soft:#1E2E4A;
+    --gold:#C89A3E;--gold-bright:#EFC463;--gold-deep:#C89A3E;
+    --paper:#10161F;--paper-2:#1B2436;--paper-line:#2B3648;--line:var(--paper-line);
+    --ink:#E9E5D8;--ink-soft:#A8B1C0;--muted:#93A0B4;
+    --green:#4FAE81;--green-bg:#173226;--amber:#E0A94A;--amber-bg:#3A2C13;
+    --red:#E2897E;--red-bg:#3A1F1C;--white:#171F2E;
+    --heading:#F2ECDD;--on-navy:#F6F3EC;--info-bg:#1E2E4A;
+    --slate-bg:#1B2436;--highlight-bg:#332B14;
+    color-scheme:dark;
+  }
+  html{background:var(--paper);}
+  body{font-family:var(--font-body);background:var(--paper);color:var(--ink);overflow-x:hidden;}
+  .app{max-width:1180px;padding:0 var(--space-5) 64px;min-width:0;}
+
+  header.masthead{position:relative;overflow:hidden;background:var(--navy);border-bottom:0;}
+  header.masthead::after{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(232,185,74,.05) 0 1px,transparent 1px 40px);content:"";pointer-events:none;}
+  .masthead-inner{position:relative;z-index:1;padding:var(--space-6) var(--space-5);align-items:center;}
+  .masthead-eyebrow{font:500 10px var(--font-data);letter-spacing:.14em;text-transform:uppercase;color:var(--gold-bright);}
+  .masthead-title{font:600 25px/1.2 var(--font-display);letter-spacing:-.01em;color:var(--on-navy);}
+  .masthead-sub{font:11px var(--font-data);color:rgba(246,243,236,.62);}
+  .countdown{min-width:150px;padding:var(--space-2) var(--space-4);border:1px solid rgba(246,243,236,.18);border-radius:var(--radius);background:rgba(246,243,236,.04);}
+  .countdown-label{font:10px var(--font-data);letter-spacing:.1em;color:rgba(246,243,236,.6);}
+  .countdown-days{font:600 28px var(--font-display);color:var(--gold-bright);}
+  .countdown-days small{font:10px var(--font-data);text-transform:uppercase;letter-spacing:.08em;color:rgba(246,243,236,.6);}
+  .icon-btn{border-radius:var(--radius);color:var(--on-navy);}
+
+  nav.tabbar{background:var(--paper);border-color:var(--paper-line);box-shadow:0 2px 0 var(--heading);}
+  .tabbar-inner{padding:0 var(--space-5);gap:0;overflow-x:auto;scrollbar-width:none;}
+  .tab-btn{min-height:44px;padding:10px 15px;border-bottom-width:2px;font:500 11px var(--font-data);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap;}
+  .tab-btn[aria-selected="true"]{border-bottom-color:var(--gold);color:var(--heading);}
+
+  main{padding-top:var(--space-8);}
+  .section-title{font:600 var(--text-xl) var(--font-display);color:var(--heading);}
+  .section-hint{max-width:80ch;color:var(--ink-soft);}
+  .card,.next-action-card{border:1px solid var(--paper-line);border-radius:var(--radius);background:var(--white);box-shadow:none;}
+  .card+.card{margin-top:var(--space-4);}
+  .card-header{padding:var(--space-3) var(--space-5);border-color:var(--paper-line);}
+  .card-header h3{font:600 11px var(--font-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+  .card-body{padding:var(--space-5);}
+
+  .hero-card{position:relative;overflow:hidden;padding:var(--space-6);border-radius:var(--radius);background:var(--navy);box-shadow:none;}
+  .hero-card::after{position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(232,185,74,.045) 0 1px,transparent 1px 40px);content:"";pointer-events:none;}
+  .hero-card>*{position:relative;z-index:1;}
+  .hero-days{font:600 46px/1 var(--font-display);color:var(--gold-bright);}
+  .hero-days-label{font:400 12px var(--font-data);color:rgba(246,243,236,.65);}
+  .hero-date,.hero-progress-row{font-family:var(--font-data);color:rgba(246,243,236,.64);}
+  .hero-progress-pct{font-family:var(--font-display);color:var(--on-navy);}
+
+  .kpi-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;padding:1px;background:var(--paper-line);border:0;}
+  .kpi-box{min-height:112px;display:flex;flex-direction:column;padding:14px;border:0;border-radius:0;background:var(--white);box-shadow:none;}
+  .kpi-label{order:2;margin-top:2px;font:600 10px var(--font-data);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);}
+  .kpi-value{order:1;margin:0;font:600 25px var(--font-display);color:var(--heading);}
+  .kpi-sub{order:3;margin-top:auto;padding-top:var(--space-3);font-size:11px;line-height:1.4;color:var(--ink-soft);}
+  .kpi-box .btn{order:4;align-self:flex-start;margin-top:var(--space-2)!important;}
+
+  .next-action-card{border-top:3px solid var(--gold);background:var(--white);}
+  .next-action-eyebrow{padding:var(--space-2) var(--space-5);background:transparent;border-bottom:1px solid var(--paper-line);font:600 10px var(--font-data);color:var(--gold);}
+  .next-action-body{padding:var(--space-5);}
+  .next-action-subject{font-family:var(--font-data);color:var(--gold);}
+  .next-action-name{font:600 18px var(--font-display);color:var(--heading);}
+  .why-now{border-color:var(--paper-line);}
+
+  .btn{min-height:var(--control-height);padding:8px 13px;border-color:var(--paper-line);border-radius:var(--radius);background:var(--white);font:500 12px var(--font-body);color:var(--ink);box-shadow:none;}
+  .btn:hover{background:var(--paper-2);}
+  .btn-primary{background:var(--navy);border-color:var(--navy);color:var(--on-navy);}
+  .btn-primary:hover{background:var(--navy-2);color:var(--on-navy);}
+  .btn-gold{background:var(--gold-bright);border-color:var(--gold);color:#0B2545;}
+  .btn-sm{min-height:34px;padding:7px 11px;font-size:var(--text-xs);}
+  .btn-danger{color:var(--red);border-color:var(--red);}
+  select.compact-select,.edital-filter,.form-field input,.form-field select,.mockexam-table input,.daily-avail-row .dhours{min-height:var(--control-height);border-color:var(--paper-line);border-radius:var(--radius);background:var(--paper);color:var(--ink);font-family:var(--font-data);}
+
+  .subtab-row{gap:1px;padding:1px;background:var(--paper-line);}
+  .subtab-btn{min-height:36px;border:0;border-radius:0;background:var(--white);font:500 11px var(--font-data);color:var(--ink-soft);}
+  .subtab-btn[aria-selected="true"]{background:var(--navy);color:var(--on-navy);}
+  .tag{border-radius:2px;font-family:var(--font-data);font-weight:500;}
+  .progress-track,.hero-track,.bar-track{border-radius:0;background:var(--slate-bg);}
+  .progress-fill,.hero-fill,.bar-fill{border-radius:0;background:linear-gradient(90deg,var(--gold),var(--gold-bright));}
+  .day-col,.goal-box,.feasibility-banner,.capacity-summary,.daily-avail-list,.accuracy-preview{border-radius:var(--radius);box-shadow:none;}
+  .day-col,.day-col-head,.today-item,.topic-row,.subject-row,.attention-item,.mockexam-row{border-color:var(--paper-line);}
+  .today-name,.topic-name,.attention-item .an,.mockexam-row .mn{color:var(--heading);}
+  .today-subject,.di-subj,.review-group-title{font-family:var(--font-data);}
+  .goal-value,.accuracy-preview .num,.mockexam-row .mp{font-family:var(--font-display);color:var(--heading);}
+
+  .modal-overlay{background:rgba(5,12,22,.7);backdrop-filter:blur(2px);}
+  .modal-box{padding:var(--space-6);border:1px solid var(--paper-line);border-radius:var(--radius);background:var(--white);box-shadow:0 18px 50px rgba(0,0,0,.28);}
+  .modal-box h3{font:600 20px var(--font-display);color:var(--heading);}
+  .modal-sub,.modal-box p{color:var(--ink-soft);}
+  .toast{border-radius:var(--radius);background:var(--navy);color:var(--on-navy);}
+
+  .toolbar{display:block;margin:var(--space-8) 0 var(--space-2);}
+  .toolbar-actions{display:flex;justify-content:flex-end;gap:var(--space-2);flex-wrap:wrap;}
+  .backup-danger-zone{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);margin-top:var(--space-5);padding:var(--space-4);border:1px solid var(--red);background:var(--red-bg);}
+  .backup-danger-zone strong{display:block;font:600 11px var(--font-data);text-transform:uppercase;color:var(--red);}
+  .backup-danger-zone span{display:block;margin-top:var(--space-1);font-size:11px;color:var(--ink-soft);}
+  footer.app-footer{border-color:var(--paper-line);color:var(--ink-soft);font-family:var(--font-data);}
+
+  @media(max-width:860px){.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+  @media(max-width:600px){
+    .app,.masthead-inner,.tabbar-inner{padding-left:var(--space-3);padding-right:var(--space-3);}
+    .masthead-inner{align-items:stretch;}.masthead-right{width:100%;}.countdown{flex:1;width:auto;}
+    .masthead-title{font-size:21px;}.hero-days{font-size:38px;}
+    .kpi-grid{grid-template-columns:1fr 1fr;}.kpi-box{min-height:104px;padding:12px;}
+    .backup-danger-zone{align-items:stretch;flex-direction:column;}.backup-danger-zone .btn{width:100%;}
+    .toolbar-actions{justify-content:stretch;}.toolbar-actions .btn{flex:1 1 160px;}
+    .modal-actions{align-items:stretch;flex-direction:column-reverse;}.modal-actions .btn{width:100%;}
+    .day-grid{min-width:0;}.perf-table{min-width:620px;}
+  }
 </style>
 </head>
 <body>
@@ -360,6 +491,7 @@
         <div class="countdown-days" id="countdownDays">—<small> dias</small></div>
       </div>
       <button class="icon-btn" id="btnSettings" type="button" title="Configurar plano" aria-label="Configurar plano">⚙</button>
+      <button class="icon-btn" id="btnTheme" type="button" title="Alternar tema" aria-label="Alternar entre tema claro e escuro">◐</button>
     </div>
   </div>
 </header>
@@ -372,11 +504,16 @@
   <main id="mainPanels"></main>
 
   <div class="toolbar">
-    <button class="btn" id="btnExport">Exportar para StudyTrack</button>
-    <button class="btn" id="btnBackup">Baixar backup completo</button>
-    <button class="btn" id="btnImportBackup">Restaurar backup</button>
-    <input type="file" id="backupFileInput" accept="application/json,.json" class="visually-hidden">
-    <button class="btn btn-danger" id="btnClear">Limpar dados</button>
+    <div class="toolbar-actions">
+      <button class="btn" id="btnExport">Exportar para StudyTrack</button>
+      <button class="btn" id="btnBackup">Baixar backup completo</button>
+      <button class="btn" id="btnImportBackup">Restaurar backup</button>
+      <input type="file" id="backupFileInput" accept="application/json,.json" class="visually-hidden">
+    </div>
+    <section class="backup-danger-zone" aria-labelledby="dangerZoneTitle">
+      <div><strong id="dangerZoneTitle">Zona de perigo</strong><span>Apaga permanentemente os dados deste navegador. Faça um backup antes de continuar.</span></div>
+      <button class="btn btn-danger" id="btnClear">Limpar todos os dados</button>
+    </section>
   </div>
 
   <footer class="app-footer">
@@ -425,6 +562,10 @@
       <div class="daily-avail-list" id="cfg-daily-availability"></div>
     </div>
     <div class="capacity-summary" id="cfg-capacity-summary"></div>
+    <div class="form-grid" style="margin-top:12px;">
+      <div class="form-field"><label for="cfg-buffer-pct">Margem para imprevistos (%)</label><input type="number" id="cfg-buffer-pct" min="0" max="50" step="1"></div>
+      <div class="form-field"><label for="cfg-review-max-pct">Limite diário de revisões (%)</label><input type="number" id="cfg-review-max-pct" min="10" max="100" step="5"></div>
+    </div>
     <div class="toggle-row" style="margin-top:10px;">
       <span>Reservar sábado também para Redação</span>
       <input type="checkbox" id="cfg-sat-redacao">
@@ -518,6 +659,10 @@ const CONFIG_DEFAULTS = {
   dailyAvailability: { mon:180, tue:180, wed:180, thu:180, fri:180, sat:180, sun:180 },
   defaultEstimatedMinutes: 90, // usado quando um tópico não tem estimatedMinutes definido
   reviewEstimatedMinutes: 30,
+  reviewMaxDailyCapacityPct: 40,
+  feasibilityBufferPct: 10,
+  feasibilityComfortableLimitPct: 80,
+  feasibilityTightLimitPct: 95,
   reserveSaturdayForRedacao: true,
   reserveSundayForReview: true,
   plannerPreferences: {
@@ -1230,8 +1375,20 @@ function planFeasibility(){
   const uncoveredDebtMinutes = Math.max(0,adherence.debtMinutes-recoveryCoverage);
   const scheduledReviewKeys = new Set(futureActive.filter(a=>a.kind==="review").map(a=>a.topicId+"|"+a.reviewStage+"|"+a.reviewDueDate));
   const reviewMinutes = reviewSchedule().filter(r=>r.nextReviewDate<CONFIG.examDate && !scheduledReviewKeys.has(r.id+"|"+r.reviewStage+"|"+r.nextReviewDate)).length*CONFIG.reviewEstimatedMinutes;
-  const result = Core.analyzeFeasibility({contentMinutes,debtMinutes:uncoveredDebtMinutes,reviewMinutes,committedMinutes,availableMinutes});
+  const result = Core.analyzeFeasibility({
+    contentMinutes,debtMinutes:uncoveredDebtMinutes,reviewMinutes,committedMinutes,availableMinutes,
+    bufferPct:CONFIG.feasibilityBufferPct,
+    comfortableLimitPct:CONFIG.feasibilityComfortableLimitPct,
+    tightLimitPct:CONFIG.feasibilityTightLimitPct
+  });
   result.deficitMinutes = Math.max(0,-result.marginMinutes);
+  const lowPriorityMinutes=pendingItemsRanked().filter(item=>item.priority==="baixa").reduce((sum,item)=>sum+item.estimatedMinutes,0);
+  result.suggestions=Core.suggestFeasibilityAdjustments({
+    deficitMinutes:result.deficitMinutes,
+    startISO:todayISO,
+    examDate:CONFIG.examDate,
+    lowPriorityMinutes
+  });
   return result;
 }
 
@@ -1390,17 +1547,20 @@ function getAssignmentStatus(assignment){
  *  para não deixar "estudei mais" mascarar atraso em outro dia) sobre minutos
  *  planejados, considerando só até hoje (dias futuros ainda não aconteceram). */
 function calculatePlanAdherence(startISO, endISO){
+  const todayISO=toISODate(new Date());
   const metrics = Core.evaluatePlan(STATE.planAssignments, STATE.sessions, {
-    startISO, endISO, todayISO:toISODate(new Date()), tolerance:Core.COMPLETION_TOLERANCE
+    startISO, endISO, todayISO, tolerance:Core.COMPLETION_TOLERANCE
   });
+  const debt=Core.calculateStudyDebt(STATE.planAssignments,STATE.sessions,{startISO,endISO,todayISO,tolerance:Core.COMPLETION_TOLERANCE});
   return {
     plannedMinutes:metrics.plannedMinutes,
     completedMinutes:metrics.creditedMinutes,
     linkedMinutes:metrics.linkedMinutes,
     totalStudyMinutes:metrics.totalStudyMinutes,
     spontaneousMinutes:metrics.spontaneousMinutes,
-    debtMinutes:metrics.debtMinutes,
+    debtMinutes:debt.totalMinutes,
     loadPct:metrics.loadPct,
+    assignmentCounts:metrics.assignmentCounts,
     pct:metrics.adherencePct
   };
 }
@@ -1483,7 +1643,13 @@ const Planner = {
       const reviewKey = review.id+"|"+review.reviewStage+"|"+review.nextReviewDate;
       if(existingReviewKeys.has(reviewKey)) return;
       const earliest = review.nextReviewDate>toISODate(planningFloor) ? review.nextReviewDate : toISODate(planningFloor);
-      const target = allDayObjs.find(day=>toISODate(day.date)>=earliest && day.remainingMinutes>=CONFIG.reviewEstimatedMinutes);
+      const target = allDayObjs.find(day=>{
+        if(toISODate(day.date)<earliest||day.remainingMinutes<CONFIG.reviewEstimatedMinutes) return false;
+        const existingReviewMinutes=(activeByDate[toISODate(day.date)]||[]).filter(a=>a.kind==="review").reduce((sum,a)=>sum+(Number(a.plannedMinutes)||0),0);
+        const newReviewMinutes=day.items.filter(item=>item.kind==="review").reduce((sum,item)=>sum+item.estimatedMinutes,0);
+        const reviewLimit=Math.round(day.capacityMinutes*(CONFIG.reviewMaxDailyCapacityPct/100));
+        return review.bucket==="overdue" || existingReviewMinutes+newReviewMinutes+CONFIG.reviewEstimatedMinutes<=reviewLimit;
+      });
       if(!target) return;
       target.items.push({
         id:review.id, subjectId:review.subjectId, subjectName:review.subjectName,
@@ -1726,16 +1892,15 @@ function renderOverviewPanel(){
   const days = daysRemaining();
 
   const feasibility = planFeasibility();
-  if(feasibility.level!=="healthy"){
+  if(feasibility.level!=="comfortable"){
     const banner = el("div","feasibility-banner");
     const statusTitle = !feasibility.feasible ? "Seu plano atual não cabe no tempo disponível" : (feasibility.level==="risk" ? "Seu plano está com margem mínima" : "Seu plano está apertado");
     const marginText = feasibility.marginMinutes>=0 ? `margem de ${minutesToHM(feasibility.marginMinutes)}` : `déficit de ${minutesToHM(feasibility.deficitMinutes)}`;
     banner.innerHTML = `
       <h4>⚠️ ${statusTitle}</h4>
-      <p>Utilização prevista: <strong>${Number.isFinite(feasibility.utilizationPct)?feasibility.utilizationPct+'%':'—'}</strong> · ${marginText} (necessário: ${minutesToHM(feasibility.neededMinutes)} · disponível: ${minutesToHM(feasibility.availableMinutes)}).</p>
+      <p>Utilização prevista: <strong>${Number.isFinite(feasibility.utilizationPct)?feasibility.utilizationPct+'%':'—'}</strong> · ${marginText} (necessário: ${minutesToHM(feasibility.neededMinutes)} com buffer de ${feasibility.bufferPct}% · disponível: ${minutesToHM(feasibility.availableMinutes)}).</p>
       <ul class="feasibility-tips">
-        <li>Aumentar a disponibilidade diária ou semanal</li>
-        <li>Reduzir ou adiar conteúdos de prioridade baixa</li>
+        ${feasibility.suggestions.length?feasibility.suggestions.slice(0,3).map(s=>`<li>${s.label} → recupera ${minutesToHM(s.recoveredMinutes)}${s.resolvesDeficit?' e elimina o déficit':''}</li>`).join(''):'<li>Ajuste a disponibilidade ou reduza conteúdos de menor prioridade.</li>'}
         <li>Conteúdo: ${minutesToHM(feasibility.contentMinutes)} · dívida: ${minutesToHM(feasibility.debtMinutes)} · revisões: ${minutesToHM(feasibility.reviewMinutes)}</li>
       </ul>`;
     const adjustBtn = el("button","btn btn-sm","Ajustar disponibilidade");
@@ -1768,14 +1933,15 @@ function renderOverviewPanel(){
     kpiGrid.appendChild(box);
   });
   const adhBox = el("div","kpi-box");
-  adhBox.innerHTML = `<div class="kpi-label">Aderência semanal</div><div class="kpi-value" style="color:var(--${weekAdhLabel.cls==='gray'?'muted':weekAdhLabel.cls});">${weekAdh.pct!==null?weekAdh.pct+"%":"—"}</div><div class="kpi-sub">${minutesToHM(weekAdh.completedMinutes)} de ${minutesToHM(weekAdh.plannedMinutes)} planejadas · ${weekAdhLabel.text}</div>`;
+  const weekCounts=weekAdh.assignmentCounts||{completed:0,partial:0,missed:0};
+  adhBox.innerHTML = `<div class="kpi-label">Aderência semanal</div><div class="kpi-value" style="color:var(--${weekAdhLabel.cls==='gray'?'muted':weekAdhLabel.cls});">${weekAdh.pct!==null?weekAdh.pct+"%":"—"}</div><div class="kpi-sub">${minutesToHM(weekAdh.completedMinutes)} de ${minutesToHM(weekAdh.plannedMinutes)} · ✓ ${weekCounts.completed} · ◐ ${weekCounts.partial} · ✕ ${weekCounts.missed}</div>`;
   kpiGrid.appendChild(adhBox);
   const loadBox = el("div","kpi-box");
   loadBox.innerHTML = `<div class="kpi-label">Carga realizada na semana</div><div class="kpi-value">${weekAdh.loadPct!==null?weekAdh.loadPct+"%":"—"}</div><div class="kpi-sub">${minutesToHM(weekAdh.totalStudyMinutes||0)} estudadas · ${minutesToHM(weekAdh.spontaneousMinutes||0)} espontâneas</div>`;
   kpiGrid.appendChild(loadBox);
   const debtBox = el("div","kpi-box");
   debtBox.innerHTML = `<div class="kpi-label">Débito de estudo</div><div class="kpi-value" style="color:var(--${overallAdh.debtMinutes>0?'red':'green'});">${minutesToHM(overallAdh.debtMinutes||0)}</div><div class="kpi-sub">Planejamento vencido ainda não cumprido</div>`;
-  if(overallAdh.debtMinutes>0){
+  if(overallAdh.debtMinutes>0 || dueReviews().length>0){
     const proposalBtn=el("button","btn btn-sm","Ver proposta");
     proposalBtn.style.marginTop="8px";
     proposalBtn.addEventListener("click",openReplanProposal);
@@ -1897,7 +2063,35 @@ function renderPlanPanel(){
   else if(STATE.ui.planSubTab === "week") wrap.appendChild(renderWeekCard());
   else if(STATE.ui.planSubTab === "upcoming") wrap.appendChild(renderUpcomingWeeksCard());
   else wrap.appendChild(renderReviewsCard());
+  if((STATE.rescheduleHistory||[]).length) wrap.appendChild(renderReplanHistoryCard());
   return wrap;
+}
+
+function renderReplanHistoryCard(){
+  const card=el("div","card");
+  card.appendChild(el("div","card-header","<h3>Histórico de ajustes</h3>"));
+  const body=el("div","card-body");
+  [...(STATE.rescheduleHistory||[])].reverse().forEach((entry,index)=>{
+    const details=document.createElement("details");
+    details.className="attention-item";
+    if(index===0) details.open=true;
+    const summary=document.createElement("summary");
+    const total=(entry.operations||[]).reduce((sum,operation)=>sum+(Number(operation.minutes)||0),0);
+    summary.textContent=`${new Date(entry.appliedAt||entry.createdAt).toLocaleString("pt-BR")} · ${(entry.operations||[]).length} ajuste(s) · ${minutesToHM(total)}`;
+    details.appendChild(summary);
+    (entry.operations||[]).forEach(operation=>{
+      const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
+      const node=findLeafNode(operation.subjectId,operation.topicId)||(source&&findLeafNode(source.subjectId,source.topicId));
+      const subject=SUBJECT_MAP[operation.subjectId];
+      const row=el("div","as");
+      row.style.marginTop="8px";
+      row.textContent=`${operation.type==="create_review_assignment"?"Revisão · ":""}${subject?subject.name+" · ":""}${node?node.name:operation.topicId} — ${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
+      details.appendChild(row);
+    });
+    body.appendChild(details);
+  });
+  card.appendChild(body);
+  return card;
 }
 
 function renderTodayCard(){
@@ -2591,6 +2785,8 @@ function openSettingsModal(){
   document.getElementById("cfg-exam").value = CONFIG.examDate;
   document.getElementById("cfg-sat-redacao").checked = CONFIG.reserveSaturdayForRedacao;
   document.getElementById("cfg-sun-review").checked = CONFIG.reserveSundayForReview;
+  document.getElementById("cfg-buffer-pct").value=CONFIG.feasibilityBufferPct;
+  document.getElementById("cfg-review-max-pct").value=CONFIG.reviewMaxDailyCapacityPct;
 
   const wrap = document.getElementById("cfg-daily-availability");
   wrap.innerHTML = "";
@@ -2701,9 +2897,13 @@ let activeReplanProposal = null;
 function buildReplanProposal(){
   const todayISO=toISODate(new Date());
   const scores={};
-  pendingItemsRanked().forEach(item=>{ scores[item.id]=item.score; });
+  const reasonsByTopic={};
+  pendingItemsRanked().forEach(item=>{
+    scores[item.id]=item.score;
+    const node=findLeafNode(item.subjectId,item.id),subject=SUBJECT_MAP[item.subjectId];
+    if(node&&subject) reasonsByTopic[item.id]=explainItemScore(node,subject).reasons;
+  });
   const availability=Object.assign({},CONFIG.dailyAvailability);
-  if(CONFIG.reserveSundayForReview) availability.sun=0;
   const proposal=Core.generateReplanProposal({
     todayISO,
     firstFutureDate:addDaysISO(todayISO,1),
@@ -2711,7 +2911,16 @@ function buildReplanProposal(){
     availability,
     assignments:STATE.planAssignments,
     sessions:STATE.sessions,
+    reviews:reviewSchedule().map(review=>Object.assign({},review,{estimatedMinutes:CONFIG.reviewEstimatedMinutes})),
     scoreByTopic:scores,
+    reasonsByTopic,
+    preferences:Object.assign({},CONFIG.plannerPreferences,{
+      reservedReviewDays:CONFIG.reserveSundayForReview?["sun"]:[],
+      reviewEstimatedMinutes:CONFIG.reviewEstimatedMinutes,
+      maxReviewCapacityPct:.4,
+      allowOverdueReviewOverflow:true
+    }),
+    subjectConflicts:CONFIG.plannerPreferences.conflictPairs,
     tolerance:Core.COMPLETION_TOLERANCE,
     createdAt:nowISOTimestamp()
   });
@@ -2723,11 +2932,11 @@ function openReplanProposal(){
   activeReplanProposal=buildReplanProposal();
   const proposal=activeReplanProposal;
   document.getElementById("replanSummary").textContent = proposal.debtMinutes
-    ? `${minutesToHM(proposal.debtMinutes)} pendentes · ${minutesToHM(proposal.scheduledMinutes)} redistribuídas`
-    : "Não há débito vencido para redistribuir.";
+    ? `${minutesToHM(proposal.debtMinutes)} pendentes · ${minutesToHM(proposal.scheduledMinutes)} redistribuídas · ${minutesToHM(proposal.scheduledReviewMinutes)} em revisões`
+    : proposal.reviewMinutes ? `${minutesToHM(proposal.reviewMinutes)} de revisões vencidas analisadas` : "Não há débito ou revisão vencida para redistribuir.";
   document.getElementById("replanFeasibility").textContent = proposal.feasible
-    ? "A proposta cabe na capacidade disponível até a prova."
-    : `A proposta é parcial: ainda restarão ${minutesToHM(proposal.remainingDebtMinutes)} sem espaço.`;
+    ? "✓ Capacidade e conflitos respeitados · ✓ atividades concluídas preservadas · ✓ data da prova preservada"
+    : `Proposta parcial: ${minutesToHM(proposal.remainingDebtMinutes)} de dívida e ${minutesToHM(proposal.remainingReviewMinutes)} de revisões ainda sem espaço.`;
   const changes=document.getElementById("replanChanges");
   changes.innerHTML="";
   if(proposal.operations.length===0){
@@ -2736,11 +2945,13 @@ function openReplanProposal(){
     proposal.operations.forEach(operation=>{
       const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
       const node=source?findLeafNode(source.subjectId,source.topicId):null;
-      const subject=source?SUBJECT_MAP[source.subjectId]:null;
+      const subject=SUBJECT_MAP[operation.subjectId];
       const row=el("div","attention-item");
-      const title=el("div","an"); title.textContent=(subject?subject.name+" · ":"")+(node?node.name:operation.topicId);
+      const reviewNode=!source?findLeafNode(operation.subjectId,operation.topicId):null;
+      const title=el("div","an"); title.textContent=(operation.type==="create_review_assignment"?"Revisão · ":"")+(subject?subject.name+" · ":"")+(node?node.name:reviewNode?reviewNode.name:operation.topicId);
       const detail=el("div","as"); detail.textContent=`${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
-      row.appendChild(title); row.appendChild(detail); changes.appendChild(row);
+      const reason=el("div","as"); reason.textContent=operation.reasons.join(" · ");
+      row.appendChild(title); row.appendChild(detail); row.appendChild(reason); changes.appendChild(row);
     });
   }
   document.getElementById("btnReplanApply").disabled=proposal.operations.length===0;
@@ -2762,19 +2973,22 @@ function applyReplanProposal(){
   const now=nowISOTimestamp();
   proposal.operations.forEach((operation,index)=>{
     const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
+    const isReview=operation.type==="create_review_assignment";
     STATE.planAssignments.push({
-      id:"recovery_"+proposal.id+"_"+index,
+      id:(isReview?"review_":"recovery_")+proposal.id+"_"+index,
       date:operation.to,
       topicId:operation.topicId,
       subjectId:operation.subjectId,
       plannedMinutes:operation.minutes,
       completedMinutes:0,
       status:"planned",
-      kind:"recovery",
+      kind:isReview?"review":"recovery",
       source:"replanner",
-      sourceAssignmentId:operation.sourceAssignmentId,
+      sourceAssignmentId:operation.sourceAssignmentId||null,
       originalDate:source?source.originalDate||source.date:operation.from,
       rescheduleCount:(source?Number(source.rescheduleCount)||0:0)+1,
+      reviewStage:isReview?operation.reviewStage:null,
+      reviewDueDate:isReview?operation.reviewDueDate:null,
       createdAt:now,
       updatedAt:now
     });
@@ -2785,6 +2999,9 @@ function applyReplanProposal(){
     createdAt:proposal.createdAt,
     appliedAt:now,
     reason:proposal.reason,
+    debtBefore:proposal.debtMinutes,
+    scheduledMinutes:proposal.scheduledMinutes,
+    scheduledReviewMinutes:proposal.scheduledReviewMinutes,
     feasible:proposal.feasible,
     remainingDebtMinutes:proposal.remainingDebtMinutes,
     operations:proposal.operations.map(operation=>Object.assign({},operation))
@@ -2797,6 +3014,7 @@ function applyReplanProposal(){
 }
 
 function setupEvents(){
+  document.getElementById("btnTheme").addEventListener("click",toggleTheme);
   document.getElementById("btnExport").addEventListener("click", Exporter.run);
   document.getElementById("btnBackup").addEventListener("click",downloadFullBackup);
   document.getElementById("btnImportBackup").addEventListener("click",()=>document.getElementById("backupFileInput").click());
@@ -2826,6 +3044,8 @@ function setupEvents(){
       startDate:start, examDate:exam, dailyAvailability,
       reserveSaturdayForRedacao: document.getElementById("cfg-sat-redacao").checked,
       reserveSundayForReview: document.getElementById("cfg-sun-review").checked,
+      feasibilityBufferPct:Math.min(50,Math.max(0,Number(document.getElementById("cfg-buffer-pct").value)||0)),
+      reviewMaxDailyCapacityPct:Math.min(100,Math.max(10,Number(document.getElementById("cfg-review-max-pct").value)||40)),
       plannerPreferences:Object.assign({},CONFIG.plannerPreferences)
     };
     applySettingsToConfig();
@@ -2892,6 +3112,27 @@ function showToast(msg){
   showToast._timer = setTimeout(()=> t.classList.remove("show"), 2600);
 }
 
+const THEME_STORAGE_KEY="bb_study_planner_theme";
+function preferredTheme(){
+  const saved=localStorage.getItem(THEME_STORAGE_KEY);
+  if(saved==="light"||saved==="dark") return saved;
+  return window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+}
+function applyTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  const button=document.getElementById("btnTheme");
+  if(button){
+    button.textContent=theme==="dark"?"☀":"◐";
+    button.title=theme==="dark"?"Usar tema claro":"Usar tema escuro";
+    button.setAttribute("aria-label",button.title);
+  }
+}
+function toggleTheme(){
+  const next=document.documentElement.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem(THEME_STORAGE_KEY,next);
+  applyTheme(next);
+}
+
 /* =========================================================================
    EXPORT
    Estrutura: topics (metadados) -> studySessions[] (registros reais, um por
@@ -2921,10 +3162,16 @@ const Exporter = {
       rescheduleHistory:STATE.rescheduleHistory||[],
       dailyAvailability:CONFIG.dailyAvailability,
       preferences:CONFIG.plannerPreferences,
-      reviews:{intervalsDays:REVIEW_INTERVALS_DAYS,estimatedMinutes:CONFIG.reviewEstimatedMinutes,schedule:reviewSchedule()},
+      planningSummary:{
+        adherencePct:overallAdherence().pct,
+        currentDebtMinutes:overallAdherence().debtMinutes,
+        plannedAssignments:STATE.planAssignments.length,
+        completedAssignments:STATE.planAssignments.filter(a=>a.status==="completed").length
+      },
+      reviews:{intervalsDays:REVIEW_INTERVALS_DAYS,estimatedMinutes:CONFIG.reviewEstimatedMinutes,schedule:reviewSchedule(),overdue:reviewSchedule().filter(review=>review.bucket==="overdue")},
       progress
     });
-    ExportCore.downloadJSON(payload,"bb-study-planner-interchange-v4.json");
+    ExportCore.downloadJSON(payload,"bb-study-planner-interchange-v5.json");
     showToast("Exportação versionada gerada.");
   },
   topicRecord(node, subj, parentId){
@@ -2959,7 +3206,7 @@ function downloadFullBackup(){
     state:currentPersistedState(),
     config:{examDate:CONFIG.examDate,dailyAvailability:CONFIG.dailyAvailability,plannerPreferences:CONFIG.plannerPreferences}
   });
-  ExportCore.downloadJSON(payload,"bb-study-planner-backup-v4.json");
+  ExportCore.downloadJSON(payload,"bb-study-planner-backup-v5.json");
   showToast("Backup completo gerado.");
 }
 
@@ -3167,6 +3414,7 @@ const Demo = {
    BOOT
    ========================================================================= */
 function boot(){
+  applyTheme(preferredTheme());
   initState();
   // Gera o plano somente na primeira execução. Um plano já existente jamais
   // é alterado apenas por recarregar ou navegar pela aplicação.

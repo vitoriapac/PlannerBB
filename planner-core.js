@@ -6,6 +6,13 @@
   "use strict";
 
   const COMPLETION_TOLERANCE = Object.freeze({ minutes: 5, ratio: 0.95 });
+  const PLAN_LIFECYCLE_STATUS = Object.freeze({
+    PLANNED:"planned", RESCHEDULED:"rescheduled", CANCELLED:"cancelled"
+  });
+  const PLAN_EXECUTION_STATUS = Object.freeze({
+    NOT_STARTED:"not_started", PLANNED:"planned", PARTIAL:"partial",
+    COMPLETED:"completed", MISSED:"missed", CANCELLED:"cancelled"
+  });
 
   function numberOrZero(value){
     const number = Number(value);
@@ -60,12 +67,12 @@
       : Math.min(completedMinutes, plannedMinutes);
     const todayISO = options.todayISO || new Date().toISOString().slice(0, 10);
 
-    let derivedStatus = "not_started";
-    if(assignment && assignment.status === "cancelled") derivedStatus = "cancelled";
-    else if(completedMinutes >= plannedMinutes && plannedMinutes > 0 || withinTolerance) derivedStatus = "completed";
-    else if(completedMinutes > 0) derivedStatus = "partial";
-    else if(assignment && assignment.date < todayISO) derivedStatus = "missed";
-    else derivedStatus = "planned";
+    let derivedStatus = PLAN_EXECUTION_STATUS.NOT_STARTED;
+    if(assignment && assignment.status === PLAN_LIFECYCLE_STATUS.CANCELLED) derivedStatus = PLAN_EXECUTION_STATUS.CANCELLED;
+    else if(completedMinutes >= plannedMinutes && plannedMinutes > 0 || withinTolerance) derivedStatus = PLAN_EXECUTION_STATUS.COMPLETED;
+    else if(completedMinutes > 0) derivedStatus = PLAN_EXECUTION_STATUS.PARTIAL;
+    else if(assignment && assignment.date < todayISO) derivedStatus = PLAN_EXECUTION_STATUS.MISSED;
+    else derivedStatus = PLAN_EXECUTION_STATUS.PLANNED;
 
     return {
       plannedMinutes,
@@ -104,6 +111,12 @@
     const spontaneousMinutes = (sessions || [])
       .filter(session => session.date >= startISO && session.date <= endISO && !session.planAssignmentId)
       .reduce((sum, session)=> sum + sessionMinutes(session), 0);
+    const assignmentCounts = {
+      completed:evaluations.filter(item=>item.result.derivedStatus===PLAN_EXECUTION_STATUS.COMPLETED).length,
+      partial:evaluations.filter(item=>item.result.derivedStatus===PLAN_EXECUTION_STATUS.PARTIAL).length,
+      missed:evaluations.filter(item=>item.result.derivedStatus===PLAN_EXECUTION_STATUS.MISSED).length,
+      planned:evaluations.filter(item=>item.result.derivedStatus===PLAN_EXECUTION_STATUS.PLANNED).length
+    };
 
     return {
       plannedMinutes,
@@ -114,7 +127,43 @@
       debtMinutes,
       loadPct: plannedMinutes ? Math.round((totalStudyMinutes / plannedMinutes) * 1000) / 10 : null,
       adherencePct: plannedMinutes ? Math.round((creditedMinutes / plannedMinutes) * 1000) / 10 : null,
+      assignmentCounts,
+      completedAssignments:assignmentCounts.completed,
+      partialAssignments:assignmentCounts.partial,
+      missedAssignments:assignmentCounts.missed,
+      plannedAssignments:assignmentCounts.planned,
       evaluations
+    };
+  }
+
+  function calculateStudyDebt(assignments,sessions,options){
+    options=options||{};
+    const todayISO=options.todayISO||new Date().toISOString().slice(0,10);
+    const startISO=options.startISO||"0000-01-01";
+    const endISO=options.endISO||todayISO;
+    const active=(assignments||[]).filter(assignment=>assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED);
+    const coverage={};
+    active.filter(assignment=>assignment.kind==="recovery"&&assignment.sourceAssignmentId).forEach(assignment=>{
+      coverage[assignment.sourceAssignmentId]=(coverage[assignment.sourceAssignmentId]||0)+numberOrZero(assignment.plannedMinutes);
+    });
+    const rows=active
+      .filter(assignment=>assignment.date>=startISO&&assignment.date<=endISO&&assignment.date<todayISO)
+      .map(assignment=>{
+        const evaluation=evaluateAssignment(assignment,sessions,{todayISO,tolerance:options.tolerance});
+        const coveredByRecoveryMinutes=coverage[assignment.id]||0;
+        const remainingMinutes=Math.max(0,evaluation.missingMinutes-coveredByRecoveryMinutes);
+        return {
+          assignmentId:assignment.id,subjectId:assignment.subjectId,topicId:assignment.topicId,
+          plannedDate:assignment.date,executionStatus:evaluation.derivedStatus,
+          plannedMinutes:evaluation.plannedMinutes,completedMinutes:evaluation.completedMinutes,
+          coveredByRecoveryMinutes,remainingMinutes,assignment
+        };
+      })
+      .filter(row=>row.remainingMinutes>0);
+    return {
+      totalMinutes:rows.reduce((sum,row)=>sum+row.remainingMinutes,0),
+      grossMinutes:rows.reduce((sum,row)=>sum+row.remainingMinutes+row.coveredByRecoveryMinutes,0),
+      assignments:rows
     };
   }
 
@@ -148,12 +197,16 @@
         date,
         capacityMinutes:Math.max(0, Math.round(numberOrZero(availability[dayKeyFromISO(date)]))),
         committedMinutes:0,
-        freeMinutes:0
+        freeMinutes:0,
+        reviewMinutes:0,
+        subjectIds:new Set()
       };
     });
     (assignments || []).forEach(assignment=>{
       if(assignment.status === "cancelled" || !ledger[assignment.date]) return;
       ledger[assignment.date].committedMinutes += Math.max(0, Math.round(numberOrZero(assignment.plannedMinutes)));
+      if(assignment.kind==="review") ledger[assignment.date].reviewMinutes += Math.max(0,Math.round(numberOrZero(assignment.plannedMinutes)));
+      if(assignment.subjectId) ledger[assignment.date].subjectIds.add(assignment.subjectId);
     });
     Object.values(ledger).forEach(day=> day.freeMinutes = Math.max(day.capacityMinutes-day.committedMinutes, 0));
     return ledger;
@@ -178,39 +231,86 @@
     const sessions = input.sessions || [];
     const ledger = buildCapacityLedger(assignments, input.availability || {}, firstFutureDate, input.examDate);
     const scoreByTopic = input.scoreByTopic || {};
-    const recoveryCoverageBySource = {};
-    assignments.filter(assignment=>assignment.status!=="cancelled" && assignment.kind==="recovery" && assignment.sourceAssignmentId).forEach(assignment=>{
-      recoveryCoverageBySource[assignment.sourceAssignmentId]=(recoveryCoverageBySource[assignment.sourceAssignmentId]||0)+numberOrZero(assignment.plannedMinutes);
+    const reasonsByTopic = input.reasonsByTopic || {};
+    const preferences=Object.assign({
+      maxSubjectsPerDay:Infinity,conflictPairs:[],reservedReviewDays:[],
+      maxReviewCapacityPct:.4,allowOverdueReviewOverflow:true,reviewEstimatedMinutes:30
+    },input.preferences||{});
+    const conflictPairs=input.subjectConflicts||preferences.conflictPairs||[];
+    const debt=calculateStudyDebt(assignments,sessions,{todayISO,tolerance:input.tolerance});
+    const debts=debt.assignments.slice().sort((a,b)=>{
+      const aPartial=a.executionStatus===PLAN_EXECUTION_STATUS.PARTIAL?1:0;
+      const bPartial=b.executionStatus===PLAN_EXECUTION_STATUS.PARTIAL?1:0;
+      return bPartial-aPartial || (scoreByTopic[b.topicId]||0)-(scoreByTopic[a.topicId]||0) || a.plannedDate.localeCompare(b.plannedDate);
     });
-    const debts = assignments
-      .filter(assignment=> assignment.status !== "cancelled" && assignment.date < todayISO)
-      .map(assignment=>{
-        const evaluation=evaluateAssignment(assignment,sessions,{todayISO,tolerance:input.tolerance});
-        const outstandingMinutes=Math.max(0,evaluation.missingMinutes-(recoveryCoverageBySource[assignment.id]||0));
-        return {assignment,evaluation,outstandingMinutes};
-      })
-      .filter(item=>item.outstandingMinutes>0)
-      .sort((a,b)=> (scoreByTopic[b.assignment.topicId]||0)-(scoreByTopic[a.assignment.topicId]||0) || a.assignment.date.localeCompare(b.assignment.date));
-
     const operations = [];
+    const days=Object.values(ledger);
+    const subjectsConflict=(subjectId,subjectIds)=>conflictPairs.some(pair=>(subjectId===pair[0]&&subjectIds.has(pair[1]))||(subjectId===pair[1]&&subjectIds.has(pair[0])));
+    const acceptsSubject=(day,subjectId)=> day.subjectIds.has(subjectId) || (
+      day.subjectIds.size < preferences.maxSubjectsPerDay && !subjectsConflict(subjectId,day.subjectIds)
+    );
+    const reserveDays=new Set(preferences.reservedReviewDays||[]);
+
+    // Revisões vencidas e de hoje entram primeiro e disputam a mesma capacidade.
+    const existingReviewKeys=new Set(assignments.filter(a=>a.status!==PLAN_LIFECYCLE_STATUS.CANCELLED&&a.kind==="review")
+      .map(a=>a.topicId+"|"+a.reviewStage+"|"+a.reviewDueDate));
+    const reviews=(input.reviews||[])
+      .filter(review=>review.nextReviewDate<=todayISO&&!existingReviewKeys.has(review.id+"|"+review.reviewStage+"|"+review.nextReviewDate))
+      .sort((a,b)=>a.nextReviewDate.localeCompare(b.nextReviewDate));
+    let remainingReviewMinutes=0;
+    reviews.forEach(review=>{
+      let remaining=Math.round(numberOrZero(review.estimatedMinutes)||preferences.reviewEstimatedMinutes);
+      const orderedDays=days.slice().sort((a,b)=>{
+        const ar=reserveDays.has(dayKeyFromISO(a.date))?0:1;
+        const br=reserveDays.has(dayKeyFromISO(b.date))?0:1;
+        return ar-br||a.date.localeCompare(b.date);
+      });
+      orderedDays.some(day=>{
+        if(remaining<=0) return true;
+        if(day.freeMinutes<=0||!acceptsSubject(day,review.subjectId)) return false;
+        const reviewLimit=Math.round(day.capacityMinutes*preferences.maxReviewCapacityPct);
+        const allowedByLimit=Math.max(0,reviewLimit-day.reviewMinutes);
+        const overdue=review.nextReviewDate<todayISO;
+        const allowed=overdue&&preferences.allowOverdueReviewOverflow?day.freeMinutes:Math.min(day.freeMinutes,allowedByLimit);
+        if(allowed<=0) return false;
+        const minutes=Math.min(remaining,allowed);
+        operations.push({
+          type:"create_review_assignment",topicId:review.id,subjectId:review.subjectId,
+          reviewStage:review.reviewStage,reviewDueDate:review.nextReviewDate,
+          from:review.nextReviewDate,to:day.date,minutes,
+          reasons:[overdue?"Revisão vencida":"Revisão prevista para hoje","Revisões consomem capacidade antes de conteúdo novo"],
+          constraintsSatisfied:["Capacidade diária respeitada","Limite de disciplinas respeitado","Conflitos de matérias respeitados"]
+        });
+        day.freeMinutes-=minutes; day.committedMinutes+=minutes; day.reviewMinutes+=minutes; day.subjectIds.add(review.subjectId); remaining-=minutes;
+        return remaining<=0;
+      });
+      remainingReviewMinutes+=remaining;
+    });
+
     let remainingDebtMinutes = 0;
     debts.forEach(item=>{
-      let remaining = item.outstandingMinutes;
-      Object.values(ledger).some(day=>{
+      let remaining = item.remainingMinutes;
+      days.some(day=>{
         if(remaining<=0) return true;
-        if(day.freeMinutes<=0) return false;
+        if(day.freeMinutes<=0||reserveDays.has(dayKeyFromISO(day.date))||!acceptsSubject(day,item.subjectId)) return false;
         const minutes = Math.min(remaining, day.freeMinutes);
         operations.push({
           type:"create_recovery_assignment",
-          sourceAssignmentId:item.assignment.id,
-          topicId:item.assignment.topicId,
-          subjectId:item.assignment.subjectId,
-          from:item.assignment.date,
+          sourceAssignmentId:item.assignmentId,
+          topicId:item.topicId,
+          subjectId:item.subjectId,
+          from:item.plannedDate,
           to:day.date,
-          minutes
+          minutes,
+          reasons:[
+            item.executionStatus===PLAN_EXECUTION_STATUS.PARTIAL?"Assignment parcialmente realizado":"Assignment não realizado",
+            scoreByTopic[item.topicId]?"Prioridade adaptativa do tópico":"Débito de estudo vencido"
+          ].concat(reasonsByTopic[item.topicId]||[]).filter((reason,index,list)=>list.indexOf(reason)===index),
+          constraintsSatisfied:["Capacidade diária respeitada","Máximo de disciplinas respeitado","Conflitos de matérias respeitados","Assignment original preservado"]
         });
         day.freeMinutes -= minutes;
         day.committedMinutes += minutes;
+        day.subjectIds.add(item.subjectId);
         remaining -= minutes;
         return remaining<=0;
       });
@@ -220,12 +320,23 @@
     return {
       reason:"missed_assignments",
       createdAt:input.createdAt || new Date().toISOString(),
-      affectedAssignmentIds:debts.map(item=>item.assignment.id),
-      debtMinutes:debts.reduce((sum,item)=>sum+item.outstandingMinutes,0),
-      scheduledMinutes:operations.reduce((sum,operation)=>sum+operation.minutes,0),
+      affectedAssignmentIds:debts.map(item=>item.assignmentId),
+      debtMinutes:debt.totalMinutes,
+      reviewMinutes:reviews.reduce((sum,review)=>sum+(numberOrZero(review.estimatedMinutes)||preferences.reviewEstimatedMinutes),0),
+      scheduledMinutes:operations.filter(operation=>operation.type==="create_recovery_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
+      scheduledReviewMinutes:operations.filter(operation=>operation.type==="create_review_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
       remainingDebtMinutes,
-      feasible:remainingDebtMinutes===0,
-      operations
+      remainingReviewMinutes,
+      feasible:remainingDebtMinutes===0&&remainingReviewMinutes===0,
+      guarantees:{
+        dailyCapacityRespected:true,
+        completedAssignmentsPreserved:true,
+        maxSubjectsPerDayRespected:true,
+        subjectConflictsRespected:true,
+        examDateRespected:operations.every(operation=>operation.to<input.examDate)
+      },
+      operations,
+      debt
     };
   }
 
@@ -235,28 +346,57 @@
     const reviewMinutes = Math.max(0, Math.round(numberOrZero(input.reviewMinutes)));
     const committedMinutes = Math.max(0, Math.round(numberOrZero(input.committedMinutes)));
     const availableMinutes = Math.max(0, Math.round(numberOrZero(input.availableMinutes)));
-    const neededMinutes = contentMinutes + debtMinutes + reviewMinutes + committedMinutes;
+    const bufferPct=Math.max(0,numberOrZero(input.bufferPct));
+    const baseNeededMinutes=contentMinutes+debtMinutes+reviewMinutes+committedMinutes;
+    const bufferMinutes=Math.round(baseNeededMinutes*(bufferPct/100));
+    const neededMinutes = baseNeededMinutes+bufferMinutes;
     const marginMinutes = availableMinutes-neededMinutes;
     const utilizationPct = availableMinutes ? Math.round((neededMinutes/availableMinutes)*1000)/10 : (neededMinutes ? Infinity : 0);
-    let level = "healthy";
+    const comfortableLimitPct=numberOrZero(input.comfortableLimitPct)||80;
+    const tightLimitPct=numberOrZero(input.tightLimitPct)||95;
+    let level = "comfortable";
     if(marginMinutes<0) level="infeasible";
-    else if(utilizationPct>95) level="risk";
-    else if(utilizationPct>80) level="tight";
-    return {contentMinutes, debtMinutes, reviewMinutes, committedMinutes, neededMinutes, availableMinutes, marginMinutes, utilizationPct, level, feasible:marginMinutes>=0};
+    else if(utilizationPct>tightLimitPct) level="risk";
+    else if(utilizationPct>comfortableLimitPct) level="tight";
+    return {contentMinutes,debtMinutes,reviewMinutes,committedMinutes,baseNeededMinutes,bufferPct,bufferMinutes,neededMinutes,availableMinutes,marginMinutes,utilizationPct,level,feasible:marginMinutes>=0};
+  }
+
+  function suggestFeasibilityAdjustments(input){
+    const deficitMinutes=Math.max(0,Math.round(numberOrZero(input.deficitMinutes)));
+    if(!deficitMinutes) return [];
+    const startISO=input.startISO;
+    const examDate=input.examDate;
+    const countDays=keys=>dateRange(startISO,examDate).filter(date=>keys.includes(dayKeyFromISO(date))).length;
+    const candidates=[
+      {id:"add_mon_wed_30",label:"Adicionar 30 min nas segundas e quartas",recoveredMinutes:countDays(["mon","wed"])*30},
+      {id:"add_saturday_60",label:"Adicionar 1h aos sábados",recoveredMinutes:countDays(["sat"])*60},
+      {id:"reduce_low_priority",label:"Reduzir conteúdos de prioridade baixa",recoveredMinutes:Math.round(numberOrZero(input.lowPriorityMinutes))}
+    ].filter(candidate=>candidate.recoveredMinutes>0);
+    return candidates.map(candidate=>Object.assign(candidate,{
+      remainingDeficitMinutes:Math.max(0,deficitMinutes-candidate.recoveredMinutes),
+      resolvesDeficit:candidate.recoveredMinutes>=deficitMinutes
+    })).sort((a,b)=>{
+      if(a.resolvesDeficit!==b.resolvesDeficit) return a.resolvesDeficit?-1:1;
+      return Math.abs(a.recoveredMinutes-deficitMinutes)-Math.abs(b.recoveredMinutes-deficitMinutes);
+    });
   }
 
   return {
     COMPLETION_TOLERANCE,
+    PLAN_LIFECYCLE_STATUS,
+    PLAN_EXECUTION_STATUS,
     migrateState,
     sessionMinutes,
     sessionsForAssignment,
     evaluateAssignment,
     evaluatePlan,
+    calculateStudyDebt,
     addDays,
     dayKeyFromISO,
     buildCapacityLedger,
     splitIntoBlocks,
     generateReplanProposal,
-    analyzeFeasibility
+    analyzeFeasibility,
+    suggestFeasibilityAdjustments
   };
 });
