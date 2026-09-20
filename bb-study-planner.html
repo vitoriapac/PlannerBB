@@ -1,0 +1,3183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extrato de Estudos · Banco do Brasil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0b2545; --navy-2:#123a6b; --navy-soft:#e8edf5;
+    --gold:#f6c344; --gold-deep:#c9932a;
+    --paper:#faf7ef; --paper-2:#f2ede1; --line:#ddd5c2;
+    --ink:#1c2333; --ink-soft:#565b6b; --muted:#8a8574;
+    --green:#2f7a4f; --green-bg:#e5f2e9;
+    --amber:#a9711b; --amber-bg:#faeed4;
+    --red:#af3a2a; --red-bg:#f7e5e1;
+    --white:#ffffff; --radius:6px; --shadow:0 1px 2px rgba(11,37,69,0.06);
+    --sans:'IBM Plex Sans', -apple-system, sans-serif;
+    --mono:'IBM Plex Mono', 'SFMono-Regular', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;}
+  button{font-family:var(--sans);}
+  .mono{font-family:var(--mono);}
+  a{color:inherit;}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+  .app{max-width:1180px;margin:0 auto;padding:0 20px 64px;}
+
+  /* ---------- Header ---------- */
+  header.masthead{background:linear-gradient(180deg,var(--navy) 0%, var(--navy-2) 100%);color:#fff;border-bottom:3px solid var(--gold);}
+  .masthead-inner{max-width:1180px;margin:0 auto;padding:20px 20px 16px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;}
+  .masthead-brand{display:flex;flex-direction:column;gap:2px;}
+  .masthead-eyebrow{font-size:11px;letter-spacing:.03em;color:var(--gold);font-family:var(--mono);}
+  .masthead-title{font-size:21px;font-weight:600;margin:0;}
+  .masthead-sub{font-size:12.5px;color:#c7d2e6;margin-top:2px;}
+  .masthead-right{display:flex;align-items:center;gap:10px;}
+  .countdown{text-align:right;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:var(--radius);padding:9px 16px;min-width:170px;}
+  .countdown-label{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#c7d2e6;font-family:var(--mono);}
+  .countdown-days{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--gold);line-height:1.15;margin-top:2px;}
+  .countdown-days small{font-size:11.5px;color:#dfe6f3;font-weight:400;font-family:var(--sans);}
+  .icon-btn{
+    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);color:#fff;
+    border-radius:var(--radius);width:40px;height:40px;font-size:17px;cursor:pointer;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .icon-btn:hover{background:rgba(255,255,255,0.16);}
+
+  /* ---------- Main nav ---------- */
+  nav.tabbar{background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20;}
+  .tabbar-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;gap:2px;}
+  .tab-btn{background:none;border:none;border-bottom:3px solid transparent;padding:13px 16px;font-size:13.5px;color:var(--ink-soft);cursor:pointer;font-weight:500;}
+  .tab-btn[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--gold);font-weight:600;}
+  .tab-btn:hover{color:var(--navy);}
+  .tab-btn:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{outline:2px solid var(--navy-2);outline-offset:2px;}
+
+  /* sub tabs (pill style) */
+  .subtab-row{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+  .subtab-btn{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:12.5px;color:var(--ink-soft);cursor:pointer;font-weight:500;}
+  .subtab-btn[aria-selected="true"]{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .subtab-btn:hover:not([aria-selected="true"]){background:var(--paper-2);}
+
+  main{padding-top:24px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  .section-title{font-size:17px;font-weight:600;color:var(--navy);margin:0 0 4px;}
+  .section-hint{font-size:12.5px;color:var(--muted);margin:0 0 16px;}
+
+  /* ---------- Cards ---------- */
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+  .card + .card{margin-top:16px;}
+  .card-header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 18px;border-bottom:1px solid var(--line);}
+  .card-header h3{margin:0;font-size:13.5px;font-weight:600;color:var(--navy);}
+  .card-body{padding:16px 18px;}
+
+  /* ---------- Hero (Visão Geral) ---------- */
+  .hero-card{background:linear-gradient(180deg,var(--navy) 0%, var(--navy-2) 100%);color:#fff;border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);margin-bottom:16px;}
+  .hero-days{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--gold);}
+  .hero-days-label{font-size:12.5px;color:#dfe6f3;}
+  .hero-date{font-family:var(--mono);font-size:12px;color:#c7d2e6;margin-top:2px;}
+  .hero-progress-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;font-size:12.5px;color:#dfe6f3;}
+  .hero-progress-pct{font-family:var(--mono);font-weight:700;font-size:16px;color:#fff;}
+  .hero-track{height:10px;background:rgba(255,255,255,0.15);border-radius:6px;overflow:hidden;margin-top:6px;}
+  .hero-fill{height:100%;background:var(--gold);border-radius:6px 0 0 6px;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px;}
+  .kpi-box{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);}
+  .kpi-label{font-size:11px;color:var(--muted);}
+  .kpi-value{font-family:var(--mono);font-size:21px;font-weight:600;color:var(--navy);margin-top:4px;}
+  .kpi-sub{font-size:10.5px;color:var(--muted);margin-top:3px;}
+
+  /* Próxima ação */
+  .next-action-card{border:1px solid var(--gold-deep);border-radius:var(--radius);background:linear-gradient(180deg,#fffdf5,var(--white));box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
+  .next-action-eyebrow{background:var(--navy);color:var(--gold);font-family:var(--mono);font-size:11px;letter-spacing:.05em;padding:8px 18px;}
+  .next-action-body{padding:16px 18px;}
+  .next-action-subject{font-size:11.5px;color:var(--gold-deep);font-weight:700;text-transform:uppercase;letter-spacing:.02em;}
+  .next-action-name{font-size:18px;font-weight:600;color:var(--navy);margin-top:3px;}
+  .next-action-tags{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;}
+  .next-action-actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;}
+  .why-now{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);}
+  .why-now-title{font-size:11.5px;font-weight:600;color:var(--navy);margin-bottom:5px;}
+  .why-now-list{margin:0;padding-left:18px;font-size:12px;color:var(--ink-soft);}
+  .why-now-list li{margin-bottom:2px;}
+  .empty-priority{padding:24px 18px;text-align:center;color:var(--muted);font-size:13px;}
+
+  .after-list{list-style:none;margin:0;padding:0;}
+  .after-list li{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.5px;}
+  .after-list li:last-child{border-bottom:none;}
+  .after-list .lbl{color:var(--ink);}
+  .after-list .sub{color:var(--muted);font-size:11px;}
+
+  .attention-item{padding:8px 0;border-bottom:1px dashed var(--line);}
+  .attention-item:last-child{border-bottom:none;}
+  .attention-item .an{font-size:13px;font-weight:600;color:var(--ink);}
+  .attention-item .as{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .attention-pct{font-family:var(--mono);font-weight:700;}
+  .feasibility-banner{background:var(--red-bg);border:1px solid #ecc9c1;border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;}
+  .feasibility-banner h4{margin:0 0 6px;color:var(--red);font-size:14px;font-weight:600;}
+  .feasibility-banner p{margin:0 0 10px;font-size:12.5px;color:var(--ink-soft);}
+  .feasibility-tips{margin:0 0 10px;padding-left:18px;font-size:12px;color:var(--ink-soft);}
+  .feasibility-tips li{margin-bottom:2px;}
+  .two-col{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start;}
+  @media (max-width:860px){.two-col{grid-template-columns:1fr;}}
+
+  /* ---------- Tags / pills ---------- */
+  .tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2.5px 8px;border-radius:20px;border:1px solid transparent;line-height:1.4;white-space:nowrap;}
+  .tag-priority-alta{background:var(--red-bg);color:var(--red);border-color:#ecc9c1;}
+  .tag-priority-media{background:var(--amber-bg);color:var(--amber);border-color:#eeddb2;}
+  .tag-priority-baixa{background:var(--navy-soft);color:var(--navy-2);border-color:#cfdbee;}
+  .tag-incidence{background:var(--paper-2);color:var(--ink-soft);border-color:var(--line);}
+  .tag-status{background:var(--paper-2);color:var(--ink-soft);border-color:var(--line);}
+  .tag-status.done{background:var(--green-bg);color:var(--green);border-color:#c7e3d0;}
+  .tag-status.progress{background:#e4edfb;color:var(--navy-2);border-color:#c6d8f2;}
+  .tag-status.review{background:var(--amber-bg);color:var(--amber);border-color:#eeddb2;}
+  select.compact-select{font-family:var(--sans);font-size:11px;border:1px solid var(--line);border-radius:12px;background:var(--white);color:var(--ink-soft);padding:2.5px 8px;cursor:pointer;}
+
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .dot.green{background:var(--green);} .dot.amber{background:var(--amber);} .dot.red{background:var(--red);} .dot.gray{background:var(--line);}
+
+  /* ---------- Meu Plano: Hoje ---------- */
+  .today-goal{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px;}
+  .goal-box{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow);flex:1;min-width:160px;}
+  .goal-label{font-size:11px;color:var(--muted);}
+  .goal-value{font-family:var(--mono);font-size:20px;font-weight:600;color:var(--navy);margin-top:3px;}
+
+  .today-item{display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-bottom:1px solid var(--line);}
+  .today-item:last-child{border-bottom:none;}
+  .today-check{width:19px;height:19px;flex:none;margin-top:2px;accent-color:var(--navy);cursor:pointer;}
+  .today-main{flex:1;min-width:0;}
+  .today-subject{font-size:11px;color:var(--gold-deep);font-weight:700;text-transform:uppercase;letter-spacing:.02em;}
+  .today-name{font-size:13.5px;font-weight:500;color:var(--ink);margin-top:2px;}
+  .today-name.done{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line);}
+  .today-tags{display:flex;gap:7px;margin-top:7px;flex-wrap:wrap;align-items:center;}
+  .today-last{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:8px;}
+  .today-actions{margin-top:9px;}
+
+  /* ---------- Week grid ---------- */
+  .week-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+  .week-nav-btn{background:var(--white);border:1px solid var(--line);border-radius:5px;padding:7px 12px;font-size:12.5px;cursor:pointer;color:var(--navy-2);font-weight:500;}
+  .week-nav-btn:disabled{opacity:.4;cursor:not-allowed;}
+  .week-nav-btn:hover:not(:disabled){background:var(--navy-soft);}
+  .week-title{text-align:center;flex:1;}
+  .week-title .w{font-size:14px;font-weight:600;color:var(--navy);}
+  .week-title .d{font-size:11.5px;color:var(--muted);font-family:var(--mono);}
+  .day-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;}
+  @media (max-width:760px){.day-grid{grid-template-columns:1fr;}}
+  .day-col{border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);display:flex;flex-direction:column;min-height:110px;}
+  .day-col.off{opacity:.5;}
+  .day-col.is-today{border-color:var(--gold-deep);box-shadow:0 0 0 1px var(--gold-deep) inset;}
+  .day-col-head{padding:8px 10px;border-bottom:1px solid var(--line);background:var(--white);border-radius:var(--radius) var(--radius) 0 0;}
+  .day-col-head .dname{font-size:11px;font-weight:600;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;}
+  .day-col-head .ddate{font-size:10.5px;color:var(--muted);font-family:var(--mono);}
+  .day-col-head .dcap{font-size:10px;color:var(--navy-2);font-family:var(--mono);margin-top:2px;}
+  .day-item .di-min{font-size:9.5px;color:var(--muted);font-family:var(--mono);margin-top:2px;}
+  .day-item .as-badge{font-weight:600;}
+  .day-item.as-completed{border-left:3px solid var(--green);}
+  .day-item.as-completed .as-badge{color:var(--green);}
+  .day-item.as-missed{border-left:3px solid var(--red);opacity:.85;}
+  .day-item.as-missed .as-badge{color:var(--red);}
+  .day-item.as-partial{border-left:3px solid var(--amber);}
+  .day-item.as-partial .as-badge{color:var(--amber);}
+  .day-col-body{padding:8px 10px;flex:1;display:flex;flex-direction:column;gap:6px;}
+  .day-item{background:var(--white);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:11px;line-height:1.35;}
+  .day-item .di-subj{font-size:9.5px;color:var(--gold-deep);text-transform:uppercase;letter-spacing:.02em;font-weight:700;}
+  .day-item .di-topic{color:var(--ink);margin-top:1px;}
+  .day-item.redacao{border-left:3px solid var(--navy);}
+  .day-item.review{background:var(--navy-soft);border-color:#cfdbee;}
+  .day-item.final{background:var(--amber-bg);border-color:#eeddb2;}
+  .day-empty{font-size:11px;color:var(--muted);font-style:italic;padding:4px 0;}
+  .week-summary{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+  .final-week-banner{background:var(--amber-bg);border:1px solid #eeddb2;color:var(--amber);border-radius:5px;padding:8px 12px;font-size:12px;margin-bottom:12px;}
+
+  .weeklist-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);cursor:pointer;}
+  .weeklist-row:last-child{border-bottom:none;}
+  .weeklist-row:hover{background:var(--paper-2);}
+  .weeklist-left .w{font-size:13px;font-weight:600;color:var(--navy);}
+  .weeklist-left .d{font-size:11px;color:var(--muted);font-family:var(--mono);}
+  .weeklist-right{font-size:11.5px;color:var(--ink-soft);text-align:right;}
+
+  /* ---------- Edital ---------- */
+  .edital-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+  .edital-search{flex:1;min-width:200px;font-family:var(--sans);font-size:13px;border:1px solid var(--line);border-radius:5px;padding:9px 12px;background:var(--white);}
+  .edital-filter{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line);border-radius:5px;padding:9px 10px;background:var(--white);color:var(--ink-soft);}
+
+  .group-block{margin-bottom:22px;}
+  .group-title{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin:0 0 8px;padding-left:2px;}
+  .subject-row{display:flex;align-items:center;gap:14px;padding:13px 18px;cursor:pointer;border-bottom:1px solid var(--line);}
+  .subject-row:last-child{border-bottom:none;}
+  .subject-row:hover{background:var(--paper-2);}
+  .subject-row .chev{color:var(--muted);font-size:11px;width:12px;flex:none;}
+  .subject-row .sname{flex:1;font-size:13.5px;font-weight:500;color:var(--ink);}
+  .subject-row .sweight{font-size:11px;color:var(--muted);font-family:var(--mono);margin-left:8px;}
+  .subject-row .strack{width:110px;height:7px;background:var(--paper-2);border-radius:4px;overflow:hidden;border:1px solid var(--line);flex:none;}
+  .subject-row .sfill{height:100%;background:linear-gradient(90deg,var(--navy),var(--navy-2));}
+  .subject-row .spct{font-family:var(--mono);font-size:12px;color:var(--navy);font-weight:600;width:36px;text-align:right;flex:none;}
+  .subject-detail{border-top:1px solid var(--line);background:var(--paper);padding:14px 18px 18px;}
+  .subject-detail-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+  .subject-detail-toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+
+  .topic{border-bottom:1px solid var(--line);background:var(--white);}
+  .topic:last-child{border-bottom:none;}
+  .topic-row{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;}
+  .topic-toggle{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;width:16px;flex:none;margin-top:3px;padding:0;}
+  .topic-check{width:18px;height:18px;flex:none;margin-top:3px;accent-color:var(--navy);cursor:pointer;}
+  .topic-main{flex:1;min-width:0;}
+  .topic-name-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+  .topic-name{font-size:13px;font-weight:500;color:var(--ink);}
+  .topic-name.done{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line);}
+  .topic-count-badge{font-size:10.5px;color:var(--muted);font-family:var(--mono);}
+  .topic-meta-row{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:7px;}
+  .topic-last{font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:7px;}
+  .subtopic-list{padding-left:26px;border-top:1px dashed var(--line);}
+  .subtopic-list .topic-row{padding:9px 16px 9px 0;border-bottom:1px dashed var(--line);}
+  .subtopic-list .topic-row:last-child{border-bottom:none;}
+  .reg-btn{margin-top:9px;background:none;border:1px solid var(--line);border-radius:5px;font-size:11px;color:var(--navy-2);padding:4px 10px;cursor:pointer;}
+  .reg-btn:hover{background:var(--navy-soft);}
+  .empty-state{padding:30px 18px;text-align:center;color:var(--muted);font-size:13px;}
+  .empty-state strong{display:block;color:var(--ink);font-size:14px;margin-bottom:6px;}
+
+  /* ---------- Desempenho ---------- */
+  table.perf-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.perf-table th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);font-weight:600;}
+  table.perf-table td{padding:10px 10px;border-bottom:1px solid var(--line);}
+  table.perf-table tr:last-child td{border-bottom:none;}
+  table.perf-table td.num{font-family:var(--mono);text-align:right;}
+  .overflow-x{overflow-x:auto;}
+  .day-col.past{opacity:.55;}
+
+  /* ---------- Revisões (repetição espaçada) ---------- */
+  .review-group-title{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600;margin:18px 0 6px;}
+  .review-group-title:first-child{margin-top:0;}
+  .review-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);}
+  .review-item:last-child{border-bottom:none;}
+  .review-item-left .rn{font-size:13px;font-weight:500;color:var(--ink);}
+  .review-item-left .rs{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .review-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;white-space:nowrap;}
+  .review-badge.overdue{background:var(--red-bg);color:var(--red);}
+  .review-badge.today{background:var(--amber-bg);color:var(--amber);}
+  .review-badge.upcoming{background:var(--navy-soft);color:var(--navy-2);}
+
+  /* ---------- Gráficos (SVG inline) ---------- */
+  .chart-card-body{padding:6px 18px 18px;}
+  .chart-toolbar{display:flex;gap:10px;padding:14px 18px 0;flex-wrap:wrap;}
+  .chart-svg{width:100%;height:auto;display:block;}
+  .chart-empty{padding:26px 18px;text-align:center;color:var(--muted);font-size:13px;}
+  .chart-legend{display:flex;gap:16px;flex-wrap:wrap;padding:0 18px 14px;font-size:11.5px;color:var(--ink-soft);}
+  .chart-legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+
+  /* ---------- Modal de simulado ---------- */
+  .mockexam-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
+  .mockexam-table th{text-align:left;font-size:10px;text-transform:uppercase;color:var(--muted);padding:5px 6px;border-bottom:1px solid var(--line);}
+  .mockexam-table td{padding:4px 6px;border-bottom:1px solid var(--line);}
+  .mockexam-table td.subj-name{font-size:12px;color:var(--ink);}
+  .mockexam-table input{width:60px;font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:4px;padding:4px 6px;background:var(--paper);}
+  .mockexam-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px dashed var(--line);}
+  .mockexam-row:last-child{border-bottom:none;}
+  .mockexam-row .mn{font-size:13px;font-weight:500;color:var(--ink);}
+  .mockexam-row .md{font-size:11.5px;color:var(--muted);margin-top:2px;font-family:var(--mono);}
+  .mockexam-row .mp{font-family:var(--mono);font-weight:700;font-size:16px;}
+
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;gap:6px;border-radius:5px;border:1px solid var(--line);background:var(--white);padding:9px 15px;font-size:13px;cursor:pointer;color:var(--ink);font-weight:500;}
+  .btn:hover{background:var(--paper-2);}
+  .btn-primary{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold-deep);font-weight:600;}
+  .btn-gold:hover{background:var(--gold-deep);color:#fff;}
+  .btn-danger{color:var(--red);border-color:#e6c1b8;}
+  .btn-danger:hover{background:var(--red-bg);}
+  .btn-sm{padding:6px 11px;font-size:12px;}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 8px;justify-content:flex-end;}
+  footer.app-footer{max-width:1180px;margin:34px auto 0;padding:16px 20px 0;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);}
+
+  /* ---------- Modal / Drawer ---------- */
+  .modal-overlay{position:fixed;inset:0;background:rgba(11,20,37,0.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+  .modal-overlay.open{display:flex;}
+  .modal-box{background:var(--white);border-radius:var(--radius);max-width:440px;width:100%;padding:22px;box-shadow:0 8px 30px rgba(11,20,37,0.3);max-height:90vh;overflow-y:auto;}
+  .modal-box.wide{max-width:580px;}
+  .modal-box h3{margin:0 0 4px;color:var(--navy);font-size:16px;}
+  .modal-sub{font-size:12px;color:var(--muted);margin:0 0 16px;}
+  .modal-box p{font-size:13px;color:var(--ink-soft);margin:0 0 16px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:6px;}
+  .confirm-check{display:flex;gap:8px;align-items:flex-start;margin-bottom:16px;font-size:12.5px;color:var(--ink-soft);}
+  .confirm-check input{margin-top:2px;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+  .form-field{display:flex;flex-direction:column;gap:4px;}
+  .form-field.full{grid-column:1 / -1;}
+  .form-field label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;}
+  .form-field input, .form-field select{font-family:var(--mono);font-size:13px;border:1px solid var(--line);border-radius:5px;padding:7px 9px;background:var(--paper);color:var(--ink);}
+  .form-field select{font-family:var(--sans);}
+  .accuracy-preview{background:var(--paper-2);border:1px solid var(--line);border-radius:5px;padding:10px 12px;text-align:center;margin-bottom:14px;}
+  .accuracy-preview .num{font-family:var(--mono);font-size:24px;font-weight:700;}
+  .accuracy-preview .lbl{font-size:11px;color:var(--muted);}
+
+  .settings-days{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;}
+  .day-chip{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:14px;padding:4px 10px;font-size:11.5px;background:var(--paper);}
+  .day-chip input{margin:0;}
+  .daily-avail-list{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:4px;}
+  .daily-avail-row{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--white);}
+  .daily-avail-row:last-child{border-bottom:none;}
+  .daily-avail-row.disabled{background:var(--paper-2);}
+  .daily-avail-row .dlabel{font-size:12.5px;color:var(--ink);width:64px;flex:none;font-weight:500;}
+  .daily-avail-row .dcheck{flex:none;accent-color:var(--navy);}
+  .daily-avail-row .dhours{width:72px;font-family:var(--mono);font-size:12.5px;border:1px solid var(--line);border-radius:5px;padding:5px 7px;background:var(--paper);margin-left:auto;}
+  .daily-avail-row .dhours:disabled{opacity:.4;}
+  .daily-avail-row .dunit{font-size:11px;color:var(--muted);}
+  .capacity-summary{background:var(--navy-soft);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--navy-2);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .capacity-summary strong{font-family:var(--mono);color:var(--navy);}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.5px;}
+  .toggle-row:last-child{border-bottom:none;}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 20px;border-radius:6px;font-size:12.5px;box-shadow:0 6px 20px rgba(11,20,37,0.3);opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:200;border-left:3px solid var(--gold);}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:600px){
+    .masthead-inner{flex-direction:column;align-items:flex-start;}
+    .countdown{text-align:left;width:100%;}
+    .form-grid{grid-template-columns:1fr;}
+    .subject-row{flex-wrap:wrap;}
+    .subject-row .strack{width:80px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-brand">
+      <span class="masthead-eyebrow">Extrato de Estudos · Planejamento complementar</span>
+      <h1 class="masthead-title">Prova Banco do Brasil — Escriturário / Agente Comercial</h1>
+      <span class="masthead-sub" id="examDateLabel">Data da prova: —</span>
+    </div>
+    <div class="masthead-right">
+      <div class="countdown">
+        <div class="countdown-label">Faltam</div>
+        <div class="countdown-days" id="countdownDays">—<small> dias</small></div>
+      </div>
+      <button class="icon-btn" id="btnSettings" type="button" title="Configurar plano" aria-label="Configurar plano">⚙</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabbar" aria-label="Navegação principal">
+  <div class="tabbar-inner" id="mainTabbar"></div>
+</nav>
+
+<div class="app">
+  <main id="mainPanels"></main>
+
+  <div class="toolbar">
+    <button class="btn" id="btnExport">Exportar para StudyTrack</button>
+    <button class="btn" id="btnBackup">Baixar backup completo</button>
+    <button class="btn" id="btnImportBackup">Restaurar backup</button>
+    <input type="file" id="backupFileInput" accept="application/json,.json" class="visually-hidden">
+    <button class="btn btn-danger" id="btnClear">Limpar dados</button>
+  </div>
+
+  <footer class="app-footer">
+    Ferramenta de planejamento complementar ao StudyTrack (Extrato de Estudos). BB Study Planner ajuda a decidir o que estudar e quando; o histórico detalhado, as análises avançadas e a evolução ao longo do tempo continuam no StudyTrack.
+  </footer>
+</div>
+
+<!-- Modal: registrar estudo -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal-box">
+    <h3>Registrar estudo</h3>
+    <p class="modal-sub" id="sessionModalSubject">—</p>
+    <p class="modal-sub" id="sessionModalPlan"></p>
+    <div class="form-grid">
+      <div class="form-field"><label for="sf-date">Data</label><input type="date" id="sf-date"></div>
+      <div class="form-field"><label for="sf-method">Método</label>
+        <select id="sf-method"></select>
+      </div>
+      <div class="form-field"><label for="sf-minutes">Tempo realizado (minutos)</label><input type="number" id="sf-minutes" min="0" step="5" value="60"></div>
+      <div class="form-field"><label for="sf-questions">Questões</label><input type="number" id="sf-questions" min="0" step="1" value="0"></div>
+      <div class="form-field"><label for="sf-correct">Acertos</label><input type="number" id="sf-correct" min="0" step="1" value="0"></div>
+      <div class="form-field"><label>Erros (calculado)</label><input type="text" id="sf-wrong" value="0" disabled></div>
+    </div>
+    <div class="accuracy-preview">
+      <div class="num" id="sf-accuracy">—</div>
+      <div class="lbl">percentual de acertos desta sessão</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-sm" id="btnSessionCancel">Cancelar</button>
+      <button class="btn btn-sm btn-primary" id="btnSessionSave">Salvar sessão</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: configurar plano -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <h3>Minha preparação</h3>
+    <p class="modal-sub">Essas configurações controlam como o cronograma é gerado.</p>
+    <div class="form-grid">
+      <div class="form-field"><label for="cfg-start">Início do plano</label><input type="date" id="cfg-start"></div>
+      <div class="form-field"><label for="cfg-exam">Data da prova</label><input type="date" id="cfg-exam"></div>
+    </div>
+    <div class="form-field full" style="margin-bottom:10px;">
+      <label>Disponibilidade por dia da semana</label>
+      <div class="daily-avail-list" id="cfg-daily-availability"></div>
+    </div>
+    <div class="capacity-summary" id="cfg-capacity-summary"></div>
+    <div class="toggle-row" style="margin-top:10px;">
+      <span>Reservar sábado também para Redação</span>
+      <input type="checkbox" id="cfg-sat-redacao">
+    </div>
+    <div class="toggle-row">
+      <span>Reservar domingo para revisão/simulado</span>
+      <input type="checkbox" id="cfg-sun-review">
+    </div>
+    <div class="modal-actions" style="margin-top:16px;">
+      <button class="btn btn-sm" id="btnSettingsCancel">Cancelar</button>
+      <button class="btn btn-sm btn-primary" id="btnSettingsSave">Recalcular planejamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: registrar simulado -->
+<div class="modal-overlay" id="mockExamModal">
+  <div class="modal-box wide">
+    <h3>Registrar simulado</h3>
+    <p class="modal-sub">Lance os resultados gerais e, se quiser, o detalhamento por disciplina.</p>
+    <div class="form-grid">
+      <div class="form-field"><label for="me-date">Data</label><input type="date" id="me-date"></div>
+      <div class="form-field"><label for="me-duration">Duração (min)</label><input type="number" id="me-duration" min="0" step="5" value="180"></div>
+      <div class="form-field full"><label for="me-title">Título</label><input type="text" id="me-title" placeholder="Ex.: Simulado Cesgranrio 1"></div>
+    </div>
+    <table class="mockexam-table">
+      <thead><tr><th>Disciplina</th><th>Questões</th><th>Acertos</th></tr></thead>
+      <tbody id="me-subjects-body"></tbody>
+    </table>
+    <div class="accuracy-preview">
+      <div class="num" id="me-accuracy">—</div>
+      <div class="lbl"><span id="me-totals">0 questões</span> · percentual geral de acertos</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-sm" id="btnMockExamCancel">Cancelar</button>
+      <button class="btn btn-sm btn-primary" id="btnMockExamSave">Salvar simulado</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: proposta de replanejamento -->
+<div class="modal-overlay" id="replanModal">
+  <div class="modal-box wide">
+    <h3>Proposta de replanejamento</h3>
+    <p class="modal-sub" id="replanSummary">—</p>
+    <div class="capacity-summary" id="replanFeasibility"></div>
+    <div id="replanChanges" style="margin-top:14px;"></div>
+    <div class="modal-actions">
+      <button class="btn btn-sm" id="btnReplanKeep">Manter plano atual</button>
+      <button class="btn btn-sm btn-primary" id="btnReplanApply">Aplicar replanejamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: limpar dados -->
+<div class="modal-overlay" id="clearModal">
+  <div class="modal-box">
+    <h3>Limpar todos os dados?</h3>
+    <p>Isso apaga permanentemente status, prioridades, sessões de estudo e configurações salvas neste navegador. Esta ação não pode ser desfeita.</p>
+    <label class="confirm-check">
+      <input type="checkbox" id="clearConfirmCheck">
+      Entendo que todos os dados serão apagados e desejo continuar.
+    </label>
+    <div class="modal-actions">
+      <button class="btn btn-sm" id="btnClearCancel">Cancelar</button>
+      <button class="btn btn-sm btn-danger" id="btnClearConfirm" disabled>Apagar dados</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="planner-core.js"></script>
+<script src="planner-storage.js"></script>
+<script src="planner-export.js"></script>
+<script src="stress-fixtures.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* =========================================================================
+   CONFIG — valores padrão. Podem ser sobrescritos pelo usuário em ⚙ Configurar
+   plano (ficam salvos em localStorage) sem precisar editar este arquivo.
+   ========================================================================= */
+const CONFIG_DEFAULTS = {
+  DEMO_MODE: false,            // demonstração somente quando ativada explicitamente no código
+  examDate: "2027-02-21",      // data da prova (YYYY-MM-DD) — ajustável em ⚙
+  startDate: null,             // null = usa a data de hoje na primeira execução
+  /* Disponibilidade real por dia da semana, em MINUTOS (não horas decimais —
+     evita arredondamentos estranhos com 1h30, 2h15 etc.). Padrão: 3h/dia todo dia. */
+  dailyAvailability: { mon:180, tue:180, wed:180, thu:180, fri:180, sat:180, sun:180 },
+  defaultEstimatedMinutes: 90, // usado quando um tópico não tem estimatedMinutes definido
+  reviewEstimatedMinutes: 30,
+  reserveSaturdayForRedacao: true,
+  reserveSundayForReview: true,
+  plannerPreferences: {
+    maxSubjectsPerDay:3,
+    avoidSameSubjectConsecutiveDays:true,
+    balanceHeavySubjects:true,
+    conflictPairs:[["port","info"]],
+    preferredBlockMinutes:60
+  },
+  storageKey: "bb_study_planner_v2"
+};
+
+const STATE_VERSION = 4;
+const PLANNER_VERSION = "2.0.0";
+const Core = window.BBPlannerCore;
+if(!Core) throw new Error("planner-core.js não foi carregado.");
+const ExportCore = window.BBPlannerExport;
+if(!ExportCore) throw new Error("planner-export.js não foi carregado.");
+
+const DAY_LABELS = { mon:"Seg", tue:"Ter", wed:"Qua", thu:"Qui", fri:"Sex", sat:"Sáb", sun:"Dom" };
+const DAY_ORDER = ["mon","tue","wed","thu","fri","sat","sun"];
+
+/** Migra configurações antigas (hoursPerDay + studyDays) para o novo formato de
+ *  disponibilidade em minutos por dia. Se dailyAvailability já existir, é usado
+ *  diretamente. Mantém compatibilidade com dados salvos antes desta atualização. */
+function migrateSettingsToDailyAvailability(settings){
+  if(settings && settings.dailyAvailability) return settings.dailyAvailability;
+  const hoursPerDay = (settings && typeof settings.hoursPerDay === "number") ? settings.hoursPerDay : 3;
+  const studyDays = (settings && Array.isArray(settings.studyDays)) ? settings.studyDays : DAY_ORDER.slice();
+  const minutes = Math.round(hoursPerDay*60);
+  const result = {};
+  DAY_ORDER.forEach(d=> result[d] = studyDays.indexOf(d)>=0 ? minutes : 0);
+  return result;
+}
+
+function minutesToHM(min){
+  min = Math.max(0, Math.round(min||0));
+  const h = Math.floor(min/60), m = min%60;
+  return h + "h" + (m ? String(m).padStart(2,"0") : "");
+}
+
+/** Estimativa de duração de um tópico/subtópico: usa estimatedMinutes se o
+ *  conteúdo tiver essa informação cadastrada, senão cai no padrão configurável. */
+function getEstimatedMinutes(node){
+  return (node.estimatedMinutes !== undefined && node.estimatedMinutes !== null)
+    ? node.estimatedMinutes
+    : CONFIG.defaultEstimatedMinutes;
+}
+
+function getWeeklyCapacityMinutes(){
+  return DAY_ORDER.reduce((a,d)=> a + (CONFIG.dailyAvailability[d]||0), 0);
+}
+
+/** Minutos disponíveis entre hoje (ou o início do plano, o que for mais tarde) e a
+ *  data da prova — a mesma janela de replanejamento usada pelo Planner. */
+function calculateAvailableMinutesUntilExam(){
+  const start = CONFIG.startDate ? parseISODate(CONFIG.startDate) : new Date(new Date().setHours(0,0,0,0));
+  const exam = parseISODate(CONFIG.examDate);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const floor = today > start ? today : start;
+  if(exam <= floor) return 0;
+  let total = 0;
+  for(let d=new Date(floor); d<exam; d.setDate(d.getDate()+1)){
+    total += CONFIG.dailyAvailability[dayKey(d)] || 0;
+  }
+  return total;
+}
+
+/* Repetição espaçada: intervalos (em dias) aplicados após cada revisão de um
+   tópico finalizado. Após o último intervalo, o tópico é considerado consolidado
+   mas continua sendo revisado no mesmo intervalo máximo. */
+const REVIEW_INTERVALS_DAYS = [1, 3, 7, 16, 35];
+
+/* Regras do planejador: no máximo N disciplinas diferentes por dia, e pares de
+   disciplinas que não devem ser combinados no mesmo dia (ex.: cansaço/atenção). */
+const MAX_SUBJECTS_PER_DAY = 3;
+const CONFLICT_SUBJECT_PAIRS = [["port","info"]];
+
+/* =========================================================================
+   DATA — Disciplina -> Tópico -> Subtópico, extraída do edital fornecido.
+   IDs são fixos (não usar o nome como identificador); "weight" é um peso
+   ESTRATÉGICO manual (0–100, uso interno do planejador para priorizar a
+   distribuição do cronograma) — não representa quantidade de questões nem
+   o peso oficial da banca na prova.
+   ========================================================================= */
+const SUBJECT_GROUPS = [
+  {id:"basicos", name:"Conhecimentos Básicos", subjectIds:["port","ing","mat","atu"]},
+  {id:"especificos", name:"Conhecimentos Específicos", subjectIds:["matfin","banc","info","vendas"]},
+  {id:"redacao_grupo", name:"Redação", subjectIds:["redacao"]}
+];
+
+const SUBJECTS = [
+  {id:"port", name:"Língua Portuguesa", weight:10, topics:[
+    {id:"port-1", name:"Compreensão de textos", estimatedMinutes:75, subtopics:[]},
+    {id:"port-2", name:"Ortografia oficial", subtopics:[]},
+    {id:"port-3", name:"Classe e emprego de palavras", subtopics:[]},
+    {id:"port-4", name:"Emprego do acento indicativo de crase", subtopics:[]},
+    {id:"port-5", name:"Sintaxe da oração e do período", subtopics:[]},
+    {id:"port-6", name:"Emprego dos sinais de pontuação", subtopics:[]},
+    {id:"port-7", name:"Concordância verbal e nominal", subtopics:[]},
+    {id:"port-8", name:"Regência verbal e nominal", subtopics:[]},
+    {id:"port-9", name:"Colocação dos pronomes oblíquos átonos (próclise, mesóclise e ênclise)", subtopics:[]}
+  ]},
+  {id:"ing", name:"Língua Inglesa", weight:5, topics:[
+    {id:"ing-1", name:"Vocabulário fundamental e aspectos gramaticais básicos para compreensão de textos", subtopics:[]}
+  ]},
+  {id:"mat", name:"Matemática", weight:5, topics:[
+    {id:"mat-1", name:"Números inteiros, racionais e reais", subtopics:[]},
+    {id:"mat-2", name:"Sistema legal de medidas", subtopics:[]},
+    {id:"mat-3", name:"Razões e proporções", subtopics:[]},
+    {id:"mat-4", name:"Lógica proposicional", subtopics:[]},
+    {id:"mat-5", name:"Noções de conjuntos", subtopics:[]},
+    {id:"mat-6", name:"Relações e funções", subtopics:[]}
+  ]},
+  {id:"atu", name:"Atualidades do Mercado Financeiro", weight:20, topics:[
+    {id:"atu-1", name:"Os bancos na Era Digital", estimatedMinutes:110, subtopics:[
+      {id:"atu-1-1", name:"Atualidade, tendências e desafios"},
+      {id:"atu-1-2", name:"Internet Banking"},
+      {id:"atu-1-3", name:"Mobile Banking"},
+      {id:"atu-1-4", name:"Open Finance"},
+      {id:"atu-1-5", name:"Novos modelos de negócios (fintechs, startups, big techs e shadow banking)"}
+    ]},
+    {id:"atu-2", name:"Funções da moeda", subtopics:[
+      {id:"atu-2-1", name:"O dinheiro na era digital (Blockchain, Bitcoin e criptomoedas)"}
+    ]},
+    {id:"atu-3", name:"Marketplace", subtopics:[]},
+    {id:"atu-4", name:"Correspondentes bancários", subtopics:[]},
+    {id:"atu-5", name:"Arranjos de pagamentos", subtopics:[
+      {id:"atu-5-1", name:"Sistema de pagamentos instantâneos (PIX)"}
+    ]},
+    {id:"atu-6", name:"Segmentação e interações digitais", subtopics:[]},
+    {id:"atu-7", name:"Transformação digital no Sistema Financeiro", subtopics:[]}
+  ]},
+  {id:"matfin", name:"Matemática Financeira", weight:5, topics:[
+    {id:"matfin-1", name:"Conceitos gerais", subtopics:[
+      {id:"matfin-1-1", name:"Valor do dinheiro no tempo"},
+      {id:"matfin-1-2", name:"Capitalização"},
+      {id:"matfin-1-3", name:"Equivalência financeira"}
+    ]},
+    {id:"matfin-2", name:"Juros simples", subtopics:[]},
+    {id:"matfin-3", name:"Juros compostos", estimatedMinutes:60, subtopics:[]},
+    {id:"matfin-4", name:"Sistemas de amortização", subtopics:[
+      {id:"matfin-4-1", name:"Sistema Price"},
+      {id:"matfin-4-2", name:"Sistema de Amortização Constante (SAC)"}
+    ]}
+  ]},
+  {id:"banc", name:"Conhecimentos Bancários", weight:25, topics:[
+    {id:"banc-1", name:"Sistema Financeiro Nacional", estimatedMinutes:120, subtopics:[
+      {id:"banc-1-1", name:"Estrutura do Sistema Financeiro Nacional"},
+      {id:"banc-1-2", name:"Órgãos normativos e instituições supervisoras, executoras e operadoras"}
+    ]},
+    {id:"banc-2", name:"Mercado financeiro e seus desdobramentos", subtopics:[
+      {id:"banc-2-1", name:"Mercados monetário, de crédito, de capitais e cambial"}
+    ]},
+    {id:"banc-3", name:"Moeda e política monetária", subtopics:[
+      {id:"banc-3-1", name:"Políticas monetárias convencionais e não convencionais (Quantitative easing)"},
+      {id:"banc-3-2", name:"Taxa SELIC e operações compromissadas"},
+      {id:"banc-3-3", name:"Depósitos remunerados dos bancos comerciais no Banco Central do Brasil"}
+    ]},
+    {id:"banc-4", name:"Orçamento público", subtopics:[
+      {id:"banc-4-1", name:"Títulos do Tesouro Nacional e dívida pública"}
+    ]},
+    {id:"banc-5", name:"Produtos Bancários", subtopics:[
+      {id:"banc-5-1", name:"Cartões de crédito e débito"},
+      {id:"banc-5-2", name:"Crédito direto ao consumidor"},
+      {id:"banc-5-3", name:"Crédito rural"},
+      {id:"banc-5-4", name:"Poupança"},
+      {id:"banc-5-5", name:"Capitalização"},
+      {id:"banc-5-6", name:"Previdência"},
+      {id:"banc-5-7", name:"Consórcio"},
+      {id:"banc-5-8", name:"Investimentos"}
+    ]},
+    {id:"banc-6", name:"Noções de mercado de capitais", subtopics:[]},
+    {id:"banc-7", name:"Noções de mercado de câmbio", subtopics:[
+      {id:"banc-7-1", name:"Instituições autorizadas a operar"},
+      {id:"banc-7-2", name:"Operações básicas"},
+      {id:"banc-7-3", name:"Regimes de taxas de câmbio (fixas, flutuantes e intermediárias)"},
+      {id:"banc-7-4", name:"Taxas de câmbio nominais e reais"},
+      {id:"banc-7-5", name:"Impactos das taxas de câmbio sobre exportações e importações"},
+      {id:"banc-7-6", name:"Diferencial de juros interno e externo"},
+      {id:"banc-7-7", name:"Dinâmica do mercado interbancário"}
+    ]},
+    {id:"banc-8", name:"Mercado bancário", subtopics:[
+      {id:"banc-8-1", name:"Operações de tesouraria"},
+      {id:"banc-8-2", name:"Varejo bancário"},
+      {id:"banc-8-3", name:"Recuperação de crédito"},
+      {id:"banc-8-4", name:"Taxas de juros (curto prazo, curva de juros, nominais e reais)"}
+    ]},
+    {id:"banc-9", name:"Garantias do Sistema Financeiro Nacional", subtopics:[]},
+    {id:"banc-10", name:"Crime de lavagem de dinheiro (Lei nº 9.613/98 e atualizações)", subtopics:[]},
+    {id:"banc-11", name:"Autorregulação bancária e Normativos SARB", subtopics:[]},
+    {id:"banc-12", name:"Sigilo bancário (Lei Complementar nº 105/2001)", subtopics:[]},
+    {id:"banc-13", name:"Lei Geral de Proteção de Dados — LGPD (Lei nº 13.709/2018)", subtopics:[]},
+    {id:"banc-14", name:"Legislação anticorrupção (Lei nº 12.846/2013)", subtopics:[]},
+    {id:"banc-15", name:"Segurança cibernética (Resolução CMN nº 4.893/2021)", subtopics:[]},
+    {id:"banc-16", name:"Ética aplicada", subtopics:[
+      {id:"banc-16-1", name:"Ética, moral, valores e virtudes"},
+      {id:"banc-16-2", name:"Ética empresarial e profissional"},
+      {id:"banc-16-3", name:"Gestão da ética nas empresas públicas e privadas"},
+      {id:"banc-16-4", name:"Código de Ética do Banco do Brasil"}
+    ]},
+    {id:"banc-17", name:"Política de Responsabilidade Socioambiental do Banco do Brasil", subtopics:[
+      {id:"banc-17-1", name:"ASG (Ambiental, Social e Governança)"},
+      {id:"banc-17-2", name:"Economia sustentável"}
+    ]},
+    {id:"banc-18", name:"Financiamentos", subtopics:[]},
+    {id:"banc-19", name:"Mercado PJ", subtopics:[]},
+    {id:"banc-20", name:"Abertura e movimentação de contas", subtopics:[]}
+  ]},
+  {id:"info", name:"Conhecimentos de Informática", weight:5, topics:[
+    {id:"info-1", name:"Noções de sistemas operacionais", subtopics:[
+      {id:"info-1-1", name:"Windows 10 (32-64 bits)"},
+      {id:"info-1-2", name:"Ambiente Linux (SUSE SLES 15 SP2)"}
+    ]},
+    {id:"info-2", name:"Edição de textos, planilhas e apresentações", subtopics:[
+      {id:"info-2-1", name:"Ambientes Microsoft Office: Word, Excel e PowerPoint (O365)"}
+    ]},
+    {id:"info-3", name:"Segurança da informação", estimatedMinutes:100, subtopics:[
+      {id:"info-3-1", name:"Fundamentos, conceitos e mecanismos de segurança"},
+      {id:"info-3-2", name:"Proteção de estações de trabalho"},
+      {id:"info-3-3", name:"Controle de dispositivos USB"},
+      {id:"info-3-4", name:"Hardening"},
+      {id:"info-3-5", name:"Antimalware"},
+      {id:"info-3-6", name:"Firewall pessoal"}
+    ]},
+    {id:"info-4", name:"Conceitos de organização e gerenciamento de informações", subtopics:[
+      {id:"info-4-1", name:"Arquivos, pastas e programas"}
+    ]},
+    {id:"info-5", name:"Redes de computadores", subtopics:[
+      {id:"info-5-1", name:"Conceitos básicos"}
+    ]},
+    {id:"info-6", name:"Ferramentas, aplicativos e procedimentos de internet e intranet", subtopics:[
+      {id:"info-6-1", name:"Navegadores Web (Microsoft Edge 91 e Mozilla Firefox 78 ESR)"},
+      {id:"info-6-2", name:"Busca e pesquisa na web"},
+      {id:"info-6-3", name:"Correio eletrônico, grupos de discussão, fóruns e wikis"},
+      {id:"info-6-4", name:"Redes sociais (Twitter, Facebook, LinkedIn, WhatsApp, YouTube, Instagram e Telegram)"}
+    ]},
+    {id:"info-7", name:"Sistemas de suporte à decisão e inteligência de negócio", subtopics:[
+      {id:"info-7-1", name:"Fundamentos sobre análise de dados"}
+    ]},
+    {id:"info-8", name:"Conceitos de educação a distância", subtopics:[]},
+    {id:"info-9", name:"Conceitos de tecnologias e ferramentas multimídia", subtopics:[
+      {id:"info-9-1", name:"Reprodução de áudio e vídeo"}
+    ]},
+    {id:"info-10", name:"Ferramentas de produtividade e trabalho a distância", subtopics:[
+      {id:"info-10-1", name:"Microsoft Teams"},
+      {id:"info-10-2", name:"Cisco Webex"},
+      {id:"info-10-3", name:"Google Hangout"},
+      {id:"info-10-4", name:"Google Drive"},
+      {id:"info-10-5", name:"Skype"}
+    ]}
+  ]},
+  {id:"vendas", name:"Vendas e Negociação", weight:20, topics:[
+    {id:"vendas-1", name:"Noções de estratégia empresarial", subtopics:[]},
+    {id:"vendas-2", name:"Análise de mercado", subtopics:[
+      {id:"vendas-2-1", name:"Forças competitivas"}
+    ]},
+    {id:"vendas-3", name:"Imagem institucional", subtopics:[
+      {id:"vendas-3-1", name:"Identidade e posicionamento"}
+    ]},
+    {id:"vendas-4", name:"Segmentação de mercado", subtopics:[]},
+    {id:"vendas-5", name:"Ações para aumentar o valor percebido pelo cliente", subtopics:[]},
+    {id:"vendas-6", name:"Gestão da experiência do cliente", subtopics:[]},
+    {id:"vendas-7", name:"Aprendizagem e sustentabilidade organizacional", subtopics:[]},
+    {id:"vendas-8", name:"Características dos serviços", subtopics:[
+      {id:"vendas-8-1", name:"Intangibilidade, inseparabilidade, variabilidade e perecibilidade"}
+    ]},
+    {id:"vendas-9", name:"Gestão da qualidade em serviços", subtopics:[]},
+    {id:"vendas-10", name:"Técnicas de vendas (da pré-abordagem ao pós-vendas)", subtopics:[]},
+    {id:"vendas-11", name:"Noções de marketing digital", estimatedMinutes:60, subtopics:[
+      {id:"vendas-11-1", name:"Geração de leads"},
+      {id:"vendas-11-2", name:"Técnica de copywriting"},
+      {id:"vendas-11-3", name:"Gatilhos mentais"},
+      {id:"vendas-11-4", name:"Inbound marketing"}
+    ]},
+    {id:"vendas-12", name:"Ética e conduta profissional em vendas", subtopics:[]},
+    {id:"vendas-13", name:"Padrões de qualidade no atendimento aos clientes", subtopics:[]},
+    {id:"vendas-14", name:"Utilização de canais remotos para vendas", subtopics:[]},
+    {id:"vendas-15", name:"Comportamento do consumidor e sua relação com vendas e negociação", subtopics:[]},
+    {id:"vendas-16", name:"Política de Relacionamento com o Cliente (Resolução CMN 4.949/21)", subtopics:[]},
+    {id:"vendas-17", name:"Ouvidoria nas instituições financeiras (Resolução CMN nº 4.860/2020)", subtopics:[]},
+    {id:"vendas-18", name:"Diversidade e Inclusão (Lei nº 13.146/2015)", subtopics:[]},
+    {id:"vendas-19", name:"Código de Proteção e Defesa do Consumidor (Lei nº 8.078/1990)", subtopics:[]}
+  ]},
+  {id:"redacao", name:"Redação", weight:5, topics:[]}
+  // Conteúdo programático de Redação não constava no edital fornecido — adicione tópicos aqui se necessário.
+];
+
+const SUBJECT_MAP = {}; SUBJECTS.forEach(s=> SUBJECT_MAP[s.id]=s);
+/** Encontra o objeto de tópico/subtópico (não apenas o id) dentro de uma disciplina. */
+function findLeafNode(subjectId, nodeId){
+  const subj = SUBJECT_MAP[subjectId];
+  if(!subj) return null;
+  for(const t of subj.topics){
+    if(t.id===nodeId) return t;
+    for(const s of t.subtopics){ if(s.id===nodeId) return s; }
+  }
+  return null;
+}
+const METHODS = ["Aula","Leitura","Questões","Revisão","Simulado"];
+const STATUSES = ["nao_iniciado","em_andamento","revisar","finalizado"];
+const STATUS_LABEL = {nao_iniciado:"Não iniciado", em_andamento:"Em andamento", revisar:"Revisar", finalizado:"Finalizado"};
+const PRIORITIES = ["alta","media","baixa"];
+const PRIORITY_LABEL = {alta:"Alta", media:"Média", baixa:"Baixa"};
+const INCIDENCES = ["nenhuma","alta","media","baixa"];
+const INCIDENCE_LABEL = {nenhuma:"Sem incidência definida", alta:"Incidência alta", media:"Incidência média", baixa:"Incidência baixa"};
+
+/* =========================================================================
+   STORAGE
+   ========================================================================= */
+const Storage = window.BBPlannerStorage.create({
+  key:CONFIG_DEFAULTS.storageKey,
+  version:STATE_VERSION,
+  migrate:(saved)=>Core.migrateState(saved,STATE_VERSION)
+});
+
+/* =========================================================================
+   STATE
+   - items[id]: {status, priority, incidence}  — metadados do tópico/subtópico
+   - sessions[]: {id, topicId, subjectId, date, method, hours, questions, correct, wrong}
+   - settings: overrides de CONFIG_DEFAULTS definidos pelo usuário em ⚙
+   ========================================================================= */
+function defaultItemState(){
+  return {
+    status:"nao_iniciado", priority:"media", incidence:"nenhuma",
+    finalizedAt:null,       // data (ISO) em que o tópico foi finalizado pela última vez
+    reviewStage:0,          // índice em REVIEW_INTERVALS_DAYS (progresso da repetição espaçada)
+    nextReviewDate:null     // próxima revisão sugerida (ISO), null enquanto não finalizado
+  };
+}
+
+let CONFIG = Object.assign({}, CONFIG_DEFAULTS);
+let STATE = {
+  stateVersion:STATE_VERSION,
+  items:{}, sessions:[], mockExams:[], planAssignments:[], rescheduleHistory:[], settings:null,
+  ui:{
+    mainTab:"overview",
+    planSubTab:"today", planWeekIndex:0,
+    perfSubTab:"geral", evolucaoScope:"geral",
+    editalSearch:"", editalStatusFilter:"todas", editalPriorityFilter:"todas", editalIncidenceFilter:"todas",
+    editalOpenSubject:null, editalExpandedTopics:{}
+  }
+};
+
+/** Migra estados antigos de forma incremental. Os campos legados são aceitos
+ *  na leitura, mas toda nova gravação usa minutos e assignments formalizados. */
+function migrateState(saved){
+  return Core.migrateState(saved, STATE_VERSION);
+}
+
+function forEachItem(cb){
+  SUBJECTS.forEach(subj=>{
+    subj.topics.forEach(topic=>{
+      cb(topic, subj);
+      topic.subtopics.forEach(sub=> cb(sub, subj, topic));
+    });
+  });
+}
+
+function applySettingsToConfig(){
+  CONFIG = Object.assign({}, CONFIG_DEFAULTS, STATE.settings || {});
+  CONFIG.plannerPreferences = Object.assign({}, CONFIG_DEFAULTS.plannerPreferences, (STATE.settings||{}).plannerPreferences||{});
+  CONFIG.dailyAvailability = migrateSettingsToDailyAvailability(STATE.settings);
+  // Compatibilidade com o núcleo atual do Planner, que ainda trabalha com um
+  // hoursPerDay/studyDays agregados (isso será substituído por alocação em
+  // minutos por dia diretamente no próximo pacote de implementação).
+  CONFIG.studyDays = DAY_ORDER.filter(d=> (CONFIG.dailyAvailability[d]||0) > 0);
+  const activeDaysCount = CONFIG.studyDays.length || 1;
+  CONFIG.hoursPerDay = Math.round((getWeeklyCapacityMinutes() / activeDaysCount / 60) * 100) / 100;
+}
+
+function initState(){
+  const saved = migrateState(Storage.load());
+  STATE.stateVersion = STATE_VERSION;
+  STATE.items = {};
+  forEachItem(node=>{ STATE.items[node.id] = defaultItemState(); });
+  STATE.sessions = [];
+  STATE.mockExams = [];
+  STATE.planAssignments = [];
+  STATE.rescheduleHistory = [];
+  STATE.settings = null;
+
+  if(saved){
+    if(saved.items) Object.keys(saved.items).forEach(id=>{
+      if(STATE.items[id]) STATE.items[id] = Object.assign(defaultItemState(), saved.items[id]);
+    });
+    if(Array.isArray(saved.sessions)) STATE.sessions = saved.sessions;
+    if(Array.isArray(saved.mockExams)) STATE.mockExams = saved.mockExams;
+    if(Array.isArray(saved.planAssignments)) STATE.planAssignments = saved.planAssignments;
+    if(Array.isArray(saved.rescheduleHistory)) STATE.rescheduleHistory = saved.rescheduleHistory;
+    if(saved.settings) STATE.settings = saved.settings;
+  } else if (CONFIG_DEFAULTS.DEMO_MODE){
+    Demo.load();
+  }
+  if(!STATE.settings){
+    STATE.settings = { startDate: toISODate(new Date()) };
+  }
+  applySettingsToConfig();
+  persist();
+}
+
+function persist(){
+  Storage.save({
+    stateVersion:STATE_VERSION,
+    items:STATE.items,
+    sessions:STATE.sessions,
+    mockExams:STATE.mockExams,
+    planAssignments:STATE.planAssignments,
+    rescheduleHistory:STATE.rescheduleHistory || [],
+    settings:STATE.settings
+  });
+}
+
+function getItem(id){ return STATE.items[id]; }
+function setItemField(id, field, value){
+  if(!STATE.items[id]) return;
+  STATE.items[id][field] = value;
+  persist();
+}
+
+function addDaysISO(iso, n){
+  const d = parseISODate(iso);
+  d.setDate(d.getDate() + n);
+  return toISODate(d);
+}
+
+/** Altera o status de um tópico e mantém a repetição espaçada coerente:
+ *  ao finalizar pela 1ª vez, agenda a próxima revisão; ao sair de "finalizado",
+ *  o agendamento é limpo (o tópico deixa de ser considerado consolidado). */
+function setItemStatus(id, newStatus){
+  const st = STATE.items[id];
+  if(!st) return;
+  const wasFinalizado = st.status === "finalizado";
+  st.status = newStatus;
+  if(newStatus === "finalizado" && !wasFinalizado){
+    st.finalizedAt = toISODate(new Date());
+    st.reviewStage = 0;
+    st.nextReviewDate = addDaysISO(st.finalizedAt, REVIEW_INTERVALS_DAYS[0]);
+  } else if(newStatus !== "finalizado" && wasFinalizado){
+    st.finalizedAt = null; st.reviewStage = 0; st.nextReviewDate = null;
+  }
+  persist();
+}
+
+/** Avança um estágio na repetição espaçada (chamado quando uma sessão de
+ *  método "Revisão" é registrada em um tópico já finalizado). */
+function advanceReview(id){
+  const st = STATE.items[id];
+  if(!st || st.status !== "finalizado") return;
+  st.reviewStage = Math.min(st.reviewStage + 1, REVIEW_INTERVALS_DAYS.length - 1);
+  st.nextReviewDate = addDaysISO(toISODate(new Date()), REVIEW_INTERVALS_DAYS[st.reviewStage]);
+  persist();
+}
+
+/** Soma os minutos de todas as sessões ligadas a um assignment e atualiza completedMinutes. */
+function recomputeAssignmentCompletedMinutes(assignmentId){
+  const assignment = STATE.planAssignments.find(a=>a.id===assignmentId);
+  if(!assignment) return;
+  const linked = STATE.sessions.filter(s=> s.planAssignmentId === assignmentId);
+  assignment.completedMinutes = linked.reduce((sum,s)=> sum + Core.sessionMinutes(s), 0);
+  assignment.updatedAt = nowISOTimestamp();
+}
+
+function addSession(session){
+  session.id = "sess_" + Date.now() + "_" + Math.round(Math.random()*10000);
+  session.actualMinutes = Math.max(0, Math.round(Number(session.actualMinutes)||0));
+  session.planAssignmentId = session.planAssignmentId || null;
+  STATE.sessions.push(session);
+  if(session.planAssignmentId) recomputeAssignmentCompletedMinutes(session.planAssignmentId);
+  if(session.method === "Revisão") advanceReview(session.topicId);
+  persist();
+}
+
+function computeMockExamTotals(subjectsObj){
+  let totalQuestions=0, totalCorrect=0;
+  Object.values(subjectsObj).forEach(s=>{ totalQuestions += Number(s.questions)||0; totalCorrect += Number(s.correct)||0; });
+  return { totalQuestions, totalCorrect, accuracyPct: totalQuestions ? Math.round((totalCorrect/totalQuestions)*1000)/10 : null };
+}
+
+function addMockExam(exam){
+  exam.id = "mock_" + Date.now() + "_" + Math.round(Math.random()*10000);
+  Object.assign(exam, computeMockExamTotals(exam.subjects));
+  STATE.mockExams.push(exam);
+  persist();
+}
+
+/* =========================================================================
+   CALCULATIONS
+   ========================================================================= */
+function sessionsForTopic(id){ return STATE.sessions.filter(s=> s.topicId===id); }
+
+function aggregateForTopic(id){
+  const sess = sessionsForTopic(id);
+  const totalMinutes = sess.reduce((a,s)=> a+Core.sessionMinutes(s), 0);
+  const hours = totalMinutes/60;
+  const questions = sess.reduce((a,s)=> a+(Number(s.questions)||0), 0);
+  const correct = sess.reduce((a,s)=> a+(Number(s.correct)||0), 0);
+  const wrong = sess.reduce((a,s)=> a+(Number(s.wrong)||0), 0);
+  const accuracyPct = questions ? Math.round((correct/questions)*1000)/10 : null;
+  const last = sess.length ? sess.slice().sort((a,b)=> a.date<b.date?1:-1)[0] : null;
+  return {hours, totalMinutes, questions, correct, wrong, accuracyPct, count:sess.length, last};
+}
+
+function accuracyClass(pct){
+  if(pct === null || pct === undefined) return "gray";
+  if(pct < 70) return "red";
+  if(pct <= 80) return "amber";
+  return "green";
+}
+
+function subjectItemIds(subj){
+  const ids = [];
+  subj.topics.forEach(t=>{
+    if(t.subtopics.length) t.subtopics.forEach(s=> ids.push(s.id));
+    else ids.push(t.id);
+  });
+  return ids;
+}
+
+function subjectProgress(subj){
+  const ids = subjectItemIds(subj);
+  if(ids.length === 0) return {done:0,total:0,pct:0};
+  const done = ids.filter(id=> STATE.items[id] && STATE.items[id].status === "finalizado").length;
+  return {done, total: ids.length, pct: Math.round((done/ids.length)*100)};
+}
+
+function globalProgress(){
+  let done=0, total=0;
+  SUBJECTS.forEach(s=>{ const p = subjectProgress(s); done += p.done; total += p.total; });
+  return {done, total, pct: total ? Math.round((done/total)*100) : 0};
+}
+
+function globalPerformance(){
+  const hours = STATE.sessions.reduce((a,s)=> a+Core.sessionMinutes(s), 0)/60;
+  const questions = STATE.sessions.reduce((a,s)=> a+(Number(s.questions)||0), 0);
+  const correct = STATE.sessions.reduce((a,s)=> a+(Number(s.correct)||0), 0);
+  const acc = questions ? Math.round((correct/questions)*1000)/10 : null;
+  return {hours, questions, correctAccuracyPct: acc};
+}
+
+function subjectPerformance(subjectId){
+  const sess = STATE.sessions.filter(s=> s.subjectId===subjectId);
+  const questions = sess.reduce((a,s)=> a+(Number(s.questions)||0), 0);
+  const correct = sess.reduce((a,s)=> a+(Number(s.correct)||0), 0);
+  const acc = questions ? Math.round((correct/questions)*1000)/10 : null;
+  return {questions, correct, accuracyPct:acc};
+}
+
+function daysRemaining(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const exam = parseISODate(CONFIG.examDate);
+  return Math.ceil((exam - today) / 86400000);
+}
+function parseISODate(iso){ const [y,m,d] = iso.split("-").map(Number); return new Date(y, m-1, d); }
+function formatDateBR(date){ return date.toLocaleDateString("pt-BR", {day:"2-digit",month:"2-digit",year:"numeric"}); }
+function toISODate(date){ const y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,"0"), d=String(date.getDate()).padStart(2,"0"); return `${y}-${m}-${d}`; }
+function dayKey(date){ return DAY_ORDER[(date.getDay()+6)%7]; }
+
+function subjectsSortedByProgress(desc){
+  return SUBJECTS.filter(s=> subjectItemIds(s).length>0)
+    .map(s=>({subj:s, prog:subjectProgress(s)}))
+    .sort((a,b)=> desc ? b.prog.pct - a.prog.pct : a.prog.pct - b.prog.pct);
+}
+
+function priorityWeight(p){ return p==="alta"?3 : p==="media"?2 : 1; }
+function incidenceWeight(i){ return i==="alta"?1.3 : i==="media"?1.1 : 1; }
+
+/* ---- Tendência de desempenho (Fase 8) ---- */
+function weekBucketKey(dateISO){
+  const d = parseISODate(dateISO);
+  const monday = new Date(d); monday.setDate(d.getDate() - ((d.getDay()+6)%7));
+  return toISODate(monday);
+}
+/** Agrupa sessões por semana e calcula a direção da tendência de acurácia,
+ *  usando só semanas com questões suficientes (para não reagir a ruído). */
+function computeTrend(sessions, minQuestionsPerWeek){
+  const byWeek = {};
+  sessions.forEach(s=>{
+    if(!Number(s.questions)) return;
+    const key = weekBucketKey(s.date);
+    if(!byWeek[key]) byWeek[key] = {questions:0, correct:0};
+    byWeek[key].questions += Number(s.questions)||0;
+    byWeek[key].correct += Number(s.correct)||0;
+  });
+  const weekKeys = Object.keys(byWeek).sort();
+  const valid = weekKeys
+    .filter(k=> byWeek[k].questions >= minQuestionsPerWeek)
+    .map(k=> ({ week:k, accuracyPct: Math.round((byWeek[k].correct/byWeek[k].questions)*1000)/10 }));
+  if(valid.length < 2) return {direction:"insufficient_data", delta:0, points:valid};
+  const points = valid.slice(-4); // até as últimas 4 semanas com dados suficientes
+  const delta = Math.round((points[points.length-1].accuracyPct - points[0].accuracyPct)*10)/10;
+  let direction = "stable";
+  if(delta <= -5) direction = "down"; else if(delta >= 5) direction = "up";
+  return {direction, delta, points};
+}
+function subjectTrend(subjectId){ return computeTrend(STATE.sessions.filter(s=>s.subjectId===subjectId), 15); }
+function topicTrend(topicId){ return computeTrend(STATE.sessions.filter(s=>s.topicId===topicId), 8); }
+/** Fator pequeno e limitado aplicado ao score — não deve dominar a prioridade estrutural do edital. */
+function trendWeight(trend){
+  if(!trend || trend.direction==="insufficient_data" || trend.direction==="stable") return 1;
+  if(trend.direction==="down") return trend.delta <= -15 ? 1.20 : 1.10;
+  return 0.95; // "up"
+}
+
+/** Monta o score adaptativo E a explicação em linguagem simples de cada fator
+ *  (Fase 7 — "Por que estudar agora?"). peso estratégico x prioridade x
+ *  incidência x desempenho recente x necessidade de revisão x tendência. */
+function computeScoreBreakdown(node, subj){
+  const st = STATE.items[node.id];
+  const agg = aggregateForTopic(node.id);
+  const reasons = [];
+
+  const prioW = priorityWeight(st.priority);
+  if(st.priority==="alta") reasons.push("Prioridade alta");
+  else if(st.priority==="baixa") reasons.push("Prioridade baixa");
+
+  const incW = incidenceWeight(st.incidence);
+  if(st.incidence==="alta") reasons.push("Alta incidência");
+  else if(st.incidence==="media") reasons.push("Incidência média");
+
+  let perfFactor = 1;
+  if(agg.accuracyPct !== null){
+    if(agg.accuracyPct < 70){ perfFactor = 1.4; reasons.push("Aproveitamento abaixo de 70% (" + agg.accuracyPct + "%)"); }
+    else if(agg.accuracyPct <= 80){ perfFactor = 1.15; reasons.push("Aproveitamento entre 70% e 80% (" + agg.accuracyPct + "%)"); }
+    else { perfFactor = 0.85; reasons.push("Bom aproveitamento (" + agg.accuracyPct + "%)"); }
+  }
+
+  const reviewFactor = st.status === "revisar" ? 1.3 : 1;
+  if(st.status==="revisar") reasons.push("Marcado para revisão");
+
+  const trend = subjectTrend(subj.id);
+  const trendFactor = trendWeight(trend);
+  if(trend.direction==="down") reasons.push("Desempenho da disciplina em queda (" + trend.points[0].accuracyPct + "% → " + trend.points[trend.points.length-1].accuracyPct + "%)");
+  else if(trend.direction==="up") reasons.push("Desempenho da disciplina em melhora (" + trend.points[0].accuracyPct + "% → " + trend.points[trend.points.length-1].accuracyPct + "%)");
+
+  const score = subj.weight * prioW * incW * perfFactor * reviewFactor * trendFactor;
+  return { score, reasons, trend };
+}
+function itemScore(node, subj){ return computeScoreBreakdown(node, subj).score; }
+/** Fase 7: explica por que um tópico tem determinada prioridade agora, em vez de só o número do score. */
+function explainItemScore(node, subj){ return computeScoreBreakdown(node, subj); }
+
+/** Lista de itens (tópicos e subtópicos-folha) pendentes, ordenada pelo score adaptativo. */
+function pendingItemsRanked(){
+  const list = [];
+  SUBJECTS.forEach(subj=>{
+    subj.topics.forEach(topic=>{
+      const leaves = topic.subtopics.length ? topic.subtopics : [topic];
+      leaves.forEach((leaf, idx)=>{
+        const st = STATE.items[leaf.id];
+        if(!st || st.status === "finalizado") return;
+        list.push({
+          id:leaf.id, name:leaf.name, subjectId:subj.id, subjectName:subj.name,
+          priority:st.priority, incidence:st.incidence, status:st.status,
+          score: itemScore(leaf, subj), order: idx, estimatedMinutes: getEstimatedMinutes(leaf)
+        });
+      });
+    });
+  });
+  list.sort((a,b)=> b.score - a.score || a.order - b.order);
+  return list;
+}
+
+function topicsNeedingAttention(limit){
+  const rows = [];
+  SUBJECTS.forEach(subj=>{
+    subj.topics.forEach(topic=>{
+      const leaves = topic.subtopics.length ? topic.subtopics : [topic];
+      leaves.forEach(leaf=>{
+        const agg = aggregateForTopic(leaf.id);
+        if(agg.accuracyPct !== null && agg.accuracyPct < 70){
+          rows.push({name:leaf.name, subjectName:subj.name, pct:agg.accuracyPct, questions:agg.questions, priority:STATE.items[leaf.id].priority});
+        }
+      });
+    });
+  });
+  rows.sort((a,b)=> a.pct - b.pct);
+  return limit ? rows.slice(0,limit) : rows;
+}
+
+/* ---- Viabilidade do plano (Fase 9) ---- */
+/** Soma o tempo estimado de todo o conteúdo ainda pendente no edital (só folhas,
+ *  sem contar tópico-container e seus subtópicos em dobro). */
+function totalPendingEstimatedMinutes(){
+  let total = 0;
+  SUBJECTS.forEach(subj=> subj.topics.forEach(topic=>{
+    const leaves = topic.subtopics.length ? topic.subtopics : [topic];
+    leaves.forEach(leaf=>{
+      const st = STATE.items[leaf.id];
+      if(st && st.status !== "finalizado") total += getEstimatedMinutes(leaf);
+    });
+  }));
+  return total;
+}
+/** Compara o tempo necessário para zerar o pendente com o tempo disponível
+ *  até a prova, dada a disponibilidade configurada. */
+function planFeasibility(){
+  const todayISO = toISODate(new Date());
+  const availableMinutes = calculateAvailableMinutesUntilExam();
+  const futureActive = STATE.planAssignments.filter(a=>a.status!=="cancelled" && a.date>=todayISO && a.date<CONFIG.examDate);
+  const committedMinutes = futureActive.reduce((sum,a)=>sum+(Number(a.plannedMinutes)||0),0);
+  const committedContentByTopic = {};
+  futureActive.filter(a=>a.kind!=="review" && a.kind!=="recovery").forEach(a=>{
+    committedContentByTopic[a.topicId]=(committedContentByTopic[a.topicId]||0)+(Number(a.plannedMinutes)||0);
+  });
+  let contentMinutes = 0;
+  pendingItemsRanked().forEach(item=> contentMinutes += Math.max(0,item.estimatedMinutes-(committedContentByTopic[item.id]||0)));
+  const adherence = Core.evaluatePlan(STATE.planAssignments,STATE.sessions,{startISO:CONFIG.startDate||todayISO,endISO:todayISO,todayISO,tolerance:Core.COMPLETION_TOLERANCE});
+  const recoveryCoverage = futureActive.filter(a=>a.kind==="recovery").reduce((sum,a)=>sum+(Number(a.plannedMinutes)||0),0);
+  const uncoveredDebtMinutes = Math.max(0,adherence.debtMinutes-recoveryCoverage);
+  const scheduledReviewKeys = new Set(futureActive.filter(a=>a.kind==="review").map(a=>a.topicId+"|"+a.reviewStage+"|"+a.reviewDueDate));
+  const reviewMinutes = reviewSchedule().filter(r=>r.nextReviewDate<CONFIG.examDate && !scheduledReviewKeys.has(r.id+"|"+r.reviewStage+"|"+r.nextReviewDate)).length*CONFIG.reviewEstimatedMinutes;
+  const result = Core.analyzeFeasibility({contentMinutes,debtMinutes:uncoveredDebtMinutes,reviewMinutes,committedMinutes,availableMinutes});
+  result.deficitMinutes = Math.max(0,-result.marginMinutes);
+  return result;
+}
+
+/* ---- Repetição espaçada ---- */
+/** Lista todos os tópicos finalizados com data de revisão definida, cada um
+ *  marcado como "overdue" (atrasado), "today" (hoje) ou "upcoming" (futuro). */
+function reviewSchedule(){
+  const todayISO = toISODate(new Date());
+  const rows = [];
+  SUBJECTS.forEach(subj=>{
+    subj.topics.forEach(topic=>{
+      const leaves = topic.subtopics.length ? topic.subtopics : [topic];
+      leaves.forEach(leaf=>{
+        const st = STATE.items[leaf.id];
+        if(st.status !== "finalizado" || !st.nextReviewDate) return;
+        let bucket = "upcoming";
+        if(st.nextReviewDate < todayISO) bucket = "overdue";
+        else if(st.nextReviewDate === todayISO) bucket = "today";
+        rows.push({
+          id:leaf.id, name:leaf.name, subjectId:subj.id, subjectName:subj.name,
+          nextReviewDate:st.nextReviewDate, reviewStage:st.reviewStage, bucket
+        });
+      });
+    });
+  });
+  rows.sort((a,b)=> a.nextReviewDate < b.nextReviewDate ? -1 : (a.nextReviewDate > b.nextReviewDate ? 1 : 0));
+  return rows;
+}
+function dueReviews(){ return reviewSchedule().filter(r=> r.bucket==="overdue" || r.bucket==="today"); }
+
+/* ---- Evolução (séries para gráficos) ---- */
+/** Sessões (opcionalmente filtradas por disciplina) em ordem cronológica,
+ *  com acurácia acumulada calculada ponto a ponto — mostra a tendência em vez
+ *  do ruído de cada sessão isolada. */
+function accuracyEvolutionSeries(subjectId){
+  const sessions = STATE.sessions
+    .filter(s=> (!subjectId || subjectId==="geral" || s.subjectId===subjectId) && Number(s.questions)>0)
+    .slice().sort((a,b)=> a.date < b.date ? -1 : (a.date > b.date ? 1 : 0));
+  let cumQuestions=0, cumCorrect=0;
+  return sessions.map(s=>{
+    cumQuestions += Number(s.questions)||0;
+    cumCorrect += Number(s.correct)||0;
+    return { date:s.date, value: Math.round((cumCorrect/cumQuestions)*1000)/10 };
+  });
+}
+/** Horas estudadas por semana (rótulo = data de início da semana ISO), últimas `weeksCount` semanas com dados. */
+function hoursPerWeekSeries(subjectId, weeksCount){
+  if(STATE.sessions.length===0) return [];
+  const filtered = STATE.sessions.filter(s=> !subjectId || subjectId==="geral" || s.subjectId===subjectId);
+  if(filtered.length===0) return [];
+  const byWeek = {};
+  filtered.forEach(s=>{
+    const d = parseISODate(s.date);
+    const monday = new Date(d); monday.setDate(d.getDate() - ((d.getDay()+6)%7));
+    const key = toISODate(monday);
+    byWeek[key] = (byWeek[key]||0) + Core.sessionMinutes(s)/60;
+  });
+  const keys = Object.keys(byWeek).sort();
+  const limited = weeksCount ? keys.slice(-weeksCount) : keys;
+  return limited.map(k=> ({date:k, value: Math.round(byWeek[k]*10)/10}));
+}
+function mockExamSeries(){
+  return STATE.mockExams.slice()
+    .sort((a,b)=> a.date < b.date ? -1 : (a.date > b.date ? 1 : 0))
+    .map(m=> ({date:m.date, value:m.accuracyPct}));
+}
+
+/* =========================================================================
+   PLANNER
+   Gera semanas do início até a prova. Cada dia possui uma capacidade própria
+   em MINUTOS (CONFIG.dailyAvailability), e cada tópico uma duração estimada
+   (getEstimatedMinutes) — a alocação preenche a capacidade real de cada dia
+   em vez de assumir uma quantidade fixa de itens por dia, então uma quarta
+   com mais tempo disponível recebe mais conteúdo que uma sexta mais corrida.
+   Dias já passados NÃO recebem novos itens (replanejamento automático): a
+   cada rebuild, apenas os tópicos ainda pendentes são redistribuídos nos dias
+   restantes — nada fica perdido, e o que não foi concluído simplesmente volta
+   para a fila e é realocado à frente. Cada dia recebe até MAX_SUBJECTS_PER_DAY
+   disciplinas diferentes, evita os pares de CONFLICT_SUBJECT_PAIRS no mesmo
+   dia e evita repetir a disciplina que dominou o dia anterior sempre que há
+   alternativa. Sábado reserva espaço para Redação (se couber no tempo restante
+   do dia); domingo é revisão/simulado. A última semana antes da prova vira
+   "Revisão final", priorizando itens marcados como Revisar e de prioridade
+   alta em vez de conteúdo novo.
+   ========================================================================= */
+function subjectsConflict(sid, subjectsSoFar){
+  const pairs = CONFIG.plannerPreferences.conflictPairs || CONFLICT_SUBJECT_PAIRS;
+  return pairs.some(([a,b])=> (sid===a && subjectsSoFar.has(b)) || (sid===b && subjectsSoFar.has(a)));
+}
+
+/** Preenche uma lista de "dias com capacidade" com itens de uma fila (respeitando
+ *  o limite de disciplinas/dia, os pares conflitantes e o orçamento por disciplina),
+ *  parando um dia quando nenhum candidato pendente cabe no tempo restante. */
+function fillDaysByMinutes(dayObjs, bySubject, remainingBudgetMinutes, previousDaySubjectsRef){
+  const cursors = {}; Object.keys(bySubject).forEach(sid=> cursors[sid]=0);
+  dayObjs.forEach(day=>{
+    let guard = 0;
+    while(day.remainingMinutes > 0 && guard < 60){
+      guard++;
+      const candidates = Object.keys(bySubject)
+        .filter(sid=> cursors[sid] < bySubject[sid].length)
+        .filter(sid=> day.subjects.has(sid) || day.subjects.size < (CONFIG.plannerPreferences.maxSubjectsPerDay||MAX_SUBJECTS_PER_DAY))
+        .filter(sid=> !subjectsConflict(sid, day.subjects))
+        .filter(sid=> bySubject[sid][cursors[sid]].estimatedMinutes <= day.remainingMinutes)
+        .sort((a,b)=>{
+          const avoidConsecutive = CONFIG.plannerPreferences.avoidSameSubjectConsecutiveDays;
+          const aPenalty = avoidConsecutive && previousDaySubjectsRef.set.has(a) && !day.subjects.has(a) ? 1 : 0;
+          const bPenalty = avoidConsecutive && previousDaySubjectsRef.set.has(b) && !day.subjects.has(b) ? 1 : 0;
+          if(aPenalty !== bPenalty) return aPenalty - bPenalty;
+          return (remainingBudgetMinutes[b]||0) - (remainingBudgetMinutes[a]||0);
+        });
+      if(candidates.length===0) break;
+      const sid = candidates[0];
+      const item = bySubject[sid][cursors[sid]];
+      day.items.push(item);
+      day.subjects.add(sid);
+      day.allocatedMinutes += item.estimatedMinutes;
+      cursors[sid]++;
+      if(remainingBudgetMinutes[sid]!==undefined) remainingBudgetMinutes[sid] -= item.estimatedMinutes;
+    }
+    if(day.subjects.size) previousDaySubjectsRef.set = day.subjects;
+  });
+}
+
+/* ---- PlanAssignment (Fase 3) ----
+   Status de um tópico ("em_andamento", "revisar"...) e status de um dia
+   planejado são conceitos diferentes: um tópico pode continuar em_andamento
+   enquanto a atividade de segunda-feira já está "completed". O status de cada
+   PlanAssignment é DERIVADO (não fica gravado, exceto "cancelled"): dias
+   futuros ficam "planned"; dias passados viram "completed" ou "missed" com
+   base no status atual do tópico. Essa é uma heurística simples — a versão
+   precisa, ligando cada assignment às sessões de estudo registradas, é o
+   próximo pacote (Planejado × Realizado por assignment). */
+const ASSIGNMENT_STATUSES = ["planned","partial","completed","missed","rescheduled","cancelled"];
+const ASSIGNMENT_STATUS_BADGE = {
+  completed: ' <span class="as-badge">✓ concluído</span>',
+  missed: ' <span class="as-badge">✗ não estudado</span>',
+  partial: ' <span class="as-badge">◐ parcial</span>',
+  rescheduled: ' <span class="as-badge">↻ remarcado</span>'
+};
+function nowISOTimestamp(){ return new Date().toISOString(); }
+function generateAssignmentId(){ return "plan_" + Date.now() + "_" + Math.round(Math.random()*10000); }
+
+/** Status do dia planejado, agora baseado no tempo REALMENTE estudado (via
+ *  sessões vinculadas) contra o tempo planejado — não mais no status do
+ *  tópico. É exatamente essa separação que a Fase 3 pedia: um tópico pode
+ *  seguir em_andamento enquanto o assignment de segunda já está "completed". */
+function getAssignmentStatus(assignment){
+  if(assignment.status === "rescheduled") return "rescheduled";
+  return Core.evaluateAssignment(assignment, STATE.sessions, {
+    todayISO:toISODate(new Date()), tolerance:Core.COMPLETION_TOLERANCE
+  }).derivedStatus;
+}
+
+/** Fase 5 — aderência: minutos realmente estudados (limitados ao planejado,
+ *  para não deixar "estudei mais" mascarar atraso em outro dia) sobre minutos
+ *  planejados, considerando só até hoje (dias futuros ainda não aconteceram). */
+function calculatePlanAdherence(startISO, endISO){
+  const metrics = Core.evaluatePlan(STATE.planAssignments, STATE.sessions, {
+    startISO, endISO, todayISO:toISODate(new Date()), tolerance:Core.COMPLETION_TOLERANCE
+  });
+  return {
+    plannedMinutes:metrics.plannedMinutes,
+    completedMinutes:metrics.creditedMinutes,
+    linkedMinutes:metrics.linkedMinutes,
+    totalStudyMinutes:metrics.totalStudyMinutes,
+    spontaneousMinutes:metrics.spontaneousMinutes,
+    debtMinutes:metrics.debtMinutes,
+    loadPct:metrics.loadPct,
+    pct:metrics.adherencePct
+  };
+}
+function adherenceLabel(pct){
+  if(pct===null) return {text:"Sem dados", cls:"gray"};
+  if(pct>=90) return {text:"Excelente", cls:"green"};
+  if(pct>=75) return {text:"Boa", cls:"green"};
+  if(pct>=60) return {text:"Atenção", cls:"amber"};
+  return {text:"Plano em risco", cls:"red"};
+}
+
+const Planner = {
+  weeks: [],
+
+  build(){
+    this.syncAssignments();
+    this.rebuildWeeksFromAssignments();
+  },
+
+  /** Cria PlanAssignments para os dias que ainda não têm nenhum (idempotente:
+   *  não mexe em dias já preenchidos, não duplica tópicos já agendados no
+   *  futuro). Cancela assignments futuros que ficaram "para depois da prova"
+   *  se a data da prova foi antecipada; assignments já concluídos não são
+   *  tocados — são fato histórico. */
+  syncAssignments(){
+    const start = CONFIG.startDate ? parseISODate(CONFIG.startDate) : new Date(new Date().setHours(0,0,0,0));
+    const exam = parseISODate(CONFIG.examDate);
+    if(exam <= start) return;
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const planningFloor = today > start ? today : start;
+    const examISO = toISODate(exam);
+
+    let changed = false;
+    STATE.planAssignments.forEach(a=>{
+      const derived = getAssignmentStatus(a);
+      if(a.status !== "cancelled" && derived !== "completed" && a.date >= examISO){
+        a.status = "cancelled"; a.updatedAt = nowISOTimestamp(); changed = true;
+      }
+    });
+
+    const days = [];
+    for(let d=new Date(start); d<exam; d.setDate(d.getDate()+1)) days.push(new Date(d));
+    const finalWeekStart = new Date(exam); finalWeekStart.setDate(finalWeekStart.getDate()-7);
+
+    const isAvailableDay = d=> (CONFIG.dailyAvailability[dayKey(d)]||0)>0 && d>=planningFloor;
+    const isContentDay = d=> isAvailableDay(d) && !(dayKey(d)==="sun" && CONFIG.reserveSundayForReview);
+    const allPlanningDays = days.filter(isAvailableDay);
+    const contentDaysRegular = allPlanningDays.filter(d=> isContentDay(d) && d < finalWeekStart);
+    const contentDaysFinal = allPlanningDays.filter(d=> isContentDay(d) && d >= finalWeekStart);
+
+    if(allPlanningDays.length===0){
+      if(changed) persist();
+      return; // nada de novo para alocar — preserva tudo que já existe
+    }
+
+    const activeByDate = {};
+    STATE.planAssignments.filter(a=>a.status!=="cancelled").forEach(a=> (activeByDate[a.date]=activeByDate[a.date]||[]).push(a));
+    const makeDayObj = d=>{
+      const existing = activeByDate[toISODate(d)] || [];
+      return {
+        date:d,
+        capacityMinutes:CONFIG.dailyAvailability[dayKey(d)]||0,
+        allocatedMinutes:existing.reduce((sum,a)=>sum+(Number(a.plannedMinutes)||0),0),
+        get remainingMinutes(){ return Math.max(this.capacityMinutes-this.allocatedMinutes,0); },
+        items:[], subjects:new Set(existing.map(a=>a.subjectId))
+      };
+    };
+    const allDayObjs = allPlanningDays.map(makeDayObj);
+    const regularDates = new Set(contentDaysRegular.map(toISODate));
+    const finalDates = new Set(contentDaysFinal.map(toISODate));
+    const regularDayObjs = allDayObjs.filter(day=>regularDates.has(toISODate(day.date)));
+    const finalDayObjs = allDayObjs.filter(day=>finalDates.has(toISODate(day.date)));
+
+    // Revisões são atividades reais e consomem a capacidade antes de conteúdo novo.
+    const existingReviewKeys = new Set(STATE.planAssignments
+      .filter(a=>a.status!=="cancelled" && a.kind==="review")
+      .map(a=>a.topicId+"|"+a.reviewStage+"|"+a.reviewDueDate));
+    reviewSchedule().filter(review=>review.nextReviewDate<examISO).forEach(review=>{
+      const reviewKey = review.id+"|"+review.reviewStage+"|"+review.nextReviewDate;
+      if(existingReviewKeys.has(reviewKey)) return;
+      const earliest = review.nextReviewDate>toISODate(planningFloor) ? review.nextReviewDate : toISODate(planningFloor);
+      const target = allDayObjs.find(day=>toISODate(day.date)>=earliest && day.remainingMinutes>=CONFIG.reviewEstimatedMinutes);
+      if(!target) return;
+      target.items.push({
+        id:review.id, subjectId:review.subjectId, subjectName:review.subjectName,
+        name:"Revisão · "+review.name, estimatedMinutes:CONFIG.reviewEstimatedMinutes,
+        kind:"review", reviewStage:review.reviewStage, reviewDueDate:review.nextReviewDate,
+        unitKey:"review|"+reviewKey
+      });
+      target.subjects.add(review.subjectId);
+      target.allocatedMinutes += CONFIG.reviewEstimatedMinutes;
+    });
+
+    // Divide conteúdos maiores em blocos que caibam até nos dias curtos.
+    const activeContentMinutes = {};
+    STATE.planAssignments.filter(a=>a.status!=="cancelled" && a.kind!=="review" && a.date>=toISODate(planningFloor)).forEach(a=>{
+      activeContentMinutes[a.topicId]=(activeContentMinutes[a.topicId]||0)+(Number(a.plannedMinutes)||0);
+    });
+    const positiveDaily = DAY_ORDER.map(d=>CONFIG.dailyAvailability[d]||0).filter(Boolean);
+    const blockMinutes = Math.max(5, Math.min(CONFIG.plannerPreferences.preferredBlockMinutes||60, positiveDaily.length?Math.min.apply(null,positiveDaily):60));
+    const units = [];
+    pendingItemsRanked().forEach(item=>{
+      const remaining=Math.max(0,item.estimatedMinutes-(activeContentMinutes[item.id]||0));
+      Core.splitIntoBlocks(remaining,blockMinutes).forEach((minutes,index)=>{
+        const part=index+1;
+        units.push(Object.assign({},item,{estimatedMinutes:minutes,unitKey:item.id+"|"+part,part}));
+      });
+    });
+    const redacaoQueue = units.filter(i=>i.subjectId==="redacao");
+    const otherQueue = CONFIG.reserveSaturdayForRedacao ? units.filter(i=>i.subjectId!=="redacao") : units.slice();
+
+    // A reserva de sábado ocorre antes das demais disciplinas.
+    let redacaoCursor = 0;
+    if(CONFIG.reserveSaturdayForRedacao){
+      regularDayObjs.filter(day=>dayKey(day.date)==="sat").forEach(day=>{
+        while(redacaoCursor<redacaoQueue.length && redacaoQueue[redacaoCursor].estimatedMinutes<=day.remainingMinutes){
+          const item=redacaoQueue[redacaoCursor++];
+          day.items.push(item); day.subjects.add("redacao"); day.allocatedMinutes+=item.estimatedMinutes;
+        }
+      });
+    }
+
+    const planningSubjects = SUBJECTS.filter(s=>!(CONFIG.reserveSaturdayForRedacao && s.id==="redacao"));
+    const totalWeight = planningSubjects.reduce((a,s)=>a+s.weight,0) || 1;
+    const bySubject = {};
+    planningSubjects.forEach(s=>{ bySubject[s.id]=otherQueue.filter(i=>i.subjectId===s.id); });
+
+    const totalRegularCapacity = regularDayObjs.reduce((a,d)=>a+d.capacityMinutes,0);
+    const remainingBudgetMinutes = {};
+    planningSubjects.forEach(s=>{ remainingBudgetMinutes[s.id]=Math.round((s.weight/totalWeight)*totalRegularCapacity); });
+
+    const prevRegular = {set:new Set()};
+    fillDaysByMinutes(regularDayObjs, bySubject, remainingBudgetMinutes, prevRegular);
+
+    // A semana final só usa itens de revisão/alta prioridade que NÃO foram
+    // consumidos pela alocação regular acima (evita agendar o mesmo tópico
+    // duas vezes — uma vez cedo e outra na revisão final).
+    const consumedByRegular = new Set(regularDayObjs.flatMap(d=> d.items.map(i=>i.unitKey)));
+    const reviewPriorityQueue = otherQueue.filter(i=> !consumedByRegular.has(i.unitKey) && (i.status==="revisar" || i.priority==="alta"));
+    const byFinalSubject = {};
+    reviewPriorityQueue.forEach(i=>{ (byFinalSubject[i.subjectId] = byFinalSubject[i.subjectId] || []).push(i); });
+    const finalBudget = {}; Object.keys(byFinalSubject).forEach(sid=> finalBudget[sid] = Infinity);
+    const prevFinal = {set:new Set()};
+    fillDaysByMinutes(finalDayObjs, byFinalSubject, finalBudget, prevFinal);
+
+    const nowTs = nowISOTimestamp();
+    allDayObjs.forEach(day=>{
+      const dateISO = toISODate(day.date);
+      day.items.forEach(item=>{
+        STATE.planAssignments.push({
+          id: generateAssignmentId(), date: dateISO,
+          topicId: item.id, subjectId: item.subjectId,
+          plannedMinutes: item.estimatedMinutes, completedMinutes: 0,
+          status:"planned", kind:item.kind||"content", source:"automatic",
+          originalDate: dateISO, rescheduleCount:0,
+          reviewStage:item.reviewStage===undefined?null:item.reviewStage,
+          reviewDueDate:item.reviewDueDate||null,
+          part:item.part||null,
+          createdAt: nowTs, updatedAt: nowTs
+        });
+        changed = true;
+      });
+    });
+
+    if(changed) persist();
+  },
+
+  /** Reconstrói a grade de semanas puramente a partir dos PlanAssignments
+   *  persistidos (leitura, sem gerar nada novo). */
+  rebuildWeeksFromAssignments(){
+    const start = CONFIG.startDate ? parseISODate(CONFIG.startDate) : new Date(new Date().setHours(0,0,0,0));
+    const exam = parseISODate(CONFIG.examDate);
+    if(exam <= start){ this.weeks = []; return; }
+
+    const today = new Date(); today.setHours(0,0,0,0);
+    const finalWeekStart = new Date(exam); finalWeekStart.setDate(finalWeekStart.getDate()-7);
+
+    const assignmentsByDate = {};
+    STATE.planAssignments.forEach(a=>{
+      if(a.status==="cancelled") return;
+      (assignmentsByDate[a.date] = assignmentsByDate[a.date] || []).push(a);
+    });
+
+    const weeks = [];
+    let cursorDate = new Date(start); let weekNum = 1;
+    while(cursorDate < exam){
+      const weekStart = new Date(cursorDate);
+      const weekDays = [];
+      for(let i=0;i<7;i++){ const d = new Date(weekStart); d.setDate(d.getDate()+i); if(d>=exam) break; weekDays.push(d); }
+      weeks.push({ num:weekNum, start:weekStart, end: weekDays[weekDays.length-1]||weekStart, days:weekDays });
+      cursorDate.setDate(cursorDate.getDate()+7); weekNum++;
+    }
+
+    weeks.forEach(week=>{
+      week.isFinalWeek = week.days.some(d=> d >= finalWeekStart);
+      week.dayPlans = week.days.map(d=>{
+        const k = dayKey(d);
+        const dateISO = toISODate(d);
+        const dayCapacity = CONFIG.dailyAvailability[k] || 0;
+        const isPast = d < today;
+        let items = [], kind = "off", capacityMinutes = 0, allocatedMinutes = 0;
+        if(dayCapacity > 0){
+          kind = (k==="sun" && CONFIG.reserveSundayForReview) ? "review" : (isPast ? "past" : (d >= finalWeekStart ? "final" : "content"));
+          capacityMinutes = dayCapacity;
+          const rawAssignments = assignmentsByDate[dateISO] || [];
+          items = rawAssignments.map(a=>{
+            const node = findLeafNode(a.subjectId, a.topicId);
+            const evaluation = Core.evaluateAssignment(a, STATE.sessions, {todayISO:toISODate(today), tolerance:Core.COMPLETION_TOLERANCE});
+            allocatedMinutes += a.plannedMinutes;
+            return {
+              id:a.topicId, assignmentId:a.id, name:(a.kind==="review"?"Revisão · ":"")+(node ? node.name : a.topicId),
+              subjectId: a.subjectId, subjectName: (SUBJECT_MAP[a.subjectId]||{}).name || a.subjectId,
+              estimatedMinutes:a.plannedMinutes, completedMinutes:evaluation.completedMinutes,
+              assignmentStatus:evaluation.derivedStatus, assignmentKind:a.kind||"content"
+            };
+          });
+        }
+        return { date:d, dayKey:k, kind, items, capacityMinutes, allocatedMinutes };
+      });
+    });
+
+    this.weeks = weeks;
+  },
+
+  /** Minutos planejados (soma de estimatedMinutes dos itens do cronograma) x
+   *  minutos efetivamente registrados em sessões na semana. */
+  weekPlannedVsRealized(week){
+    if(!week) return {plannedHours:0, realizedHours:0};
+    let plannedMinutes = 0;
+    week.dayPlans.forEach(dp=>{ plannedMinutes += dp.allocatedMinutes; });
+    const plannedHours = Math.round((plannedMinutes/60) * 10)/10;
+    const startISO = toISODate(week.start), endISO = toISODate(week.end);
+    const realizedHours = Math.round(STATE.sessions
+      .filter(s=> s.date >= startISO && s.date <= endISO)
+      .reduce((a,s)=> a+Core.sessionMinutes(s), 0) / 6)/10;
+    return {plannedHours, realizedHours};
+  },
+
+  currentWeek(idx){
+    if(this.weeks.length===0) return null;
+    const i = Math.min(Math.max(idx,0), this.weeks.length-1);
+    return this.weeks[i];
+  },
+
+  weekIndexForToday(){
+    if(this.weeks.length===0) return 0;
+    const today = new Date(); today.setHours(0,0,0,0);
+    for(let i=0;i<this.weeks.length;i++) if(today <= this.weeks[i].end) return i;
+    return this.weeks.length-1;
+  },
+
+  todayPlan(){
+    const idx = this.weekIndexForToday();
+    const week = this.currentWeek(idx);
+    if(!week) return null;
+    const todayISO = toISODate(new Date());
+    return week.dayPlans.find(dp=> toISODate(dp.date) === todayISO) || null;
+  }
+};
+
+/* =========================================================================
+   RENDER
+   ========================================================================= */
+const MAIN_TABS = [
+  {id:"overview", name:"Visão Geral"},
+  {id:"plan", name:"Meu Plano"},
+  {id:"edital", name:"Edital"},
+  {id:"performance", name:"Desempenho"}
+];
+
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+
+function renderAll(){ renderHeader(); renderMainTabs(); renderActivePanel(); }
+
+function renderHeader(){
+  const exam = parseISODate(CONFIG.examDate);
+  document.getElementById("examDateLabel").textContent = "Data da prova: " + formatDateBR(exam);
+  const days = daysRemaining();
+  document.getElementById("countdownDays").innerHTML = (days>=0?days:0) + "<small> dia" + (days===1?"":"s") + "</small>";
+}
+
+function renderMainTabs(){
+  const wrap = document.getElementById("mainTabbar");
+  wrap.innerHTML = "";
+  MAIN_TABS.forEach(tab=>{
+    const btn = el("button","tab-btn", tab.name);
+    btn.type="button"; btn.setAttribute("role","tab");
+    btn.setAttribute("aria-selected", String(STATE.ui.mainTab===tab.id));
+    btn.addEventListener("click", ()=>{ STATE.ui.mainTab = tab.id; renderMainTabs(); renderActivePanel(); });
+    wrap.appendChild(btn);
+  });
+}
+
+function renderActivePanel(){
+  const main = document.getElementById("mainPanels");
+  main.innerHTML = "";
+  // Renderização é somente leitura: criação de assignments ocorre apenas em
+  // comandos explícitos (inicialização ou alteração confirmada do plano).
+  Planner.rebuildWeeksFromAssignments();
+  if(STATE.ui.mainTab === "overview") main.appendChild(renderOverviewPanel());
+  else if(STATE.ui.mainTab === "plan") main.appendChild(renderPlanPanel());
+  else if(STATE.ui.mainTab === "edital") main.appendChild(renderEditalPanel());
+  else if(STATE.ui.mainTab === "performance") main.appendChild(renderPerformancePanel());
+}
+
+function subtab(container, options, activeId, onSelect){
+  const row = el("div","subtab-row");
+  options.forEach(opt=>{
+    const btn = el("button","subtab-btn", opt.name);
+    btn.type="button"; btn.setAttribute("aria-selected", String(activeId===opt.id));
+    btn.addEventListener("click", ()=> onSelect(opt.id));
+    row.appendChild(btn);
+  });
+  container.appendChild(row);
+}
+
+/* ---------------- VISÃO GERAL ---------------- */
+function renderOverviewPanel(){
+  const wrap = el("div","panel active");
+  const gp = globalProgress();
+  const perf = globalPerformance();
+  const days = daysRemaining();
+
+  const feasibility = planFeasibility();
+  if(feasibility.level!=="healthy"){
+    const banner = el("div","feasibility-banner");
+    const statusTitle = !feasibility.feasible ? "Seu plano atual não cabe no tempo disponível" : (feasibility.level==="risk" ? "Seu plano está com margem mínima" : "Seu plano está apertado");
+    const marginText = feasibility.marginMinutes>=0 ? `margem de ${minutesToHM(feasibility.marginMinutes)}` : `déficit de ${minutesToHM(feasibility.deficitMinutes)}`;
+    banner.innerHTML = `
+      <h4>⚠️ ${statusTitle}</h4>
+      <p>Utilização prevista: <strong>${Number.isFinite(feasibility.utilizationPct)?feasibility.utilizationPct+'%':'—'}</strong> · ${marginText} (necessário: ${minutesToHM(feasibility.neededMinutes)} · disponível: ${minutesToHM(feasibility.availableMinutes)}).</p>
+      <ul class="feasibility-tips">
+        <li>Aumentar a disponibilidade diária ou semanal</li>
+        <li>Reduzir ou adiar conteúdos de prioridade baixa</li>
+        <li>Conteúdo: ${minutesToHM(feasibility.contentMinutes)} · dívida: ${minutesToHM(feasibility.debtMinutes)} · revisões: ${minutesToHM(feasibility.reviewMinutes)}</li>
+      </ul>`;
+    const adjustBtn = el("button","btn btn-sm","Ajustar disponibilidade");
+    adjustBtn.addEventListener("click", openSettingsModal);
+    banner.appendChild(adjustBtn);
+    wrap.appendChild(banner);
+  }
+
+  const hero = el("div","hero-card");
+  hero.innerHTML = `
+    <div class="hero-days">${days>=0?days:0}<span class="hero-days-label"> dias para a prova</span></div>
+    <div class="hero-date">Prova em ${formatDateBR(parseISODate(CONFIG.examDate))}</div>
+    <div class="hero-progress-row"><span>Progresso geral do edital</span><span class="hero-progress-pct">${gp.pct}%</span></div>
+    <div class="hero-track"><div class="hero-fill" style="width:${gp.pct}%"></div></div>`;
+  wrap.appendChild(hero);
+
+  const kpiGrid = el("div","kpi-grid");
+  const curWeekForAdh = Planner.currentWeek(Planner.weekIndexForToday());
+  const weekAdh = curWeekForAdh ? calculatePlanAdherence(toISODate(curWeekForAdh.start), toISODate(curWeekForAdh.end)) : {plannedMinutes:0, completedMinutes:0, pct:null};
+  const planStartISO = CONFIG.startDate || toISODate(new Date());
+  const overallAdh = calculatePlanAdherence(planStartISO, toISODate(new Date()));
+  const weekAdhLabel = adherenceLabel(weekAdh.pct);
+  [
+    {label:"Horas estudadas", value: perf.hours.toFixed(1).replace(".",",")},
+    {label:"Questões respondidas", value: perf.questions},
+    {label:"Acertos", value: perf.correctAccuracyPct!==null? perf.correctAccuracyPct+"%":"—"},
+    {label:"Tópicos concluídos", value: gp.done + "/" + gp.total}
+  ].forEach(k=>{
+    const box = el("div","kpi-box", `<div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div>`);
+    kpiGrid.appendChild(box);
+  });
+  const adhBox = el("div","kpi-box");
+  adhBox.innerHTML = `<div class="kpi-label">Aderência semanal</div><div class="kpi-value" style="color:var(--${weekAdhLabel.cls==='gray'?'muted':weekAdhLabel.cls});">${weekAdh.pct!==null?weekAdh.pct+"%":"—"}</div><div class="kpi-sub">${minutesToHM(weekAdh.completedMinutes)} de ${minutesToHM(weekAdh.plannedMinutes)} planejadas · ${weekAdhLabel.text}</div>`;
+  kpiGrid.appendChild(adhBox);
+  const loadBox = el("div","kpi-box");
+  loadBox.innerHTML = `<div class="kpi-label">Carga realizada na semana</div><div class="kpi-value">${weekAdh.loadPct!==null?weekAdh.loadPct+"%":"—"}</div><div class="kpi-sub">${minutesToHM(weekAdh.totalStudyMinutes||0)} estudadas · ${minutesToHM(weekAdh.spontaneousMinutes||0)} espontâneas</div>`;
+  kpiGrid.appendChild(loadBox);
+  const debtBox = el("div","kpi-box");
+  debtBox.innerHTML = `<div class="kpi-label">Débito de estudo</div><div class="kpi-value" style="color:var(--${overallAdh.debtMinutes>0?'red':'green'});">${minutesToHM(overallAdh.debtMinutes||0)}</div><div class="kpi-sub">Planejamento vencido ainda não cumprido</div>`;
+  if(overallAdh.debtMinutes>0){
+    const proposalBtn=el("button","btn btn-sm","Ver proposta");
+    proposalBtn.style.marginTop="8px";
+    proposalBtn.addEventListener("click",openReplanProposal);
+    debtBox.appendChild(proposalBtn);
+  }
+  kpiGrid.appendChild(debtBox);
+  wrap.appendChild(kpiGrid);
+
+  if((STATE.rescheduleHistory||[]).length){
+    const history=STATE.rescheduleHistory;
+    const latest=history[history.length-1];
+    const historyCard=el("div","card");
+    historyCard.appendChild(el("div","card-header","<h3>Histórico de replanejamentos</h3>"));
+    const historyBody=el("div","card-body");
+    historyBody.textContent=`${history.length} replanejamento(s) aplicado(s). Último em ${new Date(latest.appliedAt).toLocaleString("pt-BR")} · ${latest.operations.length} alteração(ões).`;
+    historyCard.appendChild(historyBody);
+    wrap.appendChild(historyCard);
+  }
+
+  // Próxima ação
+  const ranked = pendingItemsRanked();
+  const nextCard = el("div","next-action-card");
+  if(ranked.length===0){
+    nextCard.innerHTML = `<div class="next-action-eyebrow">PRÓXIMA AÇÃO</div><div class="empty-priority"><strong style="display:block;color:var(--ink);margin-bottom:4px;">Tudo em dia.</strong>Não há tópicos pendentes no momento.</div>`;
+  } else {
+    const top = ranked[0];
+    const topNode = findLeafNode(top.subjectId, top.id);
+    const topSubj = SUBJECT_MAP[top.subjectId];
+    const explanation = (topNode && topSubj) ? explainItemScore(topNode, topSubj) : {reasons:[]};
+    const body = el("div","next-action-body");
+    body.innerHTML = `
+      <div class="next-action-subject">${top.subjectName}</div>
+      <div class="next-action-name">${top.name}</div>
+      <div class="next-action-tags">
+        <span class="tag tag-priority-${top.priority}">Prioridade ${PRIORITY_LABEL[top.priority]}</span>
+        ${top.incidence!=="nenhuma" ? `<span class="tag tag-incidence">${INCIDENCE_LABEL[top.incidence]}</span>` : ""}
+      </div>
+      ${explanation.reasons.length ? `<div class="why-now"><div class="why-now-title">Por que agora?</div><ul class="why-now-list">${explanation.reasons.map(r=>`<li>${r}</li>`).join("")}</ul></div>` : ""}`;
+    const actions = el("div","next-action-actions");
+    const startBtn = el("button","btn btn-gold btn-sm","Iniciar estudo");
+    startBtn.addEventListener("click", ()=> openSessionModal({topicId:top.id, subjectId:top.subjectId, subjectName:top.subjectName, topicName:top.name}));
+    actions.appendChild(startBtn);
+    body.appendChild(actions);
+    nextCard.innerHTML = `<div class="next-action-eyebrow">ESTUDAR AGORA</div>`;
+    nextCard.appendChild(body);
+  }
+  wrap.appendChild(nextCard);
+
+  const twoCol = el("div","two-col");
+  const leftCol = el("div","");
+  const rightCol = el("div","");
+  const twoColInner = leftCol; // "Depois disso" continua indo para a coluna esquerda
+
+  // Depois disso
+  const afterCard = el("div","card");
+  afterCard.appendChild(el("div","card-header","<h3>Depois disso</h3>"));
+  const afterBody = el("div","card-body");
+  const rest = ranked.slice(1,6);
+  if(rest.length===0){
+    afterBody.appendChild(el("div","empty-state","Nenhum outro tópico pendente."));
+  } else {
+    const list = el("ul","after-list");
+    rest.forEach(i=>{
+      list.innerHTML += `<li><span><span class="lbl">${i.name}</span><br><span class="sub">${i.subjectName}</span></span><span class="tag tag-priority-${i.priority}">${PRIORITY_LABEL[i.priority]}</span></li>`;
+    });
+    afterBody.appendChild(list);
+  }
+  afterCard.appendChild(afterBody);
+  twoColInner.appendChild(afterCard);
+
+  // Pontos de atenção
+  const attCard = el("div","card");
+  attCard.appendChild(el("div","card-header","<h3>Pontos de atenção</h3>"));
+  const attBody = el("div","card-body");
+  const attention = topicsNeedingAttention(4);
+  if(attention.length===0){
+    attBody.appendChild(el("div","empty-state","Nenhum tópico com aproveitamento abaixo de 70% até agora."));
+  } else {
+    attention.forEach(a=>{
+      const cls = accuracyClass(a.pct);
+      const row = el("div","attention-item");
+      row.innerHTML = `<div class="an">${a.name}</div><div class="as">${a.subjectName} · ${a.questions} questões</div><div class="attention-pct mono ${cls==='red'?'':''}" style="color:var(--${cls==='red'?'red':'amber'});margin-top:4px;">${a.pct}% de acertos</div>`;
+      attBody.appendChild(row);
+    });
+  }
+  attCard.appendChild(attBody);
+  rightCol.appendChild(attCard);
+
+  // Revisões pendentes (repetição espaçada)
+  const revCard = el("div","card");
+  const revHeader = el("div","card-header","<h3>Revisões pendentes</h3>");
+  const goToRev = el("button","btn btn-sm","Ver todas");
+  goToRev.addEventListener("click", ()=>{ STATE.ui.mainTab="plan"; STATE.ui.planSubTab="reviews"; renderMainTabs(); renderActivePanel(); });
+  revHeader.appendChild(goToRev);
+  revCard.appendChild(revHeader);
+  const revBody = el("div","card-body");
+  const due = dueReviews();
+  if(due.length===0){
+    revBody.appendChild(el("div","empty-state","Nenhuma revisão atrasada ou prevista para hoje."));
+  } else {
+    due.slice(0,4).forEach(r=> revBody.appendChild(renderReviewItemRow(r)));
+  }
+  revCard.appendChild(revBody);
+  rightCol.appendChild(revCard);
+
+  twoCol.appendChild(leftCol);
+  twoCol.appendChild(rightCol);
+  wrap.appendChild(twoCol);
+  return wrap;
+}
+
+/* ---------------- MEU PLANO ---------------- */
+function renderPlanPanel(){
+  const wrap = el("div","panel active");
+  subtab(wrap, [{id:"today",name:"Hoje"},{id:"week",name:"Esta Semana"},{id:"upcoming",name:"Próximas Semanas"},{id:"reviews",name:"Revisões"}], STATE.ui.planSubTab, (id)=>{
+    STATE.ui.planSubTab = id; renderActivePanel();
+  });
+  if(STATE.ui.planSubTab === "today") wrap.appendChild(renderTodayCard());
+  else if(STATE.ui.planSubTab === "week") wrap.appendChild(renderWeekCard());
+  else if(STATE.ui.planSubTab === "upcoming") wrap.appendChild(renderUpcomingWeeksCard());
+  else wrap.appendChild(renderReviewsCard());
+  return wrap;
+}
+
+function renderTodayCard(){
+  const card = el("div","card");
+  const todayISO = toISODate(new Date());
+  const hoursToday = STATE.sessions.filter(s=> s.date===todayISO).reduce((a,s)=> a+Core.sessionMinutes(s),0)/60;
+  const todayCapacityMinutes = CONFIG.dailyAvailability[dayKey(new Date())] || 0;
+
+  const goalRow = el("div","today-goal");
+  goalRow.innerHTML = `
+    <div class="goal-box"><div class="goal-label">Meta de hoje</div><div class="goal-value">${minutesToHM(todayCapacityMinutes)}</div></div>
+    <div class="goal-box"><div class="goal-label">Realizado hoje</div><div class="goal-value">${hoursToday.toFixed(1).replace(".",",")}h</div></div>`;
+
+  card.appendChild(el("div","card-header", `<h3>${new Date().toLocaleDateString("pt-BR",{weekday:"long", day:"2-digit", month:"long"})}</h3>`));
+  const body = el("div","card-body");
+  body.appendChild(goalRow);
+
+  const plan = Planner.todayPlan();
+  if(!plan){
+    body.appendChild(el("div","empty-state","<strong>Sem plano para hoje.</strong>Verifique se a data de hoje está dentro do período configurado em ⚙ Configurar plano."));
+  } else if(plan.kind==="off"){
+    body.appendChild(el("div","empty-state","<strong>Dia livre.</strong>Hoje não está marcado como dia de estudo nas configurações."));
+  } else if(plan.kind==="review"){
+    const reviewBox = el("div","empty-state","<strong>Revisão geral + simulado.</strong>Use o dia para revisar os pontos fracos da semana e fazer um simulado.");
+    body.appendChild(reviewBox);
+    const simBtn = el("button","btn btn-gold btn-sm","Registrar simulado");
+    simBtn.style.display="block"; simBtn.style.margin="0 auto 6px";
+    simBtn.addEventListener("click", openMockExamModal);
+    body.appendChild(simBtn);
+  } else if(plan.items.length===0){
+    body.appendChild(el("div","empty-state","Nenhum item novo planejado para hoje."));
+  } else {
+    const itemsWrap = el("div","");
+    plan.items.forEach(it=> itemsWrap.appendChild(renderTodayItemRow(it)));
+    body.appendChild(itemsWrap);
+  }
+
+  const dueToday = dueReviews();
+  if(dueToday.length>0){
+    body.appendChild(el("div","review-group-title","Revisões da repetição espaçada"));
+    dueToday.slice(0,6).forEach(r=> body.appendChild(renderReviewItemRow(r)));
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
+function renderTodayItemRow(it){
+  const st = STATE.items[it.id];
+  const agg = aggregateForTopic(it.id);
+  const row = el("div","today-item");
+  const check = el("input","today-check"); check.type="checkbox"; check.checked = st.status==="finalizado";
+  check.setAttribute("aria-label","Marcar '"+it.name+"' como concluído");
+  check.addEventListener("change", ()=>{
+    setItemStatus(it.id, check.checked?"finalizado":"em_andamento");
+    renderActivePanel();
+    showToast(check.checked?"Tópico concluído.":"Tópico reaberto.");
+  });
+  const main = el("div","today-main");
+  main.innerHTML = `<div class="today-subject">${it.subjectName}${it.subjectId==="redacao"?" · Redação":""}</div>
+    <div class="today-name ${st.status==='finalizado'?'done':''}">${it.name}</div>
+    <div class="today-tags">
+      <span class="tag tag-priority-${st.priority}">${PRIORITY_LABEL[st.priority]}</span>
+      ${st.incidence!=="nenhuma"?`<span class="tag tag-incidence">${INCIDENCE_LABEL[st.incidence]}</span>`:""}
+      <span class="tag tag-status ${st.status==='finalizado'?'done':st.status==='em_andamento'?'progress':st.status==='revisar'?'review':''}">${STATUS_LABEL[st.status]}</span>
+      <span class="tag tag-incidence">~${minutesToHM(it.estimatedMinutes)}</span>
+    </div>
+    ${agg.count>0?`<div class="today-last">Último resultado: ${agg.accuracyPct!==null?agg.accuracyPct+'% · ':''}${agg.questions} questões</div>`:""}`;
+  const actions = el("div","today-actions");
+  const btn = el("button","btn btn-sm","Registrar estudo");
+  btn.addEventListener("click", ()=> openSessionModal({
+    topicId:it.id, subjectId:it.subjectId, subjectName:it.subjectName, topicName:it.name,
+    planAssignmentId:it.assignmentId, plannedMinutes:it.estimatedMinutes,
+    defaultDate:toISODate(new Date())
+  }));
+  actions.appendChild(btn);
+  main.appendChild(actions);
+  row.appendChild(check); row.appendChild(main);
+  return row;
+}
+
+function renderReviewItemRow(r){
+  const row = el("div","review-item");
+  const todayISO = toISODate(new Date());
+  let badgeCls = "upcoming", badgeText = formatDateBR(parseISODate(r.nextReviewDate));
+  if(r.bucket==="overdue"){
+    const daysLate = Math.round((parseISODate(todayISO) - parseISODate(r.nextReviewDate))/86400000);
+    badgeCls = "overdue"; badgeText = daysLate + "d atrasada";
+  } else if(r.bucket==="today"){
+    badgeCls = "today"; badgeText = "Hoje";
+  }
+  const left = el("div","review-item-left", `<div class="rn">${r.name}</div><div class="rs">${r.subjectName} · revisão nº ${r.reviewStage+1}</div>`);
+  const right = el("div","",'');
+  right.style.display="flex"; right.style.alignItems="center"; right.style.gap="10px";
+  right.innerHTML = `<span class="review-badge ${badgeCls}">${badgeText}</span>`;
+  const btn = el("button","btn btn-sm","Registrar estudo");
+  btn.addEventListener("click", ()=> openSessionModal({topicId:r.id, subjectId:r.subjectId, subjectName:r.subjectName, topicName:r.name, defaultMethod:"Revisão"}));
+  right.appendChild(btn);
+  row.appendChild(left); row.appendChild(right);
+  return row;
+}
+
+function renderReviewsCard(){
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Revisões (repetição espaçada)</h3>"));
+  const body = el("div","card-body");
+  body.appendChild(el("div","section-hint","Tópicos finalizados voltam automaticamente para revisão em intervalos crescentes (1, 3, 7, 16 e 35 dias). Registrar uma sessão com método \"Revisão\" avança o tópico para o próximo intervalo."));
+  const schedule = reviewSchedule();
+  if(schedule.length===0){
+    body.appendChild(el("div","empty-state","<strong>Nenhuma revisão agendada ainda.</strong>À medida que você for finalizando tópicos no Edital, eles entram automaticamente neste calendário de revisão."));
+  } else {
+    const overdue = schedule.filter(r=>r.bucket==="overdue");
+    const todayList = schedule.filter(r=>r.bucket==="today");
+    const upcoming = schedule.filter(r=>r.bucket==="upcoming").slice(0,10);
+    if(overdue.length){ body.appendChild(el("div","review-group-title","Atrasadas ("+overdue.length+")")); overdue.forEach(r=>body.appendChild(renderReviewItemRow(r))); }
+    if(todayList.length){ body.appendChild(el("div","review-group-title","Hoje")); todayList.forEach(r=>body.appendChild(renderReviewItemRow(r))); }
+    if(upcoming.length){ body.appendChild(el("div","review-group-title","Próximos dias")); upcoming.forEach(r=>body.appendChild(renderReviewItemRow(r))); }
+    if(!overdue.length && !todayList.length && !upcoming.length){
+      body.appendChild(el("div","empty-state","Nenhuma revisão pendente no momento."));
+    }
+  }
+  card.appendChild(body);
+  return card;
+}
+
+function renderWeekCard(){
+  const card = el("div","card");
+  const idx = Math.min(STATE.ui.planWeekIndex, Math.max(Planner.weeks.length-1,0));
+  const week = Planner.currentWeek(idx);
+  card.appendChild(el("div","card-header","<h3>Cronograma semanal</h3>"));
+  const body = el("div","card-body");
+  if(!week){
+    body.appendChild(el("div","empty-state","<strong>Não foi possível gerar o cronograma.</strong>Confira a data de início e a data da prova em ⚙ Configurar plano."));
+    card.appendChild(body); return card;
+  }
+  if(week.isFinalWeek){
+    body.appendChild(el("div","final-week-banner","Semana final antes da prova: o cronograma prioriza revisão dos tópicos marcados como \"Revisar\" e de prioridade alta, em vez de conteúdo novo."));
+  }
+  const nav = el("div","week-nav");
+  const prevBtn = el("button","week-nav-btn","← Semana anterior");
+  const title = el("div","week-title", `<div class="w">Semana ${week.num} de ${Planner.weeks.length}</div><div class="d mono">${formatDateBR(week.start)} → ${formatDateBR(week.end)}</div>`);
+  const nextBtn = el("button","week-nav-btn","Próxima semana →");
+  prevBtn.disabled = idx<=0; nextBtn.disabled = idx>=Planner.weeks.length-1;
+  prevBtn.addEventListener("click", ()=>{ STATE.ui.planWeekIndex = idx-1; renderActivePanel(); });
+  nextBtn.addEventListener("click", ()=>{ STATE.ui.planWeekIndex = idx+1; renderActivePanel(); });
+  nav.appendChild(prevBtn); nav.appendChild(title); nav.appendChild(nextBtn);
+  body.appendChild(nav);
+
+  const todayISO = toISODate(new Date());
+  const grid = el("div","day-grid");
+  week.dayPlans.forEach(dp=>{
+    const isToday = toISODate(dp.date)===todayISO;
+    const col = el("div","day-col" + (dp.kind==="off"?" off":"") + (dp.kind==="past"?" past":"") + (isToday?" is-today":""));
+    const capLabel = (dp.kind==="content"||dp.kind==="final"||dp.kind==="past") && dp.items.length>0 ? `<div class="dcap">${minutesToHM(dp.allocatedMinutes)} / ${minutesToHM(dp.capacityMinutes)}</div>` : "";
+    col.appendChild(el("div","day-col-head", `<div class="dname">${DAY_LABELS[dp.dayKey]}</div><div class="ddate">${dp.date.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"})}</div>${capLabel}`));
+    const colBody = el("div","day-col-body");
+    if(dp.kind==="off") colBody.appendChild(el("div","day-empty","Sem estudo"));
+    else if(dp.kind==="review" && dp.items.length===0) colBody.appendChild(el("div","day-item review","<div class=\"di-subj\">Revisão</div><div class=\"di-topic\">Capacidade reservada para revisões e simulado</div>"));
+    else if(dp.items.length===0) colBody.appendChild(el("div","day-empty", dp.kind==="past" ? "Dia já passado" : "Sem novos itens"));
+    else dp.items.forEach(it=>{
+      const isRed = it.subjectId==="redacao";
+      const statusBadge = ASSIGNMENT_STATUS_BADGE[it.assignmentStatus] || "";
+      const timeLabel = it.completedMinutes>0
+        ? `${minutesToHM(it.completedMinutes)} / ${minutesToHM(it.estimatedMinutes)}`
+        : minutesToHM(it.estimatedMinutes);
+      const itemEl = el("div","day-item"+(isRed?" redacao":"")+(dp.kind==="final"?" final":"")+(it.assignmentStatus?" as-"+it.assignmentStatus:""), `<div class="di-subj">${it.subjectName}</div><div class="di-topic">${it.name}</div><div class="di-min">${timeLabel}${statusBadge}</div>`);
+      if(it.assignmentStatus!=="completed" && it.assignmentStatus!=="cancelled"){
+        const registerBtn = el("button","reg-btn","Registrar");
+        registerBtn.type = "button";
+        registerBtn.addEventListener("click", ()=> openSessionModal({
+          topicId:it.id, subjectId:it.subjectId, subjectName:it.subjectName, topicName:it.name,
+          planAssignmentId:it.assignmentId, plannedMinutes:it.estimatedMinutes,
+          defaultDate:toISODate(dp.date)
+        }));
+        itemEl.appendChild(registerBtn);
+      }
+      colBody.appendChild(itemEl);
+    });
+    col.appendChild(colBody);
+    grid.appendChild(col);
+  });
+  body.appendChild(grid);
+
+  let doneInWeek=0, totalInWeek=0;
+  week.dayPlans.forEach(dp=> dp.items.forEach(it=>{ totalInWeek++; if(STATE.items[it.id] && STATE.items[it.id].status==="finalizado") doneInWeek++; }));
+  const pvr = Planner.weekPlannedVsRealized(week);
+  const adh = calculatePlanAdherence(toISODate(week.start), toISODate(week.end));
+  const adhLabel = adherenceLabel(adh.pct);
+  const summary = el("div","week-summary");
+  summary.innerHTML = `<span>Tópicos planejados: <strong>${totalInWeek}</strong></span><span>Progresso da semana: <strong>${totalInWeek? Math.round((doneInWeek/totalInWeek)*100):0}%</strong></span><span>Planejado: <strong>${pvr.plannedHours.toFixed(1).replace('.',',')}h</strong></span><span>Carga total: <strong>${minutesToHM(adh.totalStudyMinutes||0)}</strong></span><span>Carga vinculada: <strong>${minutesToHM(adh.linkedMinutes||0)}</strong></span><span>Aderência até hoje: <strong style="color:var(--${adhLabel.cls==='gray'?'muted':adhLabel.cls});">${adh.pct!==null?adh.pct+'%':'—'}</strong></span><span>Débito: <strong>${minutesToHM(adh.debtMinutes||0)}</strong></span>`;
+  body.appendChild(summary);
+  card.appendChild(body);
+  return card;
+}
+
+function renderUpcomingWeeksCard(){
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Próximas semanas</h3>"));
+  const body = el("div","card-body");
+  const curIdx = Planner.weekIndexForToday();
+  const upcoming = Planner.weeks.slice(curIdx+1);
+  if(upcoming.length===0){
+    body.appendChild(el("div","empty-state","Não há semanas futuras além da atual."));
+  } else {
+    upcoming.forEach((week,i)=>{
+      const realIdx = curIdx+1+i;
+      const subjSet = {};
+      week.dayPlans.forEach(dp=> dp.items.forEach(it=>{ subjSet[it.subjectName]=(subjSet[it.subjectName]||0)+1; }));
+      const topSubjects = Object.entries(subjSet).sort((a,b)=>b[1]-a[1]).slice(0,2).map(e=>e[0]).join(", ");
+      const totalItems = Object.values(subjSet).reduce((a,b)=>a+b,0);
+      const row = el("div","weeklist-row");
+      row.innerHTML = `<div class="weeklist-left"><div class="w">Semana ${week.num}${week.isFinalWeek?" · Revisão final":""}</div><div class="d">${formatDateBR(week.start)} → ${formatDateBR(week.end)}</div></div>
+        <div class="weeklist-right">${totalItems} tópicos${topSubjects?"<br>"+topSubjects:""}</div>`;
+      row.addEventListener("click", ()=>{ STATE.ui.planWeekIndex = realIdx; STATE.ui.planSubTab = "week"; renderActivePanel(); });
+      body.appendChild(row);
+    });
+  }
+  card.appendChild(body);
+  return card;
+}
+
+/* ---------------- EDITAL ---------------- */
+function matchesSearch(name, term){ return !term || name.toLowerCase().includes(term.toLowerCase()); }
+function matchesStatusFilter(status, filter){
+  if(filter==="todas") return true;
+  if(filter==="pendentes") return status!=="finalizado";
+  if(filter==="andamento") return status==="em_andamento";
+  if(filter==="revisar") return status==="revisar";
+  if(filter==="finalizadas") return status==="finalizado";
+  return true;
+}
+function matchesPriorityFilter(priority, filter){ return filter==="todas" || priority===filter; }
+function matchesIncidenceFilter(incidence, filter){ return filter==="todas" || incidence===filter; }
+
+function renderEditalPanel(){
+  const wrap = el("div","panel active");
+  const toolbar = el("div","edital-toolbar");
+  const search = el("input","edital-search"); search.type="search"; search.placeholder="Buscar tópico..."; search.value = STATE.ui.editalSearch;
+  search.setAttribute("aria-label","Buscar tópico no edital");
+  search.addEventListener("input", ()=>{ STATE.ui.editalSearch = search.value; renderActivePanel(); preserveFocus(search); });
+  const filter = el("select","edital-filter");
+  [["todas","Todas"],["pendentes","Pendentes"],["andamento","Em andamento"],["revisar","Revisar"],["finalizadas","Finalizadas"]].forEach(([v,l])=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=l; if(v===STATE.ui.editalStatusFilter) o.selected=true; filter.appendChild(o);
+  });
+  filter.setAttribute("aria-label","Filtrar por status");
+  filter.addEventListener("change", ()=>{ STATE.ui.editalStatusFilter = filter.value; renderActivePanel(); });
+
+  const prioFilter = el("select","edital-filter");
+  [["todas","Toda prioridade"],["alta","Prioridade alta"],["media","Prioridade média"],["baixa","Prioridade baixa"]].forEach(([v,l])=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=l; if(v===STATE.ui.editalPriorityFilter) o.selected=true; prioFilter.appendChild(o);
+  });
+  prioFilter.setAttribute("aria-label","Filtrar por prioridade");
+  prioFilter.addEventListener("change", ()=>{ STATE.ui.editalPriorityFilter = prioFilter.value; renderActivePanel(); });
+
+  const incFilter = el("select","edital-filter");
+  [["todas","Toda incidência"],["alta","Incidência alta"],["media","Incidência média"],["baixa","Incidência baixa"],["nenhuma","Sem incidência"]].forEach(([v,l])=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=l; if(v===STATE.ui.editalIncidenceFilter) o.selected=true; incFilter.appendChild(o);
+  });
+  incFilter.setAttribute("aria-label","Filtrar por incidência");
+  incFilter.addEventListener("change", ()=>{ STATE.ui.editalIncidenceFilter = incFilter.value; renderActivePanel(); });
+
+  toolbar.appendChild(search); toolbar.appendChild(filter); toolbar.appendChild(prioFilter); toolbar.appendChild(incFilter);
+  wrap.appendChild(toolbar);
+
+  SUBJECT_GROUPS.forEach(group=>{
+    const groupSubjects = group.subjectIds.map(id=>SUBJECT_MAP[id]).filter(Boolean);
+    const block = el("div","group-block");
+    block.appendChild(el("div","group-title", group.name));
+    const card = el("div","card");
+    groupSubjects.forEach(subj=>{
+      const prog = subjectProgress(subj);
+      const row = el("div","subject-row");
+      const isOpen = STATE.ui.editalOpenSubject === subj.id;
+      row.innerHTML = `<span class="chev">${isOpen?"▾":"▸"}</span><span class="sname">${subj.name}</span><span class="sweight">peso ${subj.weight}</span><span class="strack"><span class="sfill" style="width:${prog.pct}%"></span></span><span class="spct">${prog.total?prog.pct+'%':'—'}</span>`;
+      row.addEventListener("click", ()=>{ STATE.ui.editalOpenSubject = isOpen ? null : subj.id; renderActivePanel(); });
+      card.appendChild(row);
+      if(isOpen) card.appendChild(renderSubjectDetail(subj));
+    });
+    block.appendChild(card);
+    wrap.appendChild(block);
+  });
+
+  return wrap;
+}
+
+function preserveFocus(inputEl){
+  // após re-render, o input perde o foco; devolvemos o foco e o cursor ao final
+  requestAnimationFrame(()=>{
+    const fresh = document.querySelector(".edital-search");
+    if(fresh){ fresh.focus(); const v=fresh.value; fresh.setSelectionRange(v.length, v.length); }
+  });
+}
+
+function renderSubjectDetail(subj){
+  const wrap = el("div","subject-detail");
+  const head = el("div","subject-detail-head");
+  head.innerHTML = `<div></div>`;
+  const toolbar = el("div","subject-detail-toolbar");
+  const expandAllBtn = el("button","btn btn-sm","Expandir todos");
+  const collapseAllBtn = el("button","btn btn-sm","Recolher todos");
+  expandAllBtn.addEventListener("click", ()=>{ subj.topics.forEach(t=>{ if(t.subtopics.length) STATE.ui.editalExpandedTopics[t.id]=true; }); renderActivePanel(); });
+  collapseAllBtn.addEventListener("click", ()=>{ subj.topics.forEach(t=>{ if(t.subtopics.length) STATE.ui.editalExpandedTopics[t.id]=false; }); renderActivePanel(); });
+  toolbar.appendChild(expandAllBtn); toolbar.appendChild(collapseAllBtn);
+  head.appendChild(toolbar);
+  wrap.appendChild(head);
+
+  if(subj.topics.length===0){
+    wrap.appendChild(el("div","empty-state", `<strong>Nenhum tópico cadastrado para ${subj.name}.</strong>O conteúdo programático desta disciplina não constava no edital fornecido. Adicione os tópicos no bloco DATA do código para começar a planejar.`));
+    return wrap;
+  }
+
+  const search = STATE.ui.editalSearch, filter = STATE.ui.editalStatusFilter;
+  const prioFilter = STATE.ui.editalPriorityFilter, incFilter = STATE.ui.editalIncidenceFilter;
+  const list = el("div","");
+  let anyVisible = false;
+
+  const matchesNode = (node)=>{
+    const st = STATE.items[node.id];
+    return matchesStatusFilter(st.status, filter) && matchesPriorityFilter(st.priority, prioFilter) && matchesIncidenceFilter(st.incidence, incFilter);
+  };
+
+  subj.topics.forEach(topic=>{
+    const topicNameMatches = matchesSearch(topic.name, search);
+    if(topic.subtopics.length){
+      const visibleSubs = topic.subtopics.filter(s=> (topicNameMatches || matchesSearch(s.name, search)) && matchesNode(s));
+      if(visibleSubs.length===0) return;
+      anyVisible = true;
+      const expanded = !!STATE.ui.editalExpandedTopics[topic.id];
+      list.appendChild(renderTopicRow(topic, subj, true, expanded, visibleSubs.length, topic.subtopics.length));
+      if(expanded){
+        const subList = el("div","subtopic-list");
+        visibleSubs.forEach(sub=> subList.appendChild(renderTopicRow(sub, subj, false)));
+        list.appendChild(subList);
+      }
+    } else {
+      if(!topicNameMatches || !matchesNode(topic)) return;
+      anyVisible = true;
+      list.appendChild(renderTopicRow(topic, subj, false));
+    }
+  });
+
+  if(!anyVisible){
+    wrap.appendChild(el("div","empty-state","Nenhum tópico corresponde à busca/filtro atual."));
+  } else {
+    const listCard = el("div","card"); listCard.style.marginTop="10px"; listCard.style.boxShadow="none";
+    listCard.appendChild(list);
+    wrap.appendChild(listCard);
+  }
+  return wrap;
+}
+
+function renderTopicRow(node, subj, hasChildren, expanded, visibleCount, totalCount){
+  const st = STATE.items[node.id];
+  const agg = aggregateForTopic(node.id);
+  const wrap = el("div","topic");
+  const row = el("div","topic-row");
+
+  if(hasChildren){
+    const toggle = el("button","topic-toggle", expanded?"▾":"▸");
+    toggle.type="button"; toggle.setAttribute("aria-label", (expanded?"Recolher ":"Expandir ")+node.name);
+    toggle.addEventListener("click", ()=>{ STATE.ui.editalExpandedTopics[node.id] = !expanded; renderActivePanel(); });
+    row.appendChild(toggle);
+  } else {
+    const check = el("input","topic-check"); check.type="checkbox"; check.checked = st.status==="finalizado";
+    check.setAttribute("aria-label","Marcar '"+node.name+"' como finalizado");
+    check.addEventListener("change", ()=>{
+      setItemStatus(node.id, check.checked?"finalizado":"em_andamento");
+      renderActivePanel();
+      showToast(check.checked?"Tópico marcado como finalizado.":"Tópico reaberto.");
+    });
+    row.appendChild(check);
+  }
+
+  const main = el("div","topic-main");
+  const nameRow = el("div","topic-name-row");
+  nameRow.innerHTML = `<span class="topic-name ${st.status==='finalizado'?'done':''}">${node.name}</span>` +
+    (hasChildren ? `<span class="topic-count-badge">${visibleCount}/${totalCount} subtópicos</span>` : "");
+  main.appendChild(nameRow);
+
+  if(!hasChildren){
+    const metaRow = el("div","topic-meta-row");
+    const statusSel = buildSelect(STATUSES.map(s=>[s,STATUS_LABEL[s]]), st.status, "compact-select");
+    statusSel.setAttribute("aria-label","Status de "+node.name);
+    statusSel.addEventListener("change", ()=>{ setItemStatus(node.id, statusSel.value); renderActivePanel(); });
+    metaRow.appendChild(statusSel);
+
+    const prioSel = buildSelect(PRIORITIES.map(p=>[p,"Prioridade "+PRIORITY_LABEL[p]]), st.priority, "compact-select");
+    prioSel.setAttribute("aria-label","Prioridade de "+node.name);
+    prioSel.addEventListener("change", ()=>{ setItemField(node.id,"priority",prioSel.value); renderActivePanel(); });
+    metaRow.appendChild(prioSel);
+
+    const incSel = buildSelect(INCIDENCES.map(i=>[i,INCIDENCE_LABEL[i]]), st.incidence, "compact-select");
+    incSel.setAttribute("aria-label","Incidência na banca de "+node.name);
+    incSel.addEventListener("change", ()=>{ setItemField(node.id,"incidence",incSel.value); renderActivePanel(); });
+    metaRow.appendChild(incSel);
+
+    main.appendChild(metaRow);
+
+    if(agg.count>0){
+      const cls = accuracyClass(agg.accuracyPct);
+      main.appendChild(el("div","topic-last", `Último resultado: ${agg.accuracyPct!==null?agg.accuracyPct+'% · ':''}${agg.questions} questões · ${agg.hours.toFixed(1).replace('.',',')}h registradas`));
+    }
+
+    const regBtn = el("button","reg-btn","Registrar estudo");
+    regBtn.addEventListener("click", ()=> openSessionModal({topicId:node.id, subjectId:subj.id, subjectName:subj.name, topicName:node.name}));
+    main.appendChild(regBtn);
+  }
+
+  row.appendChild(main);
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function buildSelect(optionPairs, selected, cls){
+  const sel = document.createElement("select");
+  sel.className = cls || "compact-select";
+  optionPairs.forEach(([value,label])=>{
+    const opt = document.createElement("option");
+    opt.value = value; opt.textContent = label; if(value===selected) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  return sel;
+}
+
+/* ---------------- DESEMPENHO ---------------- */
+function renderPerformancePanel(){
+  const wrap = el("div","panel active");
+  subtab(wrap, [{id:"geral",name:"Geral"},{id:"disciplina",name:"Por disciplina"},{id:"topico",name:"Por tópico"},{id:"evolucao",name:"Evolução"},{id:"simulados",name:"Simulados"}], STATE.ui.perfSubTab, (id)=>{
+    STATE.ui.perfSubTab = id; renderActivePanel();
+  });
+  if(STATE.ui.perfSubTab==="geral") wrap.appendChild(renderPerfGeral());
+  else if(STATE.ui.perfSubTab==="disciplina") wrap.appendChild(renderPerfPorDisciplina());
+  else if(STATE.ui.perfSubTab==="topico") wrap.appendChild(renderPerfPorTopico());
+  else if(STATE.ui.perfSubTab==="evolucao") wrap.appendChild(renderPerfEvolucao());
+  else wrap.appendChild(renderPerfSimulados());
+  return wrap;
+}
+
+function renderPerfGeral(){
+  const perf = globalPerformance();
+  const gp = globalProgress();
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Desempenho geral</h3>"));
+  const body = el("div","card-body");
+  const grid = el("div","kpi-grid");
+  [
+    {label:"Horas estudadas", value: perf.hours.toFixed(1).replace(".",",")},
+    {label:"Questões respondidas", value: perf.questions},
+    {label:"Percentual de acertos", value: perf.correctAccuracyPct!==null?perf.correctAccuracyPct+"%":"—"},
+    {label:"Sessões registradas", value: STATE.sessions.length},
+    {label:"Progresso do edital", value: gp.pct+"%"}
+  ].forEach(k=> grid.appendChild(el("div","kpi-box", `<div class="kpi-label">${k.label}</div><div class="kpi-value">${k.value}</div>`)));
+  body.appendChild(grid);
+
+  const curWeek = Planner.currentWeek(Planner.weekIndexForToday());
+  if(curWeek){
+    const pvr = Planner.weekPlannedVsRealized(curWeek);
+    const adh = calculatePlanAdherence(toISODate(curWeek.start), toISODate(curWeek.end));
+    const adhLabel = adherenceLabel(adh.pct);
+    const pvrCard = el("div","");
+    pvrCard.style.cssText = "margin-top:4px;border-top:1px solid var(--line);padding-top:14px;";
+    pvrCard.innerHTML = `<div class="progress-row-top" style="margin-bottom:8px;"><span class="name">Planejado × realizado (semana atual)</span></div>
+      <div style="display:flex;gap:22px;flex-wrap:wrap;">
+        <div><div class="kpi-label">Planejado</div><div class="kpi-value">${pvr.plannedHours.toFixed(1).replace('.',',')}h</div></div>
+        <div><div class="kpi-label">Realizado</div><div class="kpi-value">${pvr.realizedHours.toFixed(1).replace('.',',')}h</div></div>
+        <div><div class="kpi-label">Aderência até hoje</div><div class="kpi-value" style="color:var(--${adhLabel.cls==='gray'?'muted':adhLabel.cls});">${adh.pct!==null?adh.pct+"%":"—"}</div><div class="kpi-sub">${adhLabel.text}</div></div>
+      </div>`;
+    body.appendChild(pvrCard);
+  }
+
+  card.appendChild(body);
+  return card;
+}
+
+function renderPerfPorDisciplina(){
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Desempenho por disciplina</h3>"));
+  const body = el("div","card-body overflow-x");
+  const table = document.createElement("table"); table.className="perf-table";
+  table.innerHTML = `<thead><tr><th>Disciplina</th><th style="text-align:right;">Progresso</th><th style="text-align:right;">Questões</th><th style="text-align:right;">Acertos</th><th>Situação</th><th>Tendência</th></tr></thead>`;
+  const tbody = document.createElement("tbody");
+  SUBJECTS.filter(s=>subjectItemIds(s).length>0).forEach(s=>{
+    const prog = subjectProgress(s);
+    const perf = subjectPerformance(s.id);
+    const cls = accuracyClass(perf.accuracyPct);
+    const trend = subjectTrend(s.id);
+    const trendHtml = trend.direction==="down" ? `<span style="color:var(--red);">▼ ${trend.delta}pp</span>`
+      : trend.direction==="up" ? `<span style="color:var(--green);">▲ +${trend.delta}pp</span>`
+      : trend.direction==="stable" ? `<span style="color:var(--muted);">→ estável</span>`
+      : `<span style="color:var(--muted);">—</span>`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${s.name}</td><td class="num">${prog.pct}%</td><td class="num">${perf.questions}</td><td class="num">${perf.accuracyPct!==null?perf.accuracyPct+'%':'—'}</td><td><span class="dot ${cls}"></span></td><td class="num mono" style="font-size:11.5px;">${trendHtml}</td>`;
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  body.appendChild(table);
+  card.appendChild(body);
+  return card;
+}
+
+function renderPerfPorTopico(){
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Precisa de atenção</h3>"));
+  const body = el("div","card-body");
+  const rows = topicsNeedingAttention();
+  if(rows.length===0){
+    body.appendChild(el("div","empty-state","Nenhum tópico com aproveitamento abaixo de 70%."));
+  } else {
+    rows.forEach(r=>{
+      const cls = accuracyClass(r.pct);
+      const item = el("div","attention-item");
+      item.innerHTML = `<div class="an">${r.name}</div><div class="as">${r.subjectName} · ${r.questions} questões · Prioridade ${PRIORITY_LABEL[r.priority]}</div><div class="attention-pct mono" style="color:var(--${cls==='red'?'red':'amber'});margin-top:4px;">${r.pct}% de acertos</div>`;
+      body.appendChild(item);
+    });
+  }
+  card.appendChild(body);
+  return card;
+}
+
+/* ---- Gráficos SVG inline (sem bibliotecas externas) ---- */
+function svgEscape(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function buildLineChartSvg(points, opts){
+  opts = opts || {};
+  const width = opts.width || 600, height = opts.height || 190;
+  const color = opts.color || "var(--navy-2)";
+  const yMin = opts.yMin!==undefined ? opts.yMin : 0;
+  const yMax = opts.yMax!==undefined ? opts.yMax : 100;
+  const yFormat = opts.yFormat || (v=> Math.round(v)+"%");
+  if(!points || points.length===0){
+    return '<div class="chart-empty">Sem dados suficientes ainda. Registre sessões de estudo para ver a evolução aqui.</div>';
+  }
+  const pad = {l:36,r:14,t:14,b:24};
+  const w = width-pad.l-pad.r, h = height-pad.t-pad.b;
+  const n = points.length;
+  const xFor = i=> pad.l + (n<=1 ? w/2 : (i/(n-1))*w);
+  const yFor = v=> pad.t + h - ((Math.min(Math.max(v,yMin),yMax)-yMin)/((yMax-yMin)||1))*h;
+  const pathD = points.map((p,i)=> (i===0?"M":"L")+xFor(i).toFixed(1)+","+yFor(p.value).toFixed(1)).join(" ");
+  const areaD = pathD + ` L ${xFor(n-1).toFixed(1)},${(pad.t+h).toFixed(1)} L ${xFor(0).toFixed(1)},${(pad.t+h).toFixed(1)} Z`;
+  const dots = points.map((p,i)=> `<circle cx="${xFor(i).toFixed(1)}" cy="${yFor(p.value).toFixed(1)}" r="3" fill="${color}"><title>${svgEscape(formatDateBR(parseISODate(p.date)))}: ${svgEscape(yFormat(p.value))}</title></circle>`).join("");
+  const mid = (yMin+yMax)/2;
+  const gridLines = [yMin, mid, yMax].map(v=> `<line x1="${pad.l}" y1="${yFor(v).toFixed(1)}" x2="${width-pad.r}" y2="${yFor(v).toFixed(1)}" stroke="var(--line)" stroke-width="1"></line><text x="${pad.l-6}" y="${(yFor(v)+3).toFixed(1)}" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--muted)">${svgEscape(yFormat(v))}</text>`).join("");
+  const xLabels = `<text x="${xFor(0).toFixed(1)}" y="${height-6}" text-anchor="start" font-size="10" font-family="var(--mono)" fill="var(--muted)">${svgEscape(formatDateBR(parseISODate(points[0].date)))}</text>` +
+    (n>1 ? `<text x="${xFor(n-1).toFixed(1)}" y="${height-6}" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--muted)">${svgEscape(formatDateBR(parseISODate(points[n-1].date)))}</text>` : "");
+  return `<svg class="chart-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gráfico de evolução">
+    ${gridLines}
+    <path d="${areaD}" fill="${color}" opacity="0.08" stroke="none"></path>
+    <path d="${pathD}" fill="none" stroke="${color}" stroke-width="2"></path>
+    ${dots}
+    ${xLabels}
+  </svg>`;
+}
+
+function buildBarChartSvg(points, opts){
+  opts = opts || {};
+  const width = opts.width || 600, height = opts.height || 150;
+  const color = opts.color || "var(--gold-deep)";
+  if(!points || points.length===0){
+    return '<div class="chart-empty">Sem dados suficientes ainda.</div>';
+  }
+  const pad = {l:36,r:14,t:14,b:24};
+  const w = width-pad.l-pad.r, h = height-pad.t-pad.b;
+  const n = points.length;
+  const maxVal = Math.max.apply(null, points.map(p=>p.value).concat([1]));
+  const gap = w/n;
+  const barW = Math.max(4, gap*0.6);
+  const bars = points.map((p,i)=>{
+    const barH = (p.value/maxVal)*h;
+    const x = pad.l + i*gap + (gap-barW)/2;
+    const y = pad.t + h - barH;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${Math.max(barH,0).toFixed(1)}" rx="2" fill="${color}"><title>${svgEscape(formatDateBR(parseISODate(p.date)))}: ${p.value}h</title></rect>`;
+  }).join("");
+  const baseLine = `<line x1="${pad.l}" y1="${(pad.t+h).toFixed(1)}" x2="${width-pad.r}" y2="${(pad.t+h).toFixed(1)}" stroke="var(--line)" stroke-width="1"></line>`;
+  const xLabels = `<text x="${pad.l}" y="${height-6}" text-anchor="start" font-size="10" font-family="var(--mono)" fill="var(--muted)">${svgEscape(formatDateBR(parseISODate(points[0].date)))}</text>` +
+    (n>1 ? `<text x="${width-pad.r}" y="${height-6}" text-anchor="end" font-size="10" font-family="var(--mono)" fill="var(--muted)">${svgEscape(formatDateBR(parseISODate(points[n-1].date)))}</text>` : "");
+  return `<svg class="chart-svg" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Gráfico de horas por semana">
+    ${baseLine}
+    ${bars}
+    ${xLabels}
+  </svg>`;
+}
+
+function renderPerfEvolucao(){
+  const card = el("div","card");
+  card.appendChild(el("div","card-header","<h3>Evolução de desempenho</h3>"));
+  const toolbar = el("div","chart-toolbar");
+  const select = document.createElement("select"); select.className = "compact-select";
+  const subjectsWithData = SUBJECTS.filter(s=> subjectItemIds(s).length>0);
+  const optGeral = document.createElement("option"); optGeral.value="geral"; optGeral.textContent="Geral (todas as disciplinas)";
+  select.appendChild(optGeral);
+  subjectsWithData.forEach(s=>{ const o=document.createElement("option"); o.value=s.id; o.textContent=s.name; select.appendChild(o); });
+  select.value = STATE.ui.evolucaoScope;
+  select.setAttribute("aria-label","Filtrar evolução por disciplina");
+  select.addEventListener("change", ()=>{ STATE.ui.evolucaoScope = select.value; renderActivePanel(); });
+  toolbar.appendChild(select);
+  card.appendChild(toolbar);
+
+  const body1 = el("div","chart-card-body");
+  body1.appendChild(el("div","section-hint","Percentual de acertos acumulado ao longo das sessões registradas"));
+  body1.appendChild(el("div","", buildLineChartSvg(accuracyEvolutionSeries(STATE.ui.evolucaoScope), {yMin:0,yMax:100})));
+  card.appendChild(body1);
+
+  const body2 = el("div","chart-card-body");
+  body2.appendChild(el("div","section-hint","Horas estudadas por semana"));
+  body2.appendChild(el("div","", buildBarChartSvg(hoursPerWeekSeries(STATE.ui.evolucaoScope, 10))));
+  card.appendChild(body2);
+
+  return card;
+}
+
+function renderPerfSimulados(){
+  const card = el("div","card");
+  const header = el("div","card-header","<h3>Simulados</h3>");
+  const btn = el("button","btn btn-sm btn-gold","Registrar simulado");
+  btn.addEventListener("click", openMockExamModal);
+  header.appendChild(btn);
+  card.appendChild(header);
+
+  const body1 = el("div","chart-card-body");
+  body1.appendChild(el("div","section-hint","Evolução do percentual geral de acertos em simulados completos"));
+  body1.appendChild(el("div","", buildLineChartSvg(mockExamSeries(), {yMin:0,yMax:100,color:"var(--gold-deep)"})));
+  card.appendChild(body1);
+
+  const body2 = el("div","card-body");
+  if(STATE.mockExams.length===0){
+    body2.appendChild(el("div","empty-state","Nenhum simulado registrado ainda."));
+  } else {
+    body2.appendChild(el("div","review-group-title","Histórico"));
+    STATE.mockExams.slice().sort((a,b)=> a.date<b.date?1:-1).forEach(m=>{
+      const cls = accuracyClass(m.accuracyPct);
+      const color = cls==="red" ? "var(--red)" : cls==="amber" ? "var(--amber)" : cls==="green" ? "var(--green)" : "var(--ink)";
+      const row = el("div","mockexam-row");
+      const left=el("div","");
+      const title=el("div","mn"); title.textContent=m.title||"Simulado";
+      const details=el("div","md"); details.textContent=`${formatDateBR(parseISODate(m.date))} · ${m.totalQuestions} questões · ${m.durationMinutes||0} min`;
+      const score=el("div","mp"); score.style.color=color; score.textContent=m.accuracyPct!==null?m.accuracyPct+"%":"—";
+      left.appendChild(title); left.appendChild(details); row.appendChild(left); row.appendChild(score);
+      body2.appendChild(row);
+    });
+  }
+  card.appendChild(body2);
+  return card;
+}
+
+/* =========================================================================
+   EVENTS
+   ========================================================================= */
+let sessionModalCtx = null;
+
+function openSessionModal(options){
+  sessionModalCtx = {
+    topicId:options.topicId,
+    subjectId:options.subjectId,
+    planAssignmentId:options.planAssignmentId || null,
+    plannedMinutes:options.plannedMinutes || null
+  };
+  document.getElementById("sessionModalSubject").textContent = options.subjectName + " · " + options.topicName;
+  document.getElementById("sessionModalPlan").textContent = options.planAssignmentId
+    ? "Atividade planejada: " + minutesToHM(options.plannedMinutes) + " · vínculo automático"
+    : "Estudo espontâneo (fora do planejamento)";
+  document.getElementById("sf-date").value = options.defaultDate || toISODate(new Date());
+  const methodSel = document.getElementById("sf-method");
+  methodSel.innerHTML = "";
+  METHODS.forEach(m=>{ const o=document.createElement("option"); o.value=m; o.textContent=m; if(options.defaultMethod && m===options.defaultMethod) o.selected=true; methodSel.appendChild(o); });
+  document.getElementById("sf-minutes").value = options.plannedMinutes || 60;
+  document.getElementById("sf-questions").value = 0;
+  document.getElementById("sf-correct").value = 0;
+  updateSessionAccuracyPreview();
+  document.getElementById("sessionModal").classList.add("open");
+}
+function closeSessionModal(){ document.getElementById("sessionModal").classList.remove("open"); sessionModalCtx = null; }
+
+function updateSessionAccuracyPreview(){
+  const q = Number(document.getElementById("sf-questions").value)||0;
+  const c = Number(document.getElementById("sf-correct").value)||0;
+  const wrongEl = document.getElementById("sf-wrong");
+  const wrong = Math.max(q-c,0);
+  wrongEl.value = wrong;
+  const accEl = document.getElementById("sf-accuracy");
+  if(q>0){
+    const pct = Math.round((c/q)*1000)/10;
+    accEl.textContent = pct + "%";
+    accEl.style.color = pct<70?"var(--red)":(pct<=80?"var(--amber)":"var(--green)");
+  } else {
+    accEl.textContent = "—"; accEl.style.color = "var(--ink)";
+  }
+}
+
+function openSettingsModal(){
+  document.getElementById("cfg-start").value = CONFIG.startDate || toISODate(new Date());
+  document.getElementById("cfg-exam").value = CONFIG.examDate;
+  document.getElementById("cfg-sat-redacao").checked = CONFIG.reserveSaturdayForRedacao;
+  document.getElementById("cfg-sun-review").checked = CONFIG.reserveSundayForReview;
+
+  const wrap = document.getElementById("cfg-daily-availability");
+  wrap.innerHTML = "";
+  DAY_ORDER.forEach(d=>{
+    const minutes = CONFIG.dailyAvailability[d] || 0;
+    const row = el("div","daily-avail-row" + (minutes<=0 ? " disabled" : ""));
+    row.dataset.day = d;
+    const cb = document.createElement("input"); cb.type="checkbox"; cb.className="dcheck"; cb.checked = minutes>0;
+    const label = el("span","dlabel", DAY_LABELS[d]);
+    const hoursInput = document.createElement("input");
+    hoursInput.type="number"; hoursInput.className="dhours"; hoursInput.min="0"; hoursInput.step="0.25";
+    hoursInput.value = Math.round((minutes/60)*100)/100 || 1.5;
+    hoursInput.disabled = minutes<=0;
+    const unit = el("span","dunit","h/dia");
+    cb.addEventListener("change", ()=>{
+      hoursInput.disabled = !cb.checked;
+      row.classList.toggle("disabled", !cb.checked);
+      updateCapacityPreview();
+    });
+    hoursInput.addEventListener("input", updateCapacityPreview);
+    row.appendChild(cb); row.appendChild(label); row.appendChild(hoursInput); row.appendChild(unit);
+    wrap.appendChild(row);
+  });
+
+  ["cfg-start","cfg-exam"].forEach(id=> document.getElementById(id).addEventListener("change", updateCapacityPreview));
+  updateCapacityPreview();
+  document.getElementById("settingsModal").classList.add("open");
+}
+
+/** Lê os valores ainda não salvos do formulário e mostra a capacidade semanal
+ *  e até a prova em tempo real, antes de confirmar (Fase 1.2/1.3). */
+function readDailyAvailabilityFromForm(){
+  const result = {};
+  document.querySelectorAll("#cfg-daily-availability .daily-avail-row").forEach(row=>{
+    const d = row.dataset.day;
+    const checked = row.querySelector(".dcheck").checked;
+    const hours = Number(row.querySelector(".dhours").value) || 0;
+    result[d] = checked ? Math.round(hours*60) : 0;
+  });
+  return result;
+}
+function updateCapacityPreview(){
+  const dailyAvailability = readDailyAvailabilityFromForm();
+  const weeklyMinutes = DAY_ORDER.reduce((a,d)=> a+(dailyAvailability[d]||0), 0);
+  const startVal = document.getElementById("cfg-start").value;
+  const examVal = document.getElementById("cfg-exam").value;
+  let untilExamText = "—";
+  if(startVal && examVal){
+    const start = parseISODate(startVal), exam = parseISODate(examVal);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const floor = today > start ? today : start;
+    if(exam > floor){
+      let total = 0;
+      for(let d=new Date(floor); d<exam; d.setDate(d.getDate()+1)) total += dailyAvailability[dayKey(d)] || 0;
+      untilExamText = minutesToHM(total);
+    } else {
+      untilExamText = "data da prova inválida";
+    }
+  }
+  document.getElementById("cfg-capacity-summary").innerHTML =
+    `<span>Capacidade semanal: <strong>${minutesToHM(weeklyMinutes)}</strong></span><span>Disponível até a prova: <strong>${untilExamText}</strong></span>`;
+}
+
+function closeSettingsModal(){ document.getElementById("settingsModal").classList.remove("open"); }
+
+function openMockExamModal(){
+  document.getElementById("me-date").value = toISODate(new Date());
+  document.getElementById("me-duration").value = 180;
+  document.getElementById("me-title").value = "";
+  const tbody = document.getElementById("me-subjects-body");
+  tbody.innerHTML = "";
+  SUBJECTS.filter(s=> subjectItemIds(s).length>0).forEach(s=>{
+    const tr = document.createElement("tr");
+    const tdName = document.createElement("td"); tdName.className="subj-name"; tdName.textContent = s.name;
+    const tdQ = document.createElement("td"); const inQ = document.createElement("input"); inQ.type="number"; inQ.min="0"; inQ.step="1"; inQ.value="0"; inQ.dataset.subject=s.id; inQ.dataset.field="questions"; inQ.className="me-subj-input"; tdQ.appendChild(inQ);
+    const tdC = document.createElement("td"); const inC = document.createElement("input"); inC.type="number"; inC.min="0"; inC.step="1"; inC.value="0"; inC.dataset.subject=s.id; inC.dataset.field="correct"; inC.className="me-subj-input"; tdC.appendChild(inC);
+    tr.appendChild(tdName); tr.appendChild(tdQ); tr.appendChild(tdC);
+    tbody.appendChild(tr);
+    inQ.addEventListener("input", updateMockExamPreview);
+    inC.addEventListener("input", updateMockExamPreview);
+  });
+  updateMockExamPreview();
+  document.getElementById("mockExamModal").classList.add("open");
+}
+function closeMockExamModal(){ document.getElementById("mockExamModal").classList.remove("open"); }
+function readMockExamSubjects(){
+  const subjects = {};
+  document.querySelectorAll(".me-subj-input").forEach(input=>{
+    const sid = input.dataset.subject, field = input.dataset.field;
+    if(!subjects[sid]) subjects[sid] = {questions:0, correct:0};
+    subjects[sid][field] = Number(input.value)||0;
+  });
+  return subjects;
+}
+function updateMockExamPreview(){
+  const totals = computeMockExamTotals(readMockExamSubjects());
+  document.getElementById("me-totals").textContent = totals.totalQuestions + " questões";
+  const accEl = document.getElementById("me-accuracy");
+  if(totals.accuracyPct===null){ accEl.textContent = "—"; accEl.style.color = "var(--ink)"; }
+  else {
+    accEl.textContent = totals.accuracyPct + "%";
+    accEl.style.color = totals.accuracyPct<70 ? "var(--red)" : (totals.accuracyPct<=80 ? "var(--amber)" : "var(--green)");
+  }
+}
+
+let activeReplanProposal = null;
+
+function buildReplanProposal(){
+  const todayISO=toISODate(new Date());
+  const scores={};
+  pendingItemsRanked().forEach(item=>{ scores[item.id]=item.score; });
+  const availability=Object.assign({},CONFIG.dailyAvailability);
+  if(CONFIG.reserveSundayForReview) availability.sun=0;
+  const proposal=Core.generateReplanProposal({
+    todayISO,
+    firstFutureDate:addDaysISO(todayISO,1),
+    examDate:CONFIG.examDate,
+    availability,
+    assignments:STATE.planAssignments,
+    sessions:STATE.sessions,
+    scoreByTopic:scores,
+    tolerance:Core.COMPLETION_TOLERANCE,
+    createdAt:nowISOTimestamp()
+  });
+  proposal.id="replan_"+Date.now()+"_"+Math.round(Math.random()*10000);
+  return proposal;
+}
+
+function openReplanProposal(){
+  activeReplanProposal=buildReplanProposal();
+  const proposal=activeReplanProposal;
+  document.getElementById("replanSummary").textContent = proposal.debtMinutes
+    ? `${minutesToHM(proposal.debtMinutes)} pendentes · ${minutesToHM(proposal.scheduledMinutes)} redistribuídas`
+    : "Não há débito vencido para redistribuir.";
+  document.getElementById("replanFeasibility").textContent = proposal.feasible
+    ? "A proposta cabe na capacidade disponível até a prova."
+    : `A proposta é parcial: ainda restarão ${minutesToHM(proposal.remainingDebtMinutes)} sem espaço.`;
+  const changes=document.getElementById("replanChanges");
+  changes.innerHTML="";
+  if(proposal.operations.length===0){
+    changes.appendChild(el("div","empty-state","Nenhuma alteração disponível."));
+  } else {
+    proposal.operations.forEach(operation=>{
+      const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
+      const node=source?findLeafNode(source.subjectId,source.topicId):null;
+      const subject=source?SUBJECT_MAP[source.subjectId]:null;
+      const row=el("div","attention-item");
+      const title=el("div","an"); title.textContent=(subject?subject.name+" · ":"")+(node?node.name:operation.topicId);
+      const detail=el("div","as"); detail.textContent=`${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
+      row.appendChild(title); row.appendChild(detail); changes.appendChild(row);
+    });
+  }
+  document.getElementById("btnReplanApply").disabled=proposal.operations.length===0;
+  document.getElementById("replanModal").classList.add("open");
+}
+
+function closeReplanProposal(){
+  document.getElementById("replanModal").classList.remove("open");
+  activeReplanProposal=null;
+}
+
+function applyReplanProposal(){
+  const proposal=activeReplanProposal;
+  if(!proposal) return;
+  STATE.rescheduleHistory=STATE.rescheduleHistory||[];
+  if(STATE.rescheduleHistory.some(entry=>entry.proposalId===proposal.id)){
+    closeReplanProposal(); showToast("Esta proposta já foi aplicada."); return;
+  }
+  const now=nowISOTimestamp();
+  proposal.operations.forEach((operation,index)=>{
+    const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
+    STATE.planAssignments.push({
+      id:"recovery_"+proposal.id+"_"+index,
+      date:operation.to,
+      topicId:operation.topicId,
+      subjectId:operation.subjectId,
+      plannedMinutes:operation.minutes,
+      completedMinutes:0,
+      status:"planned",
+      kind:"recovery",
+      source:"replanner",
+      sourceAssignmentId:operation.sourceAssignmentId,
+      originalDate:source?source.originalDate||source.date:operation.from,
+      rescheduleCount:(source?Number(source.rescheduleCount)||0:0)+1,
+      createdAt:now,
+      updatedAt:now
+    });
+  });
+  STATE.rescheduleHistory.push({
+    id:"history_"+proposal.id,
+    proposalId:proposal.id,
+    createdAt:proposal.createdAt,
+    appliedAt:now,
+    reason:proposal.reason,
+    feasible:proposal.feasible,
+    remainingDebtMinutes:proposal.remainingDebtMinutes,
+    operations:proposal.operations.map(operation=>Object.assign({},operation))
+  });
+  persist();
+  Planner.rebuildWeeksFromAssignments();
+  closeReplanProposal();
+  renderAll();
+  showToast("Replanejamento aplicado sem apagar o histórico anterior.");
+}
+
+function setupEvents(){
+  document.getElementById("btnExport").addEventListener("click", Exporter.run);
+  document.getElementById("btnBackup").addEventListener("click",downloadFullBackup);
+  document.getElementById("btnImportBackup").addEventListener("click",()=>document.getElementById("backupFileInput").click());
+  document.getElementById("backupFileInput").addEventListener("change",event=>restoreBackupFile(event.target.files&&event.target.files[0]));
+  document.getElementById("btnClear").addEventListener("click", ()=> toggleClearModal(true));
+  document.getElementById("btnClearCancel").addEventListener("click", ()=> toggleClearModal(false));
+  const confirmCheck = document.getElementById("clearConfirmCheck");
+  const confirmBtn = document.getElementById("btnClearConfirm");
+  confirmCheck.addEventListener("change", ()=>{ confirmBtn.disabled = !confirmCheck.checked; });
+  confirmBtn.addEventListener("click", ()=>{
+    Storage.clear(); initState(); Planner.syncAssignments(); Planner.rebuildWeeksFromAssignments(); toggleClearModal(false);
+    STATE.ui.mainTab="overview"; STATE.ui.planWeekIndex=0;
+    renderAll();
+    showToast("Todos os dados foram apagados.");
+  });
+
+  document.getElementById("btnSettings").addEventListener("click", openSettingsModal);
+  document.getElementById("btnSettingsCancel").addEventListener("click", closeSettingsModal);
+  document.getElementById("btnSettingsSave").addEventListener("click", ()=>{
+    const start = document.getElementById("cfg-start").value;
+    const exam = document.getElementById("cfg-exam").value;
+    const dailyAvailability = readDailyAvailabilityFromForm();
+    if(!exam || !start){ showToast("Preencha as datas de início e da prova."); return; }
+    if(parseISODate(exam) <= parseISODate(start)){ showToast("A data da prova deve ser depois da data de início."); return; }
+    if(DAY_ORDER.every(d=> (dailyAvailability[d]||0)===0)){ showToast("Marque ao menos um dia com disponibilidade."); return; }
+    STATE.settings = {
+      startDate:start, examDate:exam, dailyAvailability,
+      reserveSaturdayForRedacao: document.getElementById("cfg-sat-redacao").checked,
+      reserveSundayForReview: document.getElementById("cfg-sun-review").checked,
+      plannerPreferences:Object.assign({},CONFIG.plannerPreferences)
+    };
+    applySettingsToConfig();
+    Planner.syncAssignments();
+    Planner.rebuildWeeksFromAssignments();
+    persist();
+    closeSettingsModal();
+    STATE.ui.planWeekIndex = 0;
+    renderAll();
+    showToast("Planejamento recalculado.");
+  });
+
+  document.getElementById("sf-questions").addEventListener("input", updateSessionAccuracyPreview);
+  document.getElementById("sf-correct").addEventListener("input", updateSessionAccuracyPreview);
+  document.getElementById("btnSessionCancel").addEventListener("click", closeSessionModal);
+  document.getElementById("btnSessionSave").addEventListener("click", ()=>{
+    if(!sessionModalCtx) return;
+    const actualMinutes = Math.max(0, Math.round(Number(document.getElementById("sf-minutes").value)||0));
+    const questions = Number(document.getElementById("sf-questions").value)||0;
+    const correct = Math.min(Number(document.getElementById("sf-correct").value)||0, questions);
+    const wrong = Math.max(questions-correct,0);
+    const date = document.getElementById("sf-date").value || toISODate(new Date());
+    const method = document.getElementById("sf-method").value;
+    if(actualMinutes===0 && questions===0){ showToast("Informe o tempo realizado ou a quantidade de questões."); return; }
+    addSession({
+      planAssignmentId:sessionModalCtx.planAssignmentId,
+      topicId:sessionModalCtx.topicId, subjectId:sessionModalCtx.subjectId,
+      date, method, actualMinutes, questions, correct, wrong
+    });
+    closeSessionModal();
+    renderActivePanel();
+    showToast("Sessão de estudo registrada.");
+  });
+
+  document.getElementById("btnMockExamCancel").addEventListener("click", closeMockExamModal);
+  document.getElementById("btnMockExamSave").addEventListener("click", ()=>{
+    const date = document.getElementById("me-date").value || toISODate(new Date());
+    const durationMinutes = Number(document.getElementById("me-duration").value)||0;
+    const title = document.getElementById("me-title").value.trim() || "Simulado";
+    const subjects = readMockExamSubjects();
+    const totals = computeMockExamTotals(subjects);
+    if(totals.totalQuestions===0){ showToast("Informe ao menos as questões de uma disciplina."); return; }
+    addMockExam({ date, durationMinutes, title, subjects });
+    closeMockExamModal();
+    renderActivePanel();
+    showToast("Simulado registrado.");
+  });
+
+  document.getElementById("btnReplanKeep").addEventListener("click",closeReplanProposal);
+  document.getElementById("btnReplanApply").addEventListener("click",applyReplanProposal);
+
+  [document.getElementById("sessionModal"), document.getElementById("settingsModal"), document.getElementById("clearModal"), document.getElementById("mockExamModal"), document.getElementById("replanModal")].forEach(overlay=>{
+    overlay.addEventListener("click", (e)=>{ if(e.target===overlay) overlay.classList.remove("open"); });
+  });
+}
+function toggleClearModal(open){
+  document.getElementById("clearModal").classList.toggle("open", open);
+  if(!open){ document.getElementById("clearConfirmCheck").checked=false; document.getElementById("btnClearConfirm").disabled=true; }
+}
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(()=> t.classList.remove("show"), 2600);
+}
+
+/* =========================================================================
+   EXPORT
+   Estrutura: topics (metadados) -> studySessions[] (registros reais, um por
+   sessão) -> progress (agregados). O StudyTrack pode reconstruir o histórico
+   por tópico a partir de studySessions em vez de receber apenas totais.
+   ========================================================================= */
+const Exporter = {
+  run(){
+    const topics=[];
+    const progress={};
+    SUBJECTS.forEach(subj=>{
+      subj.topics.forEach(topic=>{
+        topics.push(Exporter.topicRecord(topic,subj,null));
+        topic.subtopics.forEach(sub=>topics.push(Exporter.topicRecord(sub,subj,topic.id)));
+      });
+      progress[subj.id]=Object.assign({},subjectProgress(subj),subjectPerformance(subj.id));
+    });
+    progress.global=Object.assign({},globalProgress(),globalPerformance());
+    const payload=ExportCore.buildInterchange({
+      plannerVersion:PLANNER_VERSION,
+      exam:{institution:"Banco do Brasil",role:"Escriturário - Agente Comercial",examDate:CONFIG.examDate},
+      subjects:SUBJECTS.map(s=>({id:s.id,name:s.name,strategicWeight:s.weight})),
+      topics,
+      studySessions:STATE.sessions,
+      mockExams:STATE.mockExams,
+      assignments:STATE.planAssignments,
+      rescheduleHistory:STATE.rescheduleHistory||[],
+      dailyAvailability:CONFIG.dailyAvailability,
+      preferences:CONFIG.plannerPreferences,
+      reviews:{intervalsDays:REVIEW_INTERVALS_DAYS,estimatedMinutes:CONFIG.reviewEstimatedMinutes,schedule:reviewSchedule()},
+      progress
+    });
+    ExportCore.downloadJSON(payload,"bb-study-planner-interchange-v4.json");
+    showToast("Exportação versionada gerada.");
+  },
+  topicRecord(node, subj, parentId){
+    const st = STATE.items[node.id];
+    const agg = aggregateForTopic(node.id);
+    return {
+      id: node.id, parentId, subjectId: subj.id, name: node.name,
+      status: st.status, priority: st.priority, incidence: st.incidence,
+      totalHours: agg.hours, totalQuestions: agg.questions, totalCorrect: agg.correct, totalWrong: agg.wrong,
+      accuracyPct: agg.accuracyPct,
+      finalizedAt: st.finalizedAt, reviewStage: st.reviewStage, nextReviewDate: st.nextReviewDate
+    };
+  }
+};
+
+function currentPersistedState(){
+  return {
+    stateVersion:STATE_VERSION,
+    items:STATE.items,
+    sessions:STATE.sessions,
+    mockExams:STATE.mockExams,
+    planAssignments:STATE.planAssignments,
+    rescheduleHistory:STATE.rescheduleHistory||[],
+    settings:STATE.settings
+  };
+}
+
+function downloadFullBackup(){
+  const payload=ExportCore.buildBackup({
+    plannerVersion:PLANNER_VERSION,
+    stateVersion:STATE_VERSION,
+    state:currentPersistedState(),
+    config:{examDate:CONFIG.examDate,dailyAvailability:CONFIG.dailyAvailability,plannerPreferences:CONFIG.plannerPreferences}
+  });
+  ExportCore.downloadJSON(payload,"bb-study-planner-backup-v4.json");
+  showToast("Backup completo gerado.");
+}
+
+function restoreBackupFile(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const payload=JSON.parse(String(reader.result||""));
+      const validation=ExportCore.validateBackup(payload);
+      if(!validation.valid){ showToast(validation.errors[0]||"Backup inválido."); return; }
+      const restored=Core.migrateState(payload.state,STATE_VERSION);
+      Storage.save(restored);
+      initState();
+      Planner.rebuildWeeksFromAssignments();
+      STATE.ui.mainTab="overview";
+      renderAll();
+      showToast("Backup restaurado com sucesso.");
+    }catch(error){
+      console.warn("Falha ao restaurar backup",error);
+      showToast("Não foi possível restaurar este backup.");
+    }finally{
+      document.getElementById("backupFileInput").value="";
+    }
+  };
+  reader.onerror=()=>showToast("Não foi possível ler o arquivo de backup.");
+  reader.readAsText(file);
+}
+
+/* =========================================================================
+   DEMO — dados fictícios usados apenas na primeira visita, quando
+   CONFIG_DEFAULTS.DEMO_MODE = true e não há nada salvo no localStorage.
+   ========================================================================= */
+const Demo = {
+  load(){
+    const setFor = (id, patch)=>{ if(STATE.items[id]) STATE.items[id] = Object.assign(STATE.items[id], patch); };
+    const daysAgo = (n)=>{ const d = new Date(); d.setDate(d.getDate()-n); return toISODate(d); };
+    const sess = (topicId, subjectId, d, method, hours, questions, correct)=>{
+      STATE.sessions.push({ id:"sess_demo_"+topicId+"_"+d, planAssignmentId:null, topicId, subjectId, date:d, method, actualMinutes:Math.round(hours*60), questions, correct, wrong: Math.max(questions-correct,0) });
+    };
+
+    // Conhecimentos Bancários — avançado, com sessões ao longo do tempo
+    setFor("banc-1", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("banc-1","banc",daysAgo(20),"Aula",2,0,0);
+    sess("banc-1","banc",daysAgo(14),"Questões",2,20,15);
+    sess("banc-1","banc",daysAgo(8),"Revisão",2,20,18);
+    setFor("banc-1-1", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("banc-1-1","banc",daysAgo(13),"Questões",2,15,13);
+    setFor("banc-1-2", {status:"finalizado", priority:"media", incidence:"media"});
+    sess("banc-1-2","banc",daysAgo(12),"Leitura",1.5,10,8);
+    setFor("banc-3", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("banc-3","banc",daysAgo(10),"Questões",4,30,19);
+    setFor("banc-3-2", {status:"revisar", priority:"alta", incidence:"alta"});
+    sess("banc-3-2","banc",daysAgo(5),"Questões",1,12,7);
+    setFor("banc-5", {status:"em_andamento", priority:"media", incidence:"media"});
+    sess("banc-5","banc",daysAgo(3),"Aula",2,0,0);
+    setFor("banc-5-1", {status:"finalizado", priority:"media"});
+    sess("banc-5-1","banc",daysAgo(3),"Questões",1,8,6);
+    setFor("banc-7", {status:"nao_iniciado", priority:"alta", incidence:"media"});
+    setFor("banc-16", {status:"finalizado", priority:"baixa", incidence:"baixa"});
+    sess("banc-16","banc",daysAgo(18),"Leitura",1,6,5);
+
+    // Informática — bom progresso
+    setFor("info-1", {status:"finalizado", priority:"media", incidence:"media"});
+    sess("info-1","info",daysAgo(22),"Leitura",2,10,9);
+    setFor("info-1-1", {status:"finalizado", priority:"media"});
+    sess("info-1-1","info",daysAgo(21),"Questões",1,6,5);
+    setFor("info-3", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("info-3","info",daysAgo(16),"Questões",3,20,16);
+    setFor("info-3-1", {status:"finalizado", priority:"alta"});
+    sess("info-3-1","info",daysAgo(15),"Questões",1,8,7);
+    setFor("info-6", {status:"em_andamento", priority:"media"});
+    sess("info-6","info",daysAgo(6),"Aula",1.5,0,0);
+    setFor("info-6-1", {status:"finalizado", priority:"baixa"});
+    sess("info-6-1","info",daysAgo(6),"Leitura",0.5,4,3);
+    setFor("info-9", {status:"finalizado", priority:"baixa"});
+    sess("info-9","info",daysAgo(19),"Leitura",0.5,3,3);
+
+    // Português — em andamento, com um ponto fraco claro
+    setFor("port-1", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("port-1","port",daysAgo(17),"Questões",3,20,14);
+    setFor("port-2", {status:"finalizado", priority:"media"});
+    sess("port-2","port",daysAgo(11),"Leitura",2,14,12);
+    setFor("port-4", {status:"revisar", priority:"alta", incidence:"alta"});
+    sess("port-4","port",daysAgo(4),"Revisão",1.5,10,6);
+    setFor("port-7", {status:"em_andamento", priority:"alta", incidence:"alta"});
+    sess("port-7","port",daysAgo(2),"Aula",2,0,0);
+    setFor("port-9", {status:"nao_iniciado", priority:"media", incidence:"media"});
+
+    // Vendas e Negociação — baixo progresso, alta prioridade
+    setFor("vendas-2", {status:"em_andamento", priority:"alta"});
+    sess("vendas-2","vendas",daysAgo(1),"Leitura",1,0,0);
+    setFor("vendas-11", {status:"finalizado", priority:"media"});
+    sess("vendas-11","vendas",daysAgo(9),"Questões",2,12,9);
+    setFor("vendas-16", {status:"nao_iniciado", priority:"alta", incidence:"media"});
+    setFor("vendas-19", {status:"nao_iniciado", priority:"alta", incidence:"alta"});
+
+    // Atualidades — parcial
+    setFor("atu-1", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("atu-1","atu",daysAgo(15),"Aula",2.5,14,9);
+    setFor("atu-5", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("atu-5","atu",daysAgo(7),"Questões",1.5,10,8);
+    setFor("atu-7", {status:"em_andamento", priority:"media"});
+    sess("atu-7","atu",daysAgo(1),"Leitura",0.5,0,0);
+
+    // Matemática Financeira — ponto fraco em Juros Compostos
+    setFor("matfin-2", {status:"finalizado", priority:"alta", incidence:"alta"});
+    sess("matfin-2","matfin",daysAgo(13),"Questões",2,16,11);
+    setFor("matfin-3", {status:"em_andamento", priority:"alta"});
+    sess("matfin-3","matfin",daysAgo(2),"Aula",1,0,0);
+    sess("matfin-3","matfin",daysAgo(1),"Questões",1,20,11);
+
+    // Matemática
+    setFor("mat-3", {status:"finalizado", priority:"media"});
+    sess("mat-3","mat",daysAgo(23),"Questões",1,8,6);
+
+    // Inglês
+    setFor("ing-1", {status:"em_andamento", priority:"baixa"});
+    sess("ing-1","ing",daysAgo(5),"Leitura",1,0,0);
+
+    // Repetição espaçada — alguns exemplos explícitos para mostrar os três estados
+    setFor("banc-1", { finalizedAt: daysAgo(20), reviewStage: 1, nextReviewDate: addDaysISO(daysAgo(20), REVIEW_INTERVALS_DAYS[1]) }); // atrasada
+    setFor("port-1", { finalizedAt: daysAgo(1), reviewStage: 0, nextReviewDate: addDaysISO(daysAgo(1), REVIEW_INTERVALS_DAYS[0]) });   // hoje
+    setFor("atu-1", { finalizedAt: toISODate(new Date()), reviewStage: 0, nextReviewDate: addDaysISO(toISODate(new Date()), REVIEW_INTERVALS_DAYS[0]) }); // próxima
+
+    // Preenche automaticamente o agendamento dos demais tópicos já finalizados,
+    // para a aba Revisões não ficar vazia na demonstração.
+    let seedCounter = 0;
+    Object.keys(STATE.items).forEach(id=>{
+      const st = STATE.items[id];
+      if(st.status === "finalizado" && !st.finalizedAt){
+        seedCounter++;
+        const stage = seedCounter % 3;
+        const finAgo = 6 + (seedCounter % 20);
+        st.finalizedAt = daysAgo(finAgo);
+        st.reviewStage = stage;
+        st.nextReviewDate = addDaysISO(st.finalizedAt, REVIEW_INTERVALS_DAYS[Math.min(stage, REVIEW_INTERVALS_DAYS.length-1)]);
+      }
+    });
+
+    // Simulados de exemplo, com evolução crescente de acertos
+    const mkExam = (d, title, duration, subjectsMap)=>{
+      const totals = computeMockExamTotals(subjectsMap);
+      STATE.mockExams.push(Object.assign({ id:"mock_demo_"+d, date:d, title, durationMinutes:duration, subjects:subjectsMap }, totals));
+    };
+    mkExam(daysAgo(35), "Simulado Cesgranrio — Rodada 1", 210, {
+      port:{questions:9,correct:5}, ing:{questions:5,correct:2}, mat:{questions:5,correct:2},
+      atu:{questions:10,correct:5}, matfin:{questions:5,correct:2}, banc:{questions:15,correct:8},
+      info:{questions:5,correct:3}, vendas:{questions:12,correct:6}, redacao:{questions:0,correct:0}
+    });
+    mkExam(daysAgo(21), "Simulado Cesgranrio — Rodada 2", 210, {
+      port:{questions:9,correct:6}, ing:{questions:5,correct:3}, mat:{questions:5,correct:3},
+      atu:{questions:10,correct:7}, matfin:{questions:5,correct:3}, banc:{questions:15,correct:10},
+      info:{questions:5,correct:4}, vendas:{questions:12,correct:8}, redacao:{questions:0,correct:0}
+    });
+    mkExam(daysAgo(7), "Simulado Cesgranrio — Rodada 3", 210, {
+      port:{questions:9,correct:7}, ing:{questions:5,correct:3}, mat:{questions:5,correct:3},
+      atu:{questions:10,correct:8}, matfin:{questions:5,correct:4}, banc:{questions:15,correct:12},
+      info:{questions:5,correct:4}, vendas:{questions:12,correct:10}, redacao:{questions:0,correct:0}
+    });
+
+    // PlanAssignments históricos, para demonstrar a separação entre status do
+    // tópico e status do dia planejado (Fase 3/4): início do plano ~12 dias
+    // atrás, com uma mistura de dias concluídos, parciais e não estudados —
+    // cada sessão abaixo é vinculada ao assignment via planAssignmentId, e é
+    // essa ligação (não o status do tópico) que define completed/partial/missed.
+    STATE.settings = { startDate: daysAgo(12) };
+    const pastWeekdays = [];
+    for(let n=10; n>=1 && pastWeekdays.length<6; n--){
+      const iso = daysAgo(n);
+      if(dayKey(parseISODate(iso)) !== "sun") pastWeekdays.push(iso);
+    }
+    const seedAssignment = (dateISO, topicId, subjectId, minutes, completedRatio)=>{
+      if(!dateISO) return;
+      const assignmentId = "plan_demo_" + dateISO + "_" + topicId;
+      const completedMinutes = Math.round(minutes * (completedRatio||0));
+      STATE.planAssignments.push({
+        id: assignmentId, date: dateISO, topicId, subjectId,
+        plannedMinutes: minutes, completedMinutes, status: "planned",
+        kind:"content", source:"demo", originalDate:dateISO, rescheduleCount:0,
+        createdAt: dateISO + "T08:00:00.000Z", updatedAt: dateISO + "T08:00:00.000Z"
+      });
+      if(completedRatio>0){
+        const questions = Math.round(4 + completedRatio*6);
+        const correct = Math.round(questions * 0.75);
+        STATE.sessions.push({
+          id: "sess_demo_plan_" + dateISO + "_" + topicId, topicId, subjectId, planAssignmentId: assignmentId,
+          date: dateISO, method: "Questões", actualMinutes:completedMinutes, questions, correct, wrong:questions-correct
+        });
+      }
+    };
+    // completedRatio 1 = dia cumprido integralmente ("completed"); 0.5 = só metade
+    // do tempo planejado ("partial"); 0 = nada estudado naquele dia ("missed") —
+    // repare que isso é independente do tópico já estar finalizado ou não.
+    seedAssignment(pastWeekdays[0], "banc-1", "banc", 120, 1);
+    seedAssignment(pastWeekdays[1], "info-3", "info", 100, 1);
+    seedAssignment(pastWeekdays[2], "banc-7", "banc", 90, 0);
+    seedAssignment(pastWeekdays[3], "port-1", "port", 75, 1);
+    seedAssignment(pastWeekdays[4], "vendas-16", "vendas", 90, 0);
+    seedAssignment(pastWeekdays[5], "atu-1", "atu", 110, 0.5);
+  }
+};
+
+/* =========================================================================
+   BOOT
+   ========================================================================= */
+function boot(){
+  initState();
+  // Gera o plano somente na primeira execução. Um plano já existente jamais
+  // é alterado apenas por recarregar ou navegar pela aplicação.
+  if(STATE.planAssignments.length===0) Planner.syncAssignments();
+  Planner.rebuildWeeksFromAssignments();
+  setupEvents();
+  renderAll();
+}
+document.addEventListener("DOMContentLoaded", boot);
+
+})();
+</script>
+</body>
+</html>
