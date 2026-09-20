@@ -1,5 +1,7 @@
 {
   "name": "bb-study-planner",
+  "version": "2.0.0",
+  "description": "Planejador adaptativo para concursos bancários",
   "private": true,
   "scripts": {
     "test": "node --test tests/*.test.js"

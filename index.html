@@ -148,6 +148,7 @@
     <div id="replanChanges" style="margin-top:14px;"></div>
     <div class="modal-actions">
       <button class="btn btn-sm" id="btnReplanKeep">Manter plano atual</button>
+      <button class="btn btn-sm" id="btnReplanReview">Revisar alterações</button>
       <button class="btn btn-sm btn-primary" id="btnReplanApply">Aplicar replanejamento</button>
     </div>
   </div>
@@ -172,6 +173,11 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="planner-core.js"></script>
+<script src="planner/planner-metrics.js"></script>
+<script src="planner/planner-capacity.js"></script>
+<script src="planner/planner-replanner.js"></script>
+<script src="planner/planner-reviews.js"></script>
+<script src="planner/planner-feasibility.js"></script>
 <script src="planner-storage.js"></script>
 <script src="planner-export.js"></script>
 <script src="stress-fixtures.js"></script>
@@ -1315,6 +1321,10 @@ function renderOverviewPanel(){
     debtBox.appendChild(proposalBtn);
   }
   kpiGrid.appendChild(debtBox);
+  const stability=Core.calculatePlanStability(STATE.planAssignments);
+  const stabilityBox=el("div","kpi-box");
+  stabilityBox.innerHTML=`<div class="kpi-label">Estabilidade do plano</div><div class="kpi-value">${stability.stabilityPct.toFixed(0)}%</div><div class="kpi-sub">${stability.unchangedAssignments} de ${stability.totalAssignments} atividades permaneceram · ${stability.changedAssignments} ajustadas</div>`;
+  kpiGrid.appendChild(stabilityBox);
   wrap.appendChild(kpiGrid);
 
   if((STATE.rescheduleHistory||[]).length){
@@ -2264,6 +2274,8 @@ function updateMockExamPreview(){
 }
 
 let activeReplanProposal = null;
+let activeReplanSelections = new Set();
+let replanReviewMode = false;
 
 function buildReplanProposal(){
   const todayISO=toISODate(new Date());
@@ -2302,36 +2314,55 @@ function buildReplanProposal(){
 function openReplanProposal(){
   activeReplanProposal=buildReplanProposal();
   const proposal=activeReplanProposal;
+  activeReplanSelections=new Set(proposal.operations.map((operation,index)=>index));
+  replanReviewMode=false;
   document.getElementById("replanSummary").textContent = proposal.debtMinutes
-    ? `${minutesToHM(proposal.debtMinutes)} pendentes · ${minutesToHM(proposal.scheduledMinutes)} redistribuídas · ${minutesToHM(proposal.scheduledReviewMinutes)} em revisões`
+    ? `${proposal.operations.length} alterações · ${minutesToHM(proposal.scheduledMinutes+proposal.scheduledReviewMinutes)} recuperadas · ${proposal.planStability.stabilityPct}% de estabilidade · custo ${proposal.totalChangeCost}`
     : proposal.reviewMinutes ? `${minutesToHM(proposal.reviewMinutes)} de revisões vencidas analisadas` : "Não há débito ou revisão vencida para redistribuir.";
   document.getElementById("replanFeasibility").textContent = proposal.feasible
     ? "✓ Capacidade e conflitos respeitados · ✓ atividades concluídas preservadas · ✓ data da prova preservada"
     : `Proposta parcial: ${minutesToHM(proposal.remainingDebtMinutes)} de dívida e ${minutesToHM(proposal.remainingReviewMinutes)} de revisões ainda sem espaço.`;
+  renderReplanChanges();
+  document.getElementById("btnReplanReview").textContent="Revisar alterações";
+  document.getElementById("btnReplanApply").disabled=proposal.operations.length===0;
+  document.getElementById("replanModal").classList.add("open");
+}
+
+function renderReplanChanges(){
+  const proposal=activeReplanProposal;
   const changes=document.getElementById("replanChanges");
   changes.innerHTML="";
+  changes.appendChild(el("div","review-group-title","ANTES → DEPOIS"));
   if(proposal.operations.length===0){
     changes.appendChild(el("div","empty-state","Nenhuma alteração disponível."));
   } else {
-    proposal.operations.forEach(operation=>{
+    proposal.operations.forEach((operation,index)=>{
       const source=STATE.planAssignments.find(a=>a.id===operation.sourceAssignmentId);
       const node=source?findLeafNode(source.subjectId,source.topicId):null;
       const subject=SUBJECT_MAP[operation.subjectId];
       const row=el("div","attention-item");
+      if(replanReviewMode){
+        const choice=document.createElement("input"); choice.type="checkbox"; choice.checked=activeReplanSelections.has(index);
+        choice.setAttribute("aria-label","Incluir alteração "+(index+1));
+        choice.addEventListener("change",()=>{
+          if(choice.checked) activeReplanSelections.add(index); else activeReplanSelections.delete(index);
+          document.getElementById("btnReplanApply").disabled=activeReplanSelections.size===0;
+        });
+        row.appendChild(choice);
+      }
       const reviewNode=!source?findLeafNode(operation.subjectId,operation.topicId):null;
       const title=el("div","an"); title.textContent=(operation.type==="create_review_assignment"?"Revisão · ":"")+(subject?subject.name+" · ":"")+(node?node.name:reviewNode?reviewNode.name:operation.topicId);
       const detail=el("div","as"); detail.textContent=`${formatDateBR(parseISODate(operation.from))} → ${formatDateBR(parseISODate(operation.to))} · ${minutesToHM(operation.minutes)}`;
-      const reason=el("div","as"); reason.textContent=operation.reasons.join(" · ");
-      row.appendChild(title); row.appendChild(detail); row.appendChild(reason); changes.appendChild(row);
+      const reason=el("div","as"); reason.textContent="Por que: "+operation.reasons.join(" · ")+` · custo de alteração ${operation.changeCost}`;
+      row.appendChild(title); row.appendChild(detail); if(replanReviewMode) row.appendChild(reason); changes.appendChild(row);
     });
   }
-  document.getElementById("btnReplanApply").disabled=proposal.operations.length===0;
-  document.getElementById("replanModal").classList.add("open");
 }
 
 function closeReplanProposal(){
   document.getElementById("replanModal").classList.remove("open");
   activeReplanProposal=null;
+  activeReplanSelections=new Set();
 }
 
 function applyReplanProposal(){
@@ -2341,8 +2372,11 @@ function applyReplanProposal(){
   if(STATE.rescheduleHistory.some(entry=>entry.proposalId===proposal.id)){
     closeReplanProposal(); showToast("Esta proposta já foi aplicada."); return;
   }
+  const selectedOperations=proposal.operations.filter((operation,index)=>activeReplanSelections.has(index));
+  const rejectedOperations=proposal.operations.filter((operation,index)=>!activeReplanSelections.has(index));
+  const selectedProposal=Object.assign({},proposal,{operations:selectedOperations});
   const now=nowISOTimestamp();
-  const applied=Core.applyReplanProposal(STATE.planAssignments,proposal,{createdAt:now});
+  const applied=Core.applyReplanProposal(STATE.planAssignments,selectedProposal,{createdAt:now});
   if(applied.alreadyApplied){ closeReplanProposal(); showToast("Esta proposta já foi aplicada."); return; }
   STATE.planAssignments=applied.assignments;
   STATE.rescheduleHistory.push({
@@ -2352,11 +2386,12 @@ function applyReplanProposal(){
     appliedAt:now,
     reason:proposal.reason,
     debtBefore:proposal.debtMinutes,
-    scheduledMinutes:proposal.scheduledMinutes,
-    scheduledReviewMinutes:proposal.scheduledReviewMinutes,
-    feasible:proposal.feasible,
-    remainingDebtMinutes:proposal.remainingDebtMinutes,
-    operations:proposal.operations.map(operation=>Object.assign({},operation))
+    scheduledMinutes:selectedOperations.filter(operation=>operation.type==="create_recovery_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
+    scheduledReviewMinutes:selectedOperations.filter(operation=>operation.type==="create_review_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
+    feasible:proposal.feasible&&selectedOperations.length===proposal.operations.length,
+    remainingDebtMinutes:proposal.remainingDebtMinutes+rejectedOperations.filter(operation=>operation.type==="create_recovery_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
+    remainingReviewMinutes:proposal.remainingReviewMinutes+rejectedOperations.filter(operation=>operation.type==="create_review_assignment").reduce((sum,operation)=>sum+operation.minutes,0),
+    operations:selectedOperations.map(operation=>Object.assign({},operation))
   });
   persist();
   Planner.rebuildWeeksFromAssignments();
@@ -2462,6 +2497,11 @@ function setupEvents(){
   });
 
   document.getElementById("btnReplanKeep").addEventListener("click",closeReplanProposal);
+  document.getElementById("btnReplanReview").addEventListener("click",()=>{
+    replanReviewMode=!replanReviewMode;
+    document.getElementById("btnReplanReview").textContent=replanReviewMode?"Ocultar revisão":"Revisar alterações";
+    renderReplanChanges();
+  });
   document.getElementById("btnReplanApply").addEventListener("click",applyReplanProposal);
 
   [document.getElementById("sessionModal"), document.getElementById("settingsModal"), document.getElementById("clearModal"), document.getElementById("mockExamModal"), document.getElementById("replanModal")].forEach(overlay=>{

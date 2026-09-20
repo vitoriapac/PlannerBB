@@ -311,3 +311,28 @@ test("mudanças de disponibilidade e prova retornam impacto sem alterar assignme
   assert.equal(impact.requiresReplan,true);
   assert.deepEqual(assignments,snapshot);
 });
+
+test("estabilidade distingue atividades preservadas e ajustadas",()=>{
+  const stability=Core.calculatePlanStability([
+    assignment({id:"same",originalDate:"2026-09-10",rescheduleCount:0}),
+    assignment({id:"moved",date:"2026-09-12",originalDate:"2026-09-10",rescheduleCount:1}),
+    assignment({id:"recovery",kind:"recovery",source:"replanner",originalDate:"2026-09-10",rescheduleCount:1})
+  ]);
+  assert.deepEqual(stability,{totalAssignments:3,unchangedAssignments:1,changedAssignments:2,stabilityPct:33.3});
+});
+
+test("custo de alteração penaliza distância, troca de semana e fragmentação",()=>{
+  const operations=[
+    {type:"create_recovery_assignment",sourceAssignmentId:"source",from:"2026-09-01",to:"2026-09-02"},
+    {type:"create_recovery_assignment",sourceAssignmentId:"source",from:"2026-09-01",to:"2026-09-10"}
+  ];
+  assert.equal(Core.calculateChangeCost(operations[0],operations),5);
+  assert.equal(Core.calculateChangeCost(operations[1],operations),18);
+  const proposal=Core.generateReplanProposal({
+    todayISO:"2026-09-11",firstFutureDate:"2026-09-12",examDate:"2026-09-14",
+    availability:{sat:60,sun:60},assignments:[assignment({plannedMinutes:60})],sessions:[]
+  });
+  assert.ok(proposal.operations.every(operation=>Number.isFinite(operation.changeCost)));
+  assert.equal(proposal.totalChangeCost,proposal.operations.reduce((sum,operation)=>sum+operation.changeCost,0));
+  assert.ok(proposal.planStability.stabilityPct>=0);
+});

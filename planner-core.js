@@ -289,6 +289,30 @@
     return blocks;
   }
 
+  function daysBetween(fromISO,toISO){
+    return Math.max(0,Math.round((parseISO(toISO)-parseISO(fromISO))/86400000));
+  }
+
+  function calculateChangeCost(operation,operations){
+    const distance=daysBetween(operation.from,operation.to);
+    const crossesWeek=Math.floor(distance/7)>0?5:0;
+    const fragments=(operations||[]).filter(item=>item.sourceAssignmentId&&item.sourceAssignmentId===operation.sourceAssignmentId).length>1?4:0;
+    const creation=operation.type==="create_review_assignment"?1:0;
+    return distance+crossesWeek+fragments+creation;
+  }
+
+  function calculatePlanStability(assignments){
+    const active=(assignments||[]).filter(assignment=>assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED);
+    const unchanged=active.filter(assignment=>(assignment.originalDate||assignment.date)===assignment.date&&(Number(assignment.rescheduleCount)||0)===0&&assignment.source!=="replanner");
+    const totalAssignments=active.length;
+    const unchangedAssignments=unchanged.length;
+    const changedAssignments=totalAssignments-unchangedAssignments;
+    return {
+      totalAssignments,unchangedAssignments,changedAssignments,
+      stabilityPct:totalAssignments?Math.round((unchangedAssignments/totalAssignments)*1000)/10:100
+    };
+  }
+
   function generateReplanProposal(input){
     const todayISO = input.todayISO;
     const firstFutureDate = input.firstFutureDate || addDays(todayISO, 1);
@@ -382,6 +406,17 @@
       remainingDebtMinutes += remaining;
     });
 
+    operations.forEach(operation=>operation.changeCost=calculateChangeCost(operation,operations));
+    const affectedSources=new Set(operations.map(operation=>operation.sourceAssignmentId).filter(Boolean));
+    const currentActive=assignments.filter(assignment=>assignment.status!==PLAN_LIFECYCLE_STATUS.CANCELLED).length;
+    const predictedTotal=currentActive+operations.filter(operation=>operation.type==="create_review_assignment").length;
+    const predictedChanged=affectedSources.size+operations.filter(operation=>operation.type==="create_review_assignment").length;
+    const predictedStability={
+      totalAssignments:predictedTotal,
+      unchangedAssignments:Math.max(0,predictedTotal-predictedChanged),
+      changedAssignments:predictedChanged,
+      stabilityPct:predictedTotal?Math.round(((predictedTotal-predictedChanged)/predictedTotal)*1000)/10:100
+    };
     return {
       reason:"missed_assignments",
       createdAt:input.createdAt || new Date().toISOString(),
@@ -393,6 +428,8 @@
       remainingDebtMinutes,
       remainingReviewMinutes,
       feasible:remainingDebtMinutes===0&&remainingReviewMinutes===0,
+      totalChangeCost:operations.reduce((sum,operation)=>sum+operation.changeCost,0),
+      planStability:predictedStability,
       guarantees:{
         dailyCapacityRespected:true,
         completedAssignmentsPreserved:true,
@@ -463,6 +500,8 @@
     dayKeyFromISO,
     buildCapacityLedger,
     splitIntoBlocks,
+    calculateChangeCost,
+    calculatePlanStability,
     generateReplanProposal,
     analyzeFeasibility,
     suggestFeasibilityAdjustments
